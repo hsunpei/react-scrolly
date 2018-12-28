@@ -1,6 +1,7 @@
+.cache/
 .DS_Store
-/node_modules
-/.next
-/out
-npm-debug.log
-yarn-error.log
+node_modules/
+.next/
+out/
+*-debug.log
+*-error.log
