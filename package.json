@@ -14,5 +14,8 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "prepublish": "lerna run prepublish"
+  }
 }
