@@ -2,7 +2,13 @@
   "name": "intrasections",
   "devDependencies": {
     "@types/node": "^10.12.18",
+    "@types/react": "^16.7.18",
+    "@types/react-dom": "^16.0.11",
     "lerna": "^3.8.0",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "rimraf": "^2.6.3",
     "typescript": "^3.2.2"
   },
   "private": true,
