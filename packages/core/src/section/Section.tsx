@@ -1,0 +1,87 @@
+import * as React from 'react';
+
+export interface SectionProps {
+  // TODO: deal with this case
+  trackOnce?: boolean;
+
+  /**
+   * The array of intersectionRatio thresholds which is used in the options of IntersectionObserver
+   * @example [0, 0.25, 0.5, 0.75, 1]
+   */
+  threshold: number[] | 1;
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode | React.ReactNode[];
+}
+
+export interface SectionState {
+  /** The ID of the current active description box */
+  activeDescriptionId: descriptionID;
+}
+
+export class Section extends React.PureComponent<SectionProps, SectionState> {
+  public static defaultProps: SectionProps = {
+    trackOnce: false,
+    threshold: [0, 0.5, 1],
+  };
+
+  /** Ref for this section */
+  private sectionRef = React.createRef<HTMLDivElement>();
+
+  /**
+   * Use IntersectionObserver API to observe the changes
+   * in the intersection of the section with the viewport
+   */
+  public intersectObsr : IntersectionObserver;
+
+  private recordIntersection = (entries, observer) => {
+    const [entry] = entries;
+
+  };
+
+  public componentDidMount() {
+    const { threshold } = this.props;
+
+    this.intersectObsr = new IntersectionObserver(this.recordIntersection, {
+      threshold,
+
+      /**  Observe changes in visibility of the section relative to the document's viewport */
+      root: null,
+
+      // TODO: check this value
+      /**
+       * Watch only the changes in the intersection between the section and the viewport,
+       * without any added or substracted space
+       */
+      rootMargin: '0px',
+    });
+
+    this.intersectObsr.observe(this.sectionRef.current!);
+  }
+
+  public componentWillUnmount() {
+    /** Disable the entire IntersectionObserver */
+    this.intersectObsr.disconnect();
+  }
+
+  public render() {
+    const {
+      className,
+      style,
+      children,
+      ...restProps
+    } = this.props;
+
+    return (
+      <div
+        ref={this.sectionRef}
+        style={{ ...style, width: '100%', height: '100%' }}
+        className={className}
+        {...restProps}
+      >
+        {children}
+      </div>
+    );
+  }
+
+}
