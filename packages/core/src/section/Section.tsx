@@ -15,8 +15,14 @@ export interface SectionProps {
 }
 
 export interface SectionState {
-  /** The ID of the current active description box */
-  activeDescriptionId: descriptionID;
+  /** From IntersectionObserver: whether the Section is intersecting the root */
+  isIntersecting: boolean;
+
+  /** From IntersectionObserver: the ratio of intersectionRect area to boundingClientRect area */
+  intersectionRatio: number;
+
+  /** From IntersectionObserver: obtained by running the getBoundingClientRect() on the Section */
+  boundingClientRect: ClientRect;
 }
 
 export class Section extends React.PureComponent<SectionProps, SectionState> {
@@ -34,9 +40,14 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
    */
   public intersectObsr : IntersectionObserver;
 
-  private recordIntersection = (entries, observer) => {
+  private recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
-
+    const { isIntersecting, intersectionRatio, boundingClientRect } = entry;
+    this.setState({
+      isIntersecting,
+      intersectionRatio,
+      boundingClientRect,
+    });
   };
 
   public componentDidMount() {
