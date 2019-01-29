@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { fromEvent } from 'rxjs';
+
 import pageContext, { descriptionID } from '../context/pageContext';
 
 export interface PageState {
@@ -18,11 +19,11 @@ export class Page extends React.PureComponent<
 > {
   public static defaultProps: PageProps = {
     debounceTime: 300,
-    children: () => null
+    children: () => null,
   };
 
   public state: PageState = {
-    activeDescriptionId: null
+    activeDescriptionId: null,
   };
 
   public scrollObserver = fromEvent(window, 'scroll');
@@ -40,11 +41,13 @@ export class Page extends React.PureComponent<
     const { activeDescriptionId } = this.state;
 
     return (
-      <Provider value={{
-        activeDescriptionId,
-        scrollObserver: this.scrollObserver,
-        setCurrentActiveId: this.setCurrentActiveId,
-      }}>
+      <Provider
+        value={{
+          activeDescriptionId,
+          scrollObserver: this.scrollObserver,
+          setCurrentActiveId: this.setCurrentActiveId,
+        }}
+      >
         {children}
       </Provider>
     );
