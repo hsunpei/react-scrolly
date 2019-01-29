@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export interface SectionProps {
   // TODO: deal with this case
-  trackOnce?: boolean;
+  trackOnce: boolean;
 
   /**
    * The array of intersectionRatio thresholds which is used in the options of IntersectionObserver
@@ -38,11 +38,14 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
    * Use IntersectionObserver API to observe the changes
    * in the intersection of the section with the viewport
    */
-  public intersectObsr : IntersectionObserver;
+  public intersectObsr: IntersectionObserver;
 
   private recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
     const { isIntersecting, intersectionRatio, boundingClientRect } = entry;
+    console.log(isIntersecting,
+      intersectionRatio,
+      boundingClientRect,)
     this.setState({
       isIntersecting,
       intersectionRatio,
