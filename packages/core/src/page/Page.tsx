@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { fromEvent } from 'rxjs';
+import { fromEvent, animationFrameScheduler } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 
 import pageContext, { descriptionID } from '../context/pageContext';
 
@@ -26,7 +27,11 @@ export class Page extends React.PureComponent<
     activeDescriptionId: null,
   };
 
-  public scrollObserver = fromEvent(window, 'scroll');
+  public scrollObserver = fromEvent(window, 'scroll')
+                            .pipe(
+                              throttleTime(0, animationFrameScheduler),
+                              // TODO: get window width and height to subsribed models
+                            );
 
   public setCurrentActiveId = (activeDescriptionId: descriptionID) => {
     this.setState({ activeDescriptionId });
