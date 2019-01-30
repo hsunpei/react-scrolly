@@ -3,9 +3,15 @@ import { Observable } from 'rxjs';
 
 export type descriptionID = string | null;
 
+interface ScrollPosition {
+  scrollTop: number;
+  scrollBottom: number;
+  windowHeight: number;
+}
+
 interface PageContextInterface {
   activeDescriptionId: descriptionID;
-  scrollObserver: Observable<Event>;
+  scrollObserver: Observable<ScrollPosition>;
   setCurrentActiveId: ((activeDescriptionId: descriptionID) => void);
 }
 

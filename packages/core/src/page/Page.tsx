@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fromEvent, animationFrameScheduler } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { throttleTime, map } from 'rxjs/operators';
 
 import pageContext, { descriptionID } from '../context/pageContext';
 
@@ -28,10 +28,20 @@ export class Page extends React.PureComponent<
   };
 
   public scrollObserver = fromEvent(window, 'scroll')
-                            .pipe(
-                              throttleTime(0, animationFrameScheduler),
-                              // TODO: get window width and height to subsribed models
-                            );
+    .pipe(
+      throttleTime(0, animationFrameScheduler),
+      map(() => {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        const scrollBottom = scrollTop + windowHeight;
+
+        return {
+          scrollTop,
+          scrollBottom,
+          windowHeight,
+        };
+      }),
+    );
 
   public setCurrentActiveId = (activeDescriptionId: descriptionID) => {
     this.setState({ activeDescriptionId });
