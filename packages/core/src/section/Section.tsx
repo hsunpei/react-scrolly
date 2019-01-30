@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import pageContext from '../context/pageContext';
+
 export interface SectionProps {
   // TODO: deal with this case
   trackOnce: boolean;
@@ -26,6 +28,9 @@ export interface SectionState {
 }
 
 export class Section extends React.PureComponent<SectionProps, SectionState> {
+  /** Access the page context */
+  public static contextType = pageContext;
+
   public static defaultProps: SectionProps = {
     trackOnce: false,
     threshold: [0, 0.5, 1],
@@ -46,6 +51,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     console.log(isIntersecting,
       intersectionRatio,
       boundingClientRect,)
+
     this.setState({
       isIntersecting,
       intersectionRatio,
@@ -71,6 +77,8 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     });
 
     this.intersectObsr.observe(this.sectionRef.current!);
+
+    console.log('this.context',this.context)
   }
 
   public componentWillUnmount() {

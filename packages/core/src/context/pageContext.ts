@@ -9,7 +9,7 @@ interface ScrollPosition {
   windowHeight: number;
 }
 
-interface PageContextInterface {
+export interface PageContextInterface {
   activeDescriptionId: descriptionID;
   scrollObserver: Observable<ScrollPosition>;
   setCurrentActiveId: ((activeDescriptionId: descriptionID) => void);
