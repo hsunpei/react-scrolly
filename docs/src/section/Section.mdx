@@ -5,14 +5,19 @@ menu: Sections
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Section } from '@intrasections/core'
+import { Page, Section } from '@intrasections/core'
 
 # Section
 <Playground>
-  <div style={{ width: '100%', height: '12vh' }}>
-    <Section>
-      Test
-    </Section>
+  <div style={{ width: '100%', height: '50vh', background: '#B0E0E6', overflow: 'scroll' }}>
+    <Page>
+      <Section style={{ margin: '2rem auto', height: '30vh', background: '#FFD700' }}>
+        Section # 1
+      </Section>
+      <Section style={{ margin: '2rem auto', height: '30vh', background: '#FFD700' }}>
+        Section # 2
+      </Section>
+    </Page>
   </div>
 </Playground>
 
