@@ -49,8 +49,8 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     const [entry] = entries;
     const { isIntersecting, intersectionRatio, boundingClientRect } = entry;
     console.log(isIntersecting,
-      intersectionRatio,
-      boundingClientRect,)
+                intersectionRatio,
+                boundingClientRect);
 
     this.setState({
       isIntersecting,
@@ -61,7 +61,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
   public componentDidMount() {
     const { threshold } = this.props;
-
     this.intersectObsr = new IntersectionObserver(this.recordIntersection, {
       threshold,
 
@@ -78,12 +77,19 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
     this.intersectObsr.observe(this.sectionRef.current!);
 
-    console.log('this.context',this.context)
+    const { scrollObserver } = this.context;
+    scrollObserver.subscribe(val => console.log(val));
+
+    console.log('this.context', this.context);
   }
 
   public componentWillUnmount() {
+    const { scrollObserver } = this.context;
     /** Disable the entire IntersectionObserver */
     this.intersectObsr.disconnect();
+
+    /** Unsubscribe the page scrolling observer */
+    scrollObserver.unsubscribe();
   }
 
   public render() {
