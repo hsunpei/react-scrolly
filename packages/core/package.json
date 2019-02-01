@@ -39,6 +39,6 @@
     "url": "https://github.com/garfieldduck/intrasections/issues"
   },
   "dependencies": {
-    "rxjs": "^6.3.3"
+    "rxjs": "^6.4.0"
   }
 }

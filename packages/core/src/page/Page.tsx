@@ -27,7 +27,7 @@ export class Page extends React.PureComponent<
     activeDescriptionId: null,
   };
 
-  public scrollObserver = fromEvent(window, 'scroll')
+  public scrollObserver$ = fromEvent(window, 'scroll')
     .pipe(
       throttleTime(0, animationFrameScheduler),
       map(() => {
@@ -59,7 +59,7 @@ export class Page extends React.PureComponent<
       <Provider
         value={{
           activeDescriptionId,
-          scrollObserver: this.scrollObserver,
+          scrollObserver$: this.scrollObserver$,
           setCurrentActiveId: this.setCurrentActiveId,
         }}
       >

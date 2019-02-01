@@ -11,7 +11,7 @@ interface ScrollPosition {
 
 export interface PageContextInterface {
   activeDescriptionId: descriptionID;
-  scrollObserver: Observable<ScrollPosition>;
+  scrollObserver$: Observable<ScrollPosition>;
   setCurrentActiveId: ((activeDescriptionId: descriptionID) => void);
 }
 

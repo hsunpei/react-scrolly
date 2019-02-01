@@ -1,10 +1,13 @@
 import * as React from 'react';
 
 import pageContext from '../context/pageContext';
+import { Subscription } from 'rxjs';
 
 export interface SectionProps {
   // TODO: deal with this case
   trackOnce: boolean;
+
+  name: string;
 
   /**
    * The array of intersectionRatio thresholds which is used in the options of IntersectionObserver
@@ -31,7 +34,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   /** Access the page context */
   public static contextType = pageContext;
 
-  public static defaultProps: SectionProps = {
+  public static defaultProps = {
     trackOnce: false,
     threshold: [0, 0.5, 1],
   };
@@ -51,30 +54,42 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
    */
   public intersectObsr: IntersectionObserver;
 
+  public pageSubscription: Subscription;
+
+  /** Subscribe to the page scrolling observer */
+  private subscribePageScroll = () => {
+    const { scrollObserver$ } = this.context;
+    this.pageSubscription = scrollObserver$.subscribe(this.recordPageScroll);
+  };
+
   /** Unsubscribe the page scrolling observer */
   private unsubscribePageScroll = () => {
-    const { scrollObserver } = this.context;
-    if (scrollObserver.unsubscribe) {
-      scrollObserver.unsubscribe();
+    console.log('this.pageSubscription', this.pageSubscription)
+    if (this.pageSubscription) {
+      this.pageSubscription.unsubscribe();
     }
   };
 
+  // FIXME: this shoule be rewritten
   private updateScrollObsSubscription = (prevIntersecting: boolean, intersecting: boolean) => {
-    const { scrollObserver } = this.context;
+    const { scrollObserver$ } = this.context;
     if (!prevIntersecting && intersecting) {
-      scrollObserver.subscribe(this.recordPageScroll);
+      this.subscribePageScroll();
     } else if (prevIntersecting && !intersecting) {
+      console.log('***********unsubscribePageScroll', this.props.name)
       this.unsubscribePageScroll();
     }
   };
 
+  /** Use browser's IntersectionObserver to record whether the section is inside the viewport */
   private recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
     const { isIntersecting, intersectionRatio, boundingClientRect } = entry;
-    console.log(isIntersecting,
+    console.log(isIntersecting, this.pageSubscription,
                 intersectionRatio,
                 boundingClientRect);
 
+    // FIXME: this shoule be rewritten
     this.updateScrollObsSubscription(this.state.isIntersecting, isIntersecting);
 
     this.setState({
@@ -85,12 +100,12 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   };
 
   private recordPageScroll = (val) => {
-    console.log(val);
+    console.log('==========', this.state.isIntersecting, this.props.name, val);
   };
 
   public componentDidMount() {
     const { threshold } = this.props;
-    const { scrollObserver } = this.context;
+    const { scrollObserver$ } = this.context;
     this.intersectObsr = new IntersectionObserver(this.recordIntersection, {
       threshold,
 
@@ -107,14 +122,14 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
     this.intersectObsr.observe(this.sectionRef.current!);
 
-    scrollObserver.subscribe(this.recordPageScroll);
-
-    console.log('this.context', this.context);
+    // start subscribing to the window scrolling events from <Page>
+    this.subscribePageScroll();
   }
 
   public componentWillUnmount() {
-    /** Disable the entire IntersectionObserver */
+    // disable the entire IntersectionObserver
     this.intersectObsr.disconnect();
+    // stop subscribing to the window scrolling events from <Page>
     this.unsubscribePageScroll();
   }
 
