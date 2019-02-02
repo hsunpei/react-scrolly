@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
 import pageContext from '../context/pageContext';
-import { Subscription } from 'rxjs';
 
 export interface SectionProps {
   // TODO: deal with this case
@@ -54,30 +55,29 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
    */
   public intersectObsr: IntersectionObserver;
 
+  /**
+   * Observer to observe the scrolling position calculated in `<Page>`
+   * while the `<Section>` is inside the viewport
+   */
+  public pageScrollObsr$ = this.context.scrollObserver$.pipe(
+    takeWhile(() => {
+      return this.state.isIntersecting;
+    }),
+  );
+  /** Subscription to `pageScrollObsr$` */
   public pageSubscription: Subscription;
 
   /** Subscribe to the page scrolling observer */
   private subscribePageScroll = () => {
-    const { scrollObserver$ } = this.context;
-    this.pageSubscription = scrollObserver$.subscribe(this.recordPageScroll);
-  };
-
-  /** Unsubscribe the page scrolling observer */
-  private unsubscribePageScroll = () => {
-    console.log('this.pageSubscription', this.pageSubscription)
-    if (this.pageSubscription) {
-      this.pageSubscription.unsubscribe();
-    }
+    this.pageSubscription = this.pageScrollObsr$.subscribe(this.recordPageScroll);
   };
 
   // FIXME: this shoule be rewritten
   private updateScrollObsSubscription = (prevIntersecting: boolean, intersecting: boolean) => {
-    const { scrollObserver$ } = this.context;
     if (!prevIntersecting && intersecting) {
       this.subscribePageScroll();
     } else if (prevIntersecting && !intersecting) {
-      console.log('***********unsubscribePageScroll', this.props.name)
-      this.unsubscribePageScroll();
+      console.log('***********unsubscribePageScroll', this.props.name);
     }
   };
 
@@ -112,7 +112,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       /**  Observe changes in visibility of the section relative to the document's viewport */
       root: null,
 
-      // TODO: check this value
       /**
        * Watch only the changes in the intersection between the section and the viewport,
        * without any added or substracted space
@@ -130,7 +129,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     // disable the entire IntersectionObserver
     this.intersectObsr.disconnect();
     // stop subscribing to the window scrolling events from <Page>
-    this.unsubscribePageScroll();
+    this.pageSubscription.unsubscribe();
   }
 
   public render() {
