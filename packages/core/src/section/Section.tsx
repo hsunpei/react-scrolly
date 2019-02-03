@@ -4,6 +4,13 @@ import { takeWhile } from 'rxjs/operators';
 
 import pageContext from '../context/pageContext';
 
+export interface SectionPosition {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
 export interface SectionProps {
   // TODO: deal with this case
   trackOnce: boolean;
@@ -28,7 +35,7 @@ export interface SectionState {
   intersectionRatio: number;
 
   /** From IntersectionObserver: obtained by running the getBoundingClientRect() on the Section */
-  boundingClientRect: ClientRect | null;
+  sectionPos: SectionPosition | null;
 }
 
 export class Section extends React.PureComponent<SectionProps, SectionState> {
@@ -43,7 +50,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   public state: SectionState = {
     isIntersecting: false,
     intersectionRatio: 0,
-    boundingClientRect: null,
+    sectionPos: null,
   };
 
   /** Ref for this section */
@@ -81,10 +88,21 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       this.pageSubscription = this.pageScrollObsr$.subscribe(this.recordPageScroll);
     }
 
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const {
+      left, top, width, height,
+    } = boundingClientRect;
+
     this.setState({
       isIntersecting,
       intersectionRatio,
-      boundingClientRect,
+      sectionPos: {
+        width,
+        height,
+        left: left + scrollLeft,
+        top: top + scrollTop,
+      },
     });
   };
 
