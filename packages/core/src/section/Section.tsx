@@ -67,19 +67,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   /** Subscription to `pageScrollObsr$` */
   public pageSubscription: Subscription;
 
-  /** Subscribe to the page scrolling observer */
-  private subscribePageScroll = () => {
-    this.pageSubscription = this.pageScrollObsr$.subscribe(this.recordPageScroll);
-  };
-
-  // FIXME: this shoule be rewritten
-  private updateScrollObsSubscription = (prevIntersecting: boolean, intersecting: boolean) => {
-    if (!prevIntersecting && intersecting) {
-      this.subscribePageScroll();
-    } else if (prevIntersecting && !intersecting) {
-      console.log('***********unsubscribePageScroll', this.props.name);
-    }
-  };
 
   /** Use browser's IntersectionObserver to record whether the section is inside the viewport */
   private recordIntersection = (entries: IntersectionObserverEntry[]) => {
@@ -89,8 +76,10 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
                 intersectionRatio,
                 boundingClientRect);
 
-    // FIXME: this shoule be rewritten
-    this.updateScrollObsSubscription(this.state.isIntersecting, isIntersecting);
+    // If Section enters the viewport, start subscribing to the page scrolling observer
+    if (!this.state.isIntersecting && isIntersecting) {
+      this.pageSubscription = this.pageScrollObsr$.subscribe(this.recordPageScroll);
+    }
 
     this.setState({
       isIntersecting,
@@ -120,9 +109,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     });
 
     this.intersectObsr.observe(this.sectionRef.current!);
-
-    // start subscribing to the window scrolling events from <Page>
-    this.subscribePageScroll();
   }
 
   public componentWillUnmount() {
