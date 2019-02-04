@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fromEvent, animationFrameScheduler } from 'rxjs';
-import { throttleTime, map } from 'rxjs/operators';
+import { throttleTime, map, pairwise } from 'rxjs/operators';
 
 import pageContext, { descriptionID } from '../context/pageContext';
 
@@ -39,6 +39,20 @@ export class Page extends React.PureComponent<
           scrollTop,
           scrollBottom,
           windowHeight,
+        };
+      }),
+      // use pairwise to group pairs of consecutive emissions
+      // so that we can calculate `scrollOffset`
+      pairwise(),
+      map(([previousScroll, currentScroll]) => {
+        // amount of pixels scrolled by
+        // - postive: scroll down
+        // - negative: scroll up
+        const scrollOffset = currentScroll.scrollTop - previousScroll.scrollTop;
+
+        return {
+          ...currentScroll,
+          scrollOffset,
         };
       }),
     );
