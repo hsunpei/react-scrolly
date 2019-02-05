@@ -4,6 +4,12 @@ import { throttleTime, map, pairwise } from 'rxjs/operators';
 
 import pageContext, { descriptionID } from '../context/pageContext';
 
+export interface ScrollPosition {
+  scrollTop: number;
+  scrollBottom: number;
+  windowHeight: number;
+  scrollOffset: number;
+}
 export interface PageState {
   /** The ID of the current active description box */
   activeDescriptionId: descriptionID;
@@ -44,7 +50,7 @@ export class Page extends React.PureComponent<
       // use pairwise to group pairs of consecutive emissions
       // so that we can calculate `scrollOffset`
       pairwise(),
-      map(([previousScroll, currentScroll]) => {
+      map(([previousScroll, currentScroll]): ScrollPosition => {
         // amount of pixels scrolled by
         // - postive: scroll down
         // - negative: scroll up

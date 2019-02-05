@@ -4,13 +4,6 @@ import { takeWhile } from 'rxjs/operators';
 
 import pageContext from '../context/pageContext';
 
-export interface SectionPosition {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
-
 export interface SectionProps {
   // TODO: deal with this case
   trackOnce: boolean;
@@ -34,8 +27,27 @@ export interface SectionState {
   /** From IntersectionObserver: the ratio of intersectionRect area to boundingClientRect area */
   intersectionRatio: number;
 
-  /** From IntersectionObserver: obtained by running the getBoundingClientRect() on the Section */
-  sectionPos: SectionPosition | null;
+  /** From IntersectionObserver: the top of the Section + scrollTop */
+  sectionTop: number;
+
+  /** From IntersectionObserver: the height of the Section */
+  sectionHeight: number;
+
+  /** From <Page>: the pageYOffset of the window */
+  scrollTop: number;
+
+  /** From <Page>: the pageYOffset + height of the window */
+  scrollBottom: number;
+
+  /** From <Page>: the height of the window */
+  windowHeight: number;
+
+  /**
+   * From <Page>:
+   * the difference between the current scrolltop and previous scrolltop.
+   * Positive: if the user scroll down the page.
+   */
+  scrollOffset: number;
 }
 
 export class Section extends React.PureComponent<SectionProps, SectionState> {
@@ -50,7 +62,12 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   public state: SectionState = {
     isIntersecting: false,
     intersectionRatio: 0,
-    sectionPos: null,
+    sectionTop: 0,
+    sectionHeight: 0,
+    scrollTop: 0,
+    scrollBottom: 0,
+    windowHeight: 0,
+    scrollOffset: 0,
   };
 
   /** Ref for this section */
@@ -74,7 +91,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   /** Subscription to `pageScrollObsr$` */
   public pageSubscription: Subscription;
 
-
   /** Use browser's IntersectionObserver to record whether the section is inside the viewport */
   private recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
@@ -88,26 +104,27 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       this.pageSubscription = this.pageScrollObsr$.subscribe(this.recordPageScroll);
     }
 
-    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const {
-      left, top, width, height,
-    } = boundingClientRect;
+    const { top, height } = boundingClientRect;
 
     this.setState({
       isIntersecting,
       intersectionRatio,
-      sectionPos: {
-        width,
-        height,
-        left: left + scrollLeft,
-        top: top + scrollTop,
-      },
+      sectionTop: top + scrollTop,
+      sectionHeight: height,
     });
   };
 
-  private recordPageScroll = (val) => {
-    console.log('==========', this.state.isIntersecting, this.props.name, val);
+  /** Sets the scroll position information calculated in <Page> to the state */
+  private recordPageScroll = (scrollPos) => {
+    console.log('==========', this.state.isIntersecting, this.props.name, scrollPos);
+    const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
+    this.setState({
+      scrollTop,
+      scrollBottom,
+      windowHeight,
+      scrollOffset,
+    });
   };
 
   public componentDidMount() {
