@@ -2,7 +2,19 @@ import * as React from 'react';
 import { Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
+import { ScrollPosition } from '../page/Page';
 import pageContext from '../context/pageContext';
+
+export interface SectionState extends ScrollPosition {
+  /** From IntersectionObserver: whether the Section is intersecting the root */
+  isIntersecting: boolean;
+
+   /** From IntersectionObserver: the top of the Section + scrollTop */
+  sectionTop: number;
+
+  /** From IntersectionObserver: the height of the Section */
+  sectionHeight: number;
+}
 
 export interface SectionProps {
   // TODO: deal with this case
@@ -17,37 +29,7 @@ export interface SectionProps {
   threshold: number[] | 1;
   className?: string;
   style?: React.CSSProperties;
-  children?: React.ReactNode | React.ReactNode[];
-}
-
-export interface SectionState {
-  /** From IntersectionObserver: whether the Section is intersecting the root */
-  isIntersecting: boolean;
-
-  /** From IntersectionObserver: the ratio of intersectionRect area to boundingClientRect area */
-  intersectionRatio: number;
-
-  /** From IntersectionObserver: the top of the Section + scrollTop */
-  sectionTop: number;
-
-  /** From IntersectionObserver: the height of the Section */
-  sectionHeight: number;
-
-  /** From <Page>: the pageYOffset of the window */
-  scrollTop: number;
-
-  /** From <Page>: the pageYOffset + height of the window */
-  scrollBottom: number;
-
-  /** From <Page>: the height of the window */
-  windowHeight: number;
-
-  /**
-   * From <Page>:
-   * the difference between the current scrolltop and previous scrolltop.
-   * Positive: if the user scroll down the page.
-   */
-  scrollOffset: number;
+  children: (section: SectionState) => React.ReactNode;
 }
 
 export class Section extends React.PureComponent<SectionProps, SectionState> {
@@ -61,7 +43,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
   public state: SectionState = {
     isIntersecting: false,
-    intersectionRatio: 0,
     sectionTop: 0,
     sectionHeight: 0,
     scrollTop: 0,
@@ -94,9 +75,8 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   /** Use browser's IntersectionObserver to record whether the section is inside the viewport */
   private recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
-    const { isIntersecting, intersectionRatio, boundingClientRect } = entry;
+    const { isIntersecting, boundingClientRect } = entry;
     console.log(isIntersecting, this.pageSubscription,
-                intersectionRatio,
                 boundingClientRect);
 
     // If Section enters the viewport, start subscribing to the page scrolling observer
@@ -109,14 +89,13 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
     this.setState({
       isIntersecting,
-      intersectionRatio,
       sectionTop: top + scrollTop,
       sectionHeight: height,
     });
   };
 
   /** Sets the scroll position information calculated in <Page> to the state */
-  private recordPageScroll = (scrollPos) => {
+  private recordPageScroll = (scrollPos: ScrollPosition) => {
     console.log('==========', this.state.isIntersecting, this.props.name, scrollPos);
     const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
     this.setState({
@@ -129,7 +108,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
   public componentDidMount() {
     const { threshold } = this.props;
-    const { scrollObserver$ } = this.context;
+    // start observing whether the section is scrolled into the viewport
     this.intersectObsr = new IntersectionObserver(this.recordIntersection, {
       threshold,
 
@@ -161,6 +140,8 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       ...restProps
     } = this.props;
 
+    // TODO: calculate the scroll ration
+
     return (
       <div
         ref={this.sectionRef}
@@ -168,7 +149,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
         style={style}
         {...restProps}
       >
-        {children}
+        {children(this.state)}
       </div>
     );
   }

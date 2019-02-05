@@ -5,9 +5,19 @@ import { throttleTime, map, pairwise } from 'rxjs/operators';
 import pageContext, { descriptionID } from '../context/pageContext';
 
 export interface ScrollPosition {
+  /** The pageYOffset of the window obtained in <Page>  */
   scrollTop: number;
+
+  /** The pageYOffset + height of the window obtained in <Page> */
   scrollBottom: number;
+
+  /** The height of the window obtained in <Page> */
   windowHeight: number;
+
+  /**
+   * The difference between the current scrolltop and previous scrolltop obtained in <Page>.
+   * Positive: if the user scroll down the page.
+   */
   scrollOffset: number;
 }
 export interface PageState {
