@@ -17,8 +17,8 @@ export interface SectionState extends ScrollPosition {
 }
 
 export interface SectionProps {
-  // TODO: deal with this case
-  trackOnce: boolean;
+  // Only track the section using the IntersectionObserver once
+  trackonce: boolean;
 
   name: string;
 
@@ -37,7 +37,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   public static contextType = pageContext;
 
   public static defaultProps = {
-    trackOnce: false,
+    trackonce: false,
     threshold: [0, 0.5, 1],
   };
 
@@ -81,7 +81,10 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
     // If Section enters the viewport, start subscribing to the page scrolling observer
     if (!this.state.isIntersecting && isIntersecting) {
-      this.pageSubscription = this.pageScrollObsr$.subscribe(this.recordPageScroll);
+      this.pageSubscription = this.pageScrollObsr$.subscribe({
+        next: this.recordPageScroll,
+        complete: this.onPageSubscriptionComplete,
+      });
     }
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -104,6 +107,14 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       windowHeight,
       scrollOffset,
     });
+  };
+
+  private onPageSubscriptionComplete = () => {
+    const { trackonce } = this.props;
+
+    if (trackonce) {
+      this.intersectObsr.disconnect();
+    }
   };
 
   public componentDidMount() {
