@@ -14,6 +14,9 @@ export interface SectionState extends ScrollPosition {
 
   /** From IntersectionObserver: the height of the Section */
   sectionHeight: number;
+
+  /** Ratio of the Page being scrolled */
+  scrolledRatio: number;
 }
 
 export interface SectionProps {
@@ -44,11 +47,12 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   public state: SectionState = {
     isIntersecting: false,
     sectionTop: 0,
-    sectionHeight: 0,
+    sectionHeight: 1,
     scrollTop: 0,
     scrollBottom: 0,
     windowHeight: 0,
     scrollOffset: 0,
+    scrolledRatio: 0,
   };
 
   /** Ref for this section */
@@ -101,11 +105,22 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   private recordPageScroll = (scrollPos: ScrollPosition) => {
     console.log('==========', this.state.isIntersecting, this.props.name, scrollPos);
     const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
+    const { sectionTop, sectionHeight } = this.state;
+
+    let scrolledRatio = (scrollBottom - sectionTop) / sectionHeight;
+
+    if (scrolledRatio > 1) {
+      scrolledRatio = 1;
+    } else if (scrolledRatio < 0) {
+      scrolledRatio = 0;
+    }
+
     this.setState({
       scrollTop,
       scrollBottom,
       windowHeight,
       scrollOffset,
+      scrolledRatio,
     });
   };
 
@@ -151,8 +166,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       trackOnce,
       ...restProps
     } = this.props;
-
-    // TODO: calculate the scroll ration
 
     return (
       <div
