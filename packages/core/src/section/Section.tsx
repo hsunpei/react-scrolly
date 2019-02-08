@@ -17,9 +17,6 @@ export interface SectionState extends ScrollPosition {
 }
 
 export interface SectionProps {
-  // Only track the section using the IntersectionObserver once
-  trackonce: boolean;
-
   name: string;
 
   /**
@@ -30,6 +27,9 @@ export interface SectionProps {
   className?: string;
   style?: React.CSSProperties;
   children: (section: SectionState) => React.ReactNode;
+
+  /** Only track the section using the IntersectionObserver once */
+  trackOnce: boolean;
 }
 
 export class Section extends React.PureComponent<SectionProps, SectionState> {
@@ -37,7 +37,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   public static contextType = pageContext;
 
   public static defaultProps = {
-    trackonce: false,
+    trackOnce: false,
     threshold: [0, 0.5, 1],
   };
 
@@ -110,9 +110,9 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   };
 
   private onPageSubscriptionComplete = () => {
-    const { trackonce } = this.props;
+    const { trackOnce } = this.props;
 
-    if (trackonce) {
+    if (trackOnce) {
       this.intersectObsr.disconnect();
     }
   };
@@ -148,6 +148,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       className,
       style,
       children,
+      trackOnce,
       ...restProps
     } = this.props;
 
