@@ -26,16 +26,14 @@ export interface PageState {
 }
 
 export interface PageProps {
-  debounceTime?: number;
   children: React.ReactNode | React.ReactNode[];
 }
 
-export class Page extends React.PureComponent<
-  PageProps,
+export class Page<T extends PageProps> extends React.PureComponent<
+  T,
   PageState
 > {
   public static defaultProps: PageProps = {
-    debounceTime: 300,
     children: () => null,
   };
 
@@ -73,9 +71,12 @@ export class Page extends React.PureComponent<
       }),
     );
 
-  public setCurrentActiveId = (activeDescriptionId: descriptionID) => {
+  // tslint:disable-next-line:function-name
+  public _setCurrentActiveId(activeDescriptionId: descriptionID) {
     this.setState({ activeDescriptionId });
-  };
+  }
+
+  public setCurrentActiveId = this._setCurrentActiveId.bind(this);
 
   public render() {
     const { Provider } = pageContext;
