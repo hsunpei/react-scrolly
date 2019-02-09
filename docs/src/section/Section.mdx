@@ -9,12 +9,15 @@ import { Page, Section } from '@intrasections/core'
 
 # Section
 <Playground>
-  <div style={{ width: '100%', height: '50vh', background: '#B0E0E6', overflow: 'scroll' }}>
+  <div style={{ position: 'fixed', top: '50%', left: '50%', background: '#B0E0E6' }}>
+    Test
+  </div>
+  <div style={{ width: '100%', background: '#B0E0E6' }}>
     <Page>
-      <Section name="section1" trackOnce style={{ margin: '2rem auto', height: '30vh', background: '#FFD700' }}>
+      <Section name="section1" trackOnce style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
         {() => <div>Section # 1</div>}
       </Section>
-      <Section name="section2" style={{ margin: '2rem auto', height: '30vh', background: '#FFD700' }}>
+      <Section name="section2" style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
         {() => <div>Section # 2</div>}
       </Section>
     </Page>
