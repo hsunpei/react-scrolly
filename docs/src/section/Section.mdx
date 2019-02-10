@@ -7,6 +7,8 @@ menu: Sections
 import { Playground, PropsTable } from 'docz'
 import { Page, Section, StickySection } from '@intrasections/core'
 
+import { sectionStyle } from './styles'
+
 # Section
 <Playground>
   <div style={{ width: '100%', background: '#B0E0E6' }}>
@@ -15,11 +17,14 @@ import { Page, Section, StickySection } from '@intrasections/core'
         name="sticky1"
         renderNonSticky={
           <>
-            <Section name="section1" trackOnce style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
-              {() => <div>Section # 1</div>}
+            <Section name="section1" trackOnce style={sectionStyle}>
+              {({scrolledRatio}) => <div>Section # 1: {scrolledRatio}</div>}
             </Section>
-            <Section name="section2" style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
-              {() => <div>Section # 2</div>}
+            <Section name="section2" style={sectionStyle}>
+              {({scrolledRatio}) => <div>Section # 2: {scrolledRatio}</div>}
+            </Section>
+            <Section name="section3" style={sectionStyle}>
+              {({scrolledRatio}) => <div>Section # 3: {scrolledRatio}</div>}
             </Section>
           </>
         }
@@ -29,7 +34,11 @@ import { Page, Section, StickySection } from '@intrasections/core'
               width: '50%',
               height: '100%',
               margin: '0 auto',
-              background: '#B0A0E6'
+              background: '#B0A0E6',
+              display: 'flex',
+              justifyContent: 'center',
+              alignContent: 'center',
+              flexDirection: 'column',
             }}
           >
             Test
