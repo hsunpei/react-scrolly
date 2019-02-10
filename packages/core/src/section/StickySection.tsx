@@ -98,7 +98,9 @@ export const StickySection: React.SFC<StickySectionProps> = ({
             <div style={stickyStyle}>
               {children(section)}
             </div>
-            {renderNonSticky}
+            <div style={{ position: 'relative' }}>
+              {renderNonSticky}
+            </div>
           </>
         );
       }}
