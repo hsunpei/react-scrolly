@@ -5,21 +5,37 @@ menu: Sections
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Page, Section } from '@intrasections/core'
+import { Page, Section, StickySection } from '@intrasections/core'
 
 # Section
 <Playground>
-  <div style={{ position: 'fixed', top: '50%', left: '50%', background: '#B0E0E6' }}>
-    Test
-  </div>
   <div style={{ width: '100%', background: '#B0E0E6' }}>
     <Page>
-      <Section name="section1" trackOnce style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
-        {() => <div>Section # 1</div>}
-      </Section>
-      <Section name="section2" style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
-        {() => <div>Section # 2</div>}
-      </Section>
+      <StickySection
+        name="sticky1"
+        renderNonSticky={
+          <>
+            <Section name="section1" trackOnce style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
+              {() => <div>Section # 1</div>}
+            </Section>
+            <Section name="section2" style={{ margin: '2rem auto', height: '80vh', background: '#FFD700' }}>
+              {() => <div>Section # 2</div>}
+            </Section>
+          </>
+        }
+      >
+        {() => (
+          <div style={{
+              width: '50%',
+              height: '100%',
+              margin: '0 auto',
+              background: '#B0A0E6'
+            }}
+          >
+            Test
+          </div>
+        )}
+      </StickySection>
     </Page>
   </div>
 </Playground>

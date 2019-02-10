@@ -7,6 +7,12 @@ export interface StickySectionProps {
   className?: string;
   style?: React.CSSProperties;
   children: SectionProps['children'];
+
+  /**
+   * Render the non-sticky part of the section,
+   * which is placed on top of the children
+   */
+  renderNonSticky: React.ReactNode;
 }
 
 const positions: {
@@ -60,6 +66,7 @@ export const StickySection: React.SFC<StickySectionProps> = ({
   className,
   style,
   children,
+  renderNonSticky,
 }) => {
   const outerStyle: React.CSSProperties = {
     ...style,
@@ -83,12 +90,16 @@ export const StickySection: React.SFC<StickySectionProps> = ({
           width: '100%',
           height: `${windowHeight}px`,
           boxSizing: 'border-box',
+          transition: 'all 0.25s ease',
         };
 
         return (
-          <div style={stickyStyle}>
-            {children(section)}
-          </div>
+          <>
+            <div style={stickyStyle}>
+              {children(section)}
+            </div>
+            {renderNonSticky}
+          </>
         );
       }}
     </Section>
