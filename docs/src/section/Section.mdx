@@ -5,7 +5,7 @@ menu: Sections
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Page, Section, StickySection } from '@intrasections/core'
+import { Page, Section, StickySection, PageContext } from '@intrasections/core'
 
 import { sectionStyle } from './styles'
 
@@ -17,13 +17,13 @@ import { sectionStyle } from './styles'
         name="sticky1"
         renderNonSticky={
           <>
-            <Section name="section1" trackOnce style={sectionStyle}>
+            <Section trackingId="section1" trackOnce style={sectionStyle}>
               {({scrolledRatio}) => <div>Section # 1: {scrolledRatio}</div>}
             </Section>
-            <Section name="section2" style={sectionStyle}>
+            <Section trackingId="section2" style={sectionStyle}>
               {({scrolledRatio}) => <div>Section # 2: {scrolledRatio}</div>}
             </Section>
-            <Section name="section3" style={sectionStyle}>
+            <Section trackingId="section3" style={sectionStyle}>
               {({scrolledRatio}) => <div>Section # 3: {scrolledRatio}</div>}
             </Section>
           </>
@@ -41,7 +41,11 @@ import { sectionStyle } from './styles'
               flexDirection: 'column',
             }}
           >
-            Test
+            <PageContext.Consumer>
+              {({ activeSectionId }) => (
+                <span>{activeSectionId}</span>
+              )}
+            </PageContext.Consumer>
           </div>
         )}
       </StickySection>

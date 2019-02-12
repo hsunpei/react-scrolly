@@ -4,7 +4,7 @@ import { takeWhile } from 'rxjs/operators';
 
 import { ScrollPosition } from '../page/Page';
 import { getScrollPosition } from '../utils/getScrollPosition';
-import pageContext from '../context/pageContext';
+import { PageContext } from '../context/PageContext';
 
 export interface SectionState extends ScrollPosition {
   /** From IntersectionObserver: whether the Section is intersecting the root */
@@ -21,7 +21,14 @@ export interface SectionState extends ScrollPosition {
 }
 
 export interface SectionProps {
-  name: string;
+  /**
+   * By setting an unique Section ID, you can know which section the user is currently viewing.
+   * If `trackingId` is not null,
+   * `<Section>` will set it to `activeSectionId` of the `<Page>`
+   * Please make sure that on the same `scrollTop`,
+   * there is **NO** more than one tracked section (section with `trackingId`).
+   */
+  trackingId?: string;
 
   /**
    * The array of intersectionRatio thresholds which is used in the options of IntersectionObserver
@@ -38,7 +45,7 @@ export interface SectionProps {
 
 export class Section extends React.PureComponent<SectionProps, SectionState> {
   /** Access the page context */
-  public static contextType = pageContext;
+  public static contextType = PageContext;
 
   public static defaultProps = {
     trackOnce: false,
@@ -70,6 +77,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
    * while the `<Section>` is inside the viewport
    */
   public pageScrollObsr$ = this.context.scrollObserver$.pipe(
+    // TODO: clear the trackingID in the Page
     takeWhile(() => {
       return this.state.isIntersecting;
     }),
@@ -109,7 +117,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
   /** Sets the scroll position information calculated in <Page> to the state */
   private recordPageScroll = (scrollPos: ScrollPosition) => {
-    console.log('==========', this.state.isIntersecting, this.props.name, scrollPos);
+    console.log('==========', this.state.isIntersecting, this.props.trackingId, scrollPos);
     const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
     const { sectionTop, sectionHeight } = this.state;
 
@@ -121,6 +129,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       scrolledRatio = 0;
     }
 
+    // updates the ratio of the section being scrolled and the scroll positions
     this.setState({
       scrollTop,
       scrollBottom,
@@ -128,6 +137,13 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       scrollOffset,
       scrolledRatio,
     });
+
+    // updates the section currently being scrolled
+    const { setCurrentActiveId } = this.context;
+    const { trackingId } = this.props;
+    if (trackingId) {
+      setCurrentActiveId(trackingId);
+    }
   };
 
   private onPageSubscriptionComplete = () => {

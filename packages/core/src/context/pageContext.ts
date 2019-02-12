@@ -1,7 +1,7 @@
 import { createContext } from 'react';
 import { Observable } from 'rxjs';
 
-export type descriptionID = string | null;
+export type sectionID = string | null;
 
 interface ScrollPosition {
   scrollTop: number;
@@ -10,9 +10,9 @@ interface ScrollPosition {
 }
 
 export interface PageContextInterface {
-  activeDescriptionId: descriptionID;
+  activeSectionId: sectionID;
   scrollObserver$: Observable<ScrollPosition>;
-  setCurrentActiveId: ((activeDescriptionId: descriptionID) => void);
+  setCurrentActiveId: ((activeSectionId: sectionID) => void);
 }
 
-export default createContext<PageContextInterface | null>(null);
+export const PageContext = createContext<PageContextInterface | null>(null);

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Section, SectionProps } from './Section';
 
 export interface StickySectionProps {
-  name: string;
+  trackingId: SectionProps['trackingId'];
   className?: string;
   style?: React.CSSProperties;
   children: SectionProps['children'];
@@ -62,7 +62,7 @@ function getStickyPosition(
 }
 
 export const StickySection: React.SFC<StickySectionProps> = ({
-  name,
+  trackingId,
   className,
   style,
   children,
@@ -75,7 +75,7 @@ export const StickySection: React.SFC<StickySectionProps> = ({
   };
 
   return (
-    <Section name={name} className={className} style={outerStyle}>
+    <Section trackingId={trackingId} className={className} style={outerStyle}>
       {(section) => {
         const {
           scrollTop,
