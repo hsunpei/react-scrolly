@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
 import { ScrollPosition } from '../page/Page';
+import { getScrollPosition } from '../utils/getScrollPosition';
 import pageContext from '../context/pageContext';
 
 export interface SectionState extends ScrollPosition {
@@ -76,6 +77,14 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   /** Subscription to `pageScrollObsr$` */
   public pageSubscription: Subscription;
 
+  /** Subscribe to the `scrollObserver` from <Page> */
+  private subscribeScrollPos = () => {
+    this.pageSubscription = this.pageScrollObsr$.subscribe({
+      next: this.recordPageScroll,
+      complete: this.onPageSubscriptionComplete,
+    });
+  };
+
   /** Use browser's IntersectionObserver to record whether the section is inside the viewport */
   private recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
@@ -85,10 +94,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
     // If Section enters the viewport, start subscribing to the page scrolling observer
     if (!this.state.isIntersecting && isIntersecting) {
-      this.pageSubscription = this.pageScrollObsr$.subscribe({
-        next: this.recordPageScroll,
-        complete: this.onPageSubscriptionComplete,
-      });
+      this.subscribeScrollPos();
     }
 
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -149,6 +155,9 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     });
 
     this.intersectObsr.observe(this.sectionRef.current!);
+
+    // update the initial scroll information of the window into the section
+    this.setState(getScrollPosition());
   }
 
   public componentWillUnmount() {

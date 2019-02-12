@@ -3,6 +3,7 @@ import { fromEvent, animationFrameScheduler } from 'rxjs';
 import { throttleTime, map, pairwise } from 'rxjs/operators';
 
 import pageContext, { descriptionID } from '../context/pageContext';
+import { getScrollPosition } from '../utils/getScrollPosition';
 
 export interface ScrollPosition {
   /** The pageYOffset of the window obtained in <Page>  */
@@ -44,17 +45,7 @@ export class Page<T extends PageProps> extends React.PureComponent<
   public scrollObserver$ = fromEvent(window, 'scroll')
     .pipe(
       throttleTime(0, animationFrameScheduler),
-      map(() => {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        const scrollBottom = scrollTop + windowHeight;
-
-        return {
-          scrollTop,
-          scrollBottom,
-          windowHeight,
-        };
-      }),
+      map(() => getScrollPosition()),
       // use pairwise to group pairs of consecutive emissions
       // so that we can calculate `scrollOffset`
       pairwise(),
