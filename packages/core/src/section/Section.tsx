@@ -77,7 +77,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
    * while the `<Section>` is inside the viewport
    */
   public pageScrollObsr$ = this.context.scrollObserver$.pipe(
-    // TODO: clear the trackingID in the Page
     takeWhile(() => {
       return this.state.isIntersecting;
     }),
@@ -146,9 +145,20 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     }
   };
 
+  /**
+   * Executes after the subscription to the page scrolling completes,
+   * i.e., the section is scrolled out of the viewport
+   */
   private onPageSubscriptionComplete = () => {
-    const { trackOnce } = this.props;
+    const { trackingId, trackOnce } = this.props;
 
+    // clear the section ID tracked in the page
+    const { setCurrentActiveId } = this.context;
+    if (trackingId) {
+      setCurrentActiveId(undefined);
+    }
+
+    // disconnect from IntersectionObserver if the section is only tracked once
     if (trackOnce) {
       this.intersectObsr.disconnect();
     }
