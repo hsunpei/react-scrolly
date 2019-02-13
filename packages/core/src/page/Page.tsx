@@ -2,7 +2,7 @@ import * as React from 'react';
 import { fromEvent, animationFrameScheduler } from 'rxjs';
 import { throttleTime, map, pairwise } from 'rxjs/operators';
 
-import { PageContext, sectionID } from '../context/PageContext';
+import { PageContext, PageContextInterface, sectionID } from '../context/PageContext';
 import { getScrollPosition } from '../utils/getScrollPosition';
 
 export interface ScrollPosition {
@@ -21,10 +21,6 @@ export interface ScrollPosition {
    */
   scrollOffset: number;
 }
-export interface PageState {
-  /** The ID of the current active description box */
-  activeSectionId: sectionID;
-}
 
 export interface PageProps {
   children: React.ReactNode | React.ReactNode[];
@@ -32,14 +28,10 @@ export interface PageProps {
 
 export class Page<T extends PageProps> extends React.PureComponent<
   T,
-  PageState
+  PageContextInterface
 > {
   public static defaultProps: PageProps = {
     children: () => null,
-  };
-
-  public state: PageState = {
-    activeSectionId: null,
   };
 
   public scrollObserver$ = fromEvent(window, 'scroll')
@@ -69,21 +61,22 @@ export class Page<T extends PageProps> extends React.PureComponent<
 
   public setCurrentActiveId = this._setCurrentActiveId.bind(this);
 
+  public state: PageContextInterface = {
+    activeSectionId: null,
+    scrollObserver$: this.scrollObserver$,
+    setCurrentActiveId: this.setCurrentActiveId,
+  };
+
   public render() {
     const { Provider } = PageContext;
 
     const {
       children,
     } = this.props;
-    const { activeSectionId } = this.state;
 
     return (
       <Provider
-        value={{
-          activeSectionId,
-          scrollObserver$: this.scrollObserver$,
-          setCurrentActiveId: this.setCurrentActiveId,
-        }}
+        value={this.state}
       >
         {children}
       </Provider>
