@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 
-import { Section, SectionProps } from './Section';
+import { Section, SectionState, SectionProps } from './Section';
 
 export interface StickySectionProps {
   trackingId: SectionProps['trackingId'];
@@ -23,6 +23,7 @@ const positions: {
   absTop: {
     position: 'absolute',
     top: 0,
+    width: '100%',
   },
   fixed: {
     position: 'fixed',
@@ -31,22 +32,25 @@ const positions: {
   absBottom: {
     position: 'absolute',
     bottom: 0,
+    width: '100%',
   },
 };
 
 /**
  * Returns the position of the inner div of the StickySection
- * @param scrollTop - scrollTop of the window
- * @param scrollBottom - window height + scrollTop
- * @param sectionTop - the top of the Section + scrollTop
- * @param sectionBottom - sectionTop + sectionHeight
  */
 function getStickyPosition(
-  scrollTop: number,
-  scrollBottom: number,
-  sectionTop: number,
-  sectionBottom: number,
+  section: SectionState,
 ): React.CSSProperties {
+  const {
+    scrollTop,
+    scrollBottom,
+    sectionTop,
+    sectionHeight,
+    sectionBoundingRect,
+  } = section;
+  const sectionBottom = sectionTop + sectionHeight;
+
   if (scrollTop < sectionTop) {
     // appears on the top of the page
     return positions.absTop;
@@ -54,7 +58,11 @@ function getStickyPosition(
 
   if ((scrollTop >= sectionTop) && (sectionBottom > scrollBottom)) {
     // sticks to the viewport
-    return positions.fixed;
+    return {
+      ...positions.fixed,
+      left: sectionBoundingRect.left,
+      width: sectionBoundingRect.width,
+    };
   }
 
   // appears on the bottom of the page
@@ -71,26 +79,18 @@ export const StickySection: React.SFC<StickySectionProps> = ({
   const outerStyle: React.CSSProperties = {
     ...style,
     position: 'relative',
-    boxSizing: 'border-box',
   };
 
   return (
-    <Section trackingId={trackingId} className={className} style={outerStyle}>
+    <Section
+      trackingId={trackingId}
+      className={className}
+      style={outerStyle}
+    >
       {(section) => {
-        const {
-          scrollTop,
-          scrollBottom,
-          sectionTop,
-          sectionHeight,
-          windowHeight,
-        } = section;
         const stickyStyle: React.CSSProperties = {
-          ...getStickyPosition(scrollTop, scrollBottom, sectionTop, (sectionTop + sectionHeight)),
-          left: 0,
-          width: '100%',
-          height: `${windowHeight}px`,
-          boxSizing: 'border-box',
-          transition: 'all 0.25s ease',
+          ...getStickyPosition(section),
+          height: `${section.windowHeight}px`,
         };
 
         return (

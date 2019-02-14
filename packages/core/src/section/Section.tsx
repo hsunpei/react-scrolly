@@ -7,14 +7,17 @@ import { getScrollPosition } from '../utils/getScrollPosition';
 import { PageContext } from '../context/PageContext';
 
 export interface SectionState extends ScrollPosition {
-  /** From IntersectionObserver: whether the Section is intersecting the root */
+  /** From IntersectionObserver: whether the `<Section>` is intersecting the root */
   isIntersecting: boolean;
 
-   /** From IntersectionObserver: the top of the Section + scrollTop */
+   /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
   sectionTop: number;
 
-  /** From IntersectionObserver: the height of the Section */
+  /** From IntersectionObserver: the height of the `<Section>` */
   sectionHeight: number;
+
+  /** The bounding rectangle of `<Section>` */
+  sectionBoundingRect: ClientRect;
 
   /** Ratio of the Page being scrolled */
   scrolledRatio: number;
@@ -61,6 +64,14 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     windowHeight: 0,
     scrollOffset: 0,
     scrolledRatio: 0,
+    sectionBoundingRect: {
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      height: 1,
+      width: 1,
+    },
   };
 
   /** Ref for this section */
@@ -111,6 +122,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       isIntersecting,
       sectionTop: top + scrollTop,
       sectionHeight: height,
+      sectionBoundingRect: boundingClientRect,
     });
   };
 
