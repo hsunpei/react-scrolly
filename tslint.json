@@ -40,6 +40,9 @@
       "check-format",
       "allow-pascal-case"
     ],
+    "import-name": [true, {
+      "react": "React"
+    }],
     // ============= from tslint-eslint-rules =============
     "object-curly-spacing": [true, "always"],
     "ter-max-len": [
