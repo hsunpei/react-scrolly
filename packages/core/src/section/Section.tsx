@@ -158,6 +158,7 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     }
   };
 
+  /** updates the section bound when the window resizes */
   private updateSectionBounds = () => {
     const currentSect = this.sectionRef.current;
     // only update the resized `<Section>` if it is in the viewport
@@ -167,7 +168,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
         sectionBoundingRect,
         sectionHeight: sectionBoundingRect.height,
       });
-      console.log('updateSectionBounds', sectionBoundingRect)
     }
   };
 
