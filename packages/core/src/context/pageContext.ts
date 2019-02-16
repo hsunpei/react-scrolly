@@ -12,6 +12,7 @@ interface ScrollPosition {
 export interface PageContextInterface {
   activeSectionId: sectionID;
   scrollObserver$: Observable<ScrollPosition>;
+  resizeObserver$: Observable<Event>;
   setCurrentActiveId: ((activeSectionId: sectionID) => void);
 }
 

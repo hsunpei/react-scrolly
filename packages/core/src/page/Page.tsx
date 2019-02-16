@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fromEvent, animationFrameScheduler } from 'rxjs';
-import { throttleTime, map, pairwise } from 'rxjs/operators';
+import { debounceTime, map, pairwise } from 'rxjs/operators';
 
 import { PageContext, PageContextInterface, sectionID } from '../context/PageContext';
 import { getScrollPosition } from '../utils/getScrollPosition';
@@ -24,6 +24,11 @@ export interface ScrollPosition {
 
 export interface PageProps {
   children: React.ReactNode | React.ReactNode[];
+
+  /**
+   * Allows the window resizing event to go through again after the `resizeThrottleTime`
+   */
+  resizeThrottleTime: number;
 }
 
 export class Page<T extends PageProps> extends React.PureComponent<
@@ -32,11 +37,16 @@ export class Page<T extends PageProps> extends React.PureComponent<
 > {
   public static defaultProps: PageProps = {
     children: () => null,
+    resizeThrottleTime: 300,
   };
 
+  /**
+   * Observer to listen to page scroll
+   */
   public scrollObserver$ = fromEvent(window, 'scroll')
     .pipe(
-      throttleTime(0, animationFrameScheduler),
+      // throttled by the animation frame
+      debounceTime(0, animationFrameScheduler),
       map(() => getScrollPosition()),
       // use pairwise to group pairs of consecutive emissions
       // so that we can calculate `scrollOffset`
@@ -54,6 +64,14 @@ export class Page<T extends PageProps> extends React.PureComponent<
       }),
     );
 
+  /**
+   * Observer to listen to window resize
+   */
+  public resizeObserver$ = fromEvent(window, 'resize')
+    .pipe(
+      debounceTime(this.props.resizeThrottleTime),
+  );
+
   // tslint:disable-next-line:function-name
   public _setCurrentActiveId(activeSectionId: sectionID) {
     this.setState({ activeSectionId });
@@ -64,6 +82,7 @@ export class Page<T extends PageProps> extends React.PureComponent<
   public state: PageContextInterface = {
     activeSectionId: null,
     scrollObserver$: this.scrollObserver$,
+    resizeObserver$: this.resizeObserver$,
     setCurrentActiveId: this.setCurrentActiveId,
   };
 

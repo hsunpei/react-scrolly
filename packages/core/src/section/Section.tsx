@@ -92,8 +92,12 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
       return this.state.isIntersecting;
     }),
   );
+
   /** Subscription to `pageScrollObsr$` */
   public pageSubscription: Subscription;
+
+  /** Subscription to `resizeObserver$` */
+  public resizeSubscription: Subscription;
 
   /** Subscribe to the `scrollObserver` from <Page> */
   private subscribeScrollPos = () => {
@@ -107,8 +111,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
   private recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
     const { isIntersecting, boundingClientRect } = entry;
-    console.log(isIntersecting, this.pageSubscription,
-                boundingClientRect);
 
     // If Section enters the viewport, start subscribing to the page scrolling observer
     if (!this.state.isIntersecting && isIntersecting) {
@@ -128,7 +130,6 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
   /** Sets the scroll position information calculated in <Page> to the state */
   private recordPageScroll = (scrollPos: ScrollPosition) => {
-    console.log('==========', this.state.isIntersecting, this.props.trackingId, scrollPos);
     const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
     const { sectionTop, sectionHeight } = this.state;
 
@@ -154,6 +155,19 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     const { trackingId } = this.props;
     if (trackingId) {
       setCurrentActiveId(trackingId);
+    }
+  };
+
+  private updateSectionBounds = () => {
+    const currentSect = this.sectionRef.current;
+    // only update the resized `<Section>` if it is in the viewport
+    if (currentSect && this.state.isIntersecting) {
+      const sectionBoundingRect = currentSect.getBoundingClientRect();
+      this.setState({
+        sectionBoundingRect,
+        sectionHeight: sectionBoundingRect.height,
+      });
+      console.log('updateSectionBounds', sectionBoundingRect)
     }
   };
 
@@ -194,6 +208,11 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
 
     this.intersectObsr.observe(this.sectionRef.current!);
 
+    // subscribe to the window resize event
+    this.resizeSubscription = this.context.resizeObserver$.subscribe({
+      next: this.updateSectionBounds,
+    });
+
     // update the initial scroll information of the window into the section
     this.setState(getScrollPosition());
   }
@@ -203,6 +222,8 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     this.intersectObsr.disconnect();
     // stop subscribing to the window scrolling events from <Page>
     this.pageSubscription.unsubscribe();
+    // stop subscribing to the window resizing events from <Page>
+    this.resizeSubscription.unsubscribe();
   }
 
   public render() {
