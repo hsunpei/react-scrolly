@@ -21,7 +21,7 @@
   ],
   "scripts": {
     "prepublish": "lerna run prepublish",
-    "start": "docz dev",
+    "start": "docz dev --port 5000",
     "lint": "lerna run lint --parallel --stream"
   }
 }
