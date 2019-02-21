@@ -151,10 +151,10 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     });
 
     // updates the section currently being scrolled
-    const { setCurrentActiveId } = this.context;
+    const { setActiveSectionId } = this.context;
     const { trackingId } = this.props;
     if (trackingId) {
-      setCurrentActiveId(trackingId);
+      setActiveSectionId(trackingId);
     }
   };
 
@@ -179,9 +179,9 @@ export class Section extends React.PureComponent<SectionProps, SectionState> {
     const { trackingId, trackOnce } = this.props;
 
     // clear the section ID tracked in the page
-    const { setCurrentActiveId } = this.context;
+    const { setActiveSectionId } = this.context;
     if (trackingId) {
-      setCurrentActiveId(undefined);
+      setActiveSectionId(undefined);
     }
 
     // disconnect from IntersectionObserver if the section is only tracked once

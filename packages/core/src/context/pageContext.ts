@@ -13,7 +13,7 @@ export interface PageContextInterface {
   activeSectionId: sectionID;
   scrollObserver$: Observable<ScrollPosition>;
   resizeObserver$: Observable<Event>;
-  setCurrentActiveId: ((activeSectionId: sectionID) => void);
+  setActiveSectionId: (activeSectionId: sectionID) => void;
 }
 
 export const PageContext = createContext<PageContextInterface | null>(null);

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { FunctionComponent, useState, useRef } from 'react';
 import { fromEvent, animationFrameScheduler } from 'rxjs';
 import { debounceTime, map, pairwise } from 'rxjs/operators';
 
@@ -23,7 +23,7 @@ export interface ScrollPosition {
 }
 
 export interface PageProps {
-  children: React.ReactNode | React.ReactNode[];
+  children: React.ReactNode;
 
   /**
    * Allows the window resizing event to go through again after the `resizeThrottleTime`
@@ -31,19 +31,18 @@ export interface PageProps {
   resizeThrottleTime: number;
 }
 
-export class Page<T extends PageProps> extends React.PureComponent<
-  T,
-  PageContextInterface
-> {
-  public static defaultProps: PageProps = {
-    children: () => null,
-    resizeThrottleTime: 300,
-  };
+export const Page: FunctionComponent<PageProps> = ({
+  children,
+  resizeThrottleTime = 300,
+}) => {
+  // TODO: change it with dispatch
+  const [activeSectionId, setActiveSectionId] = useState<sectionID>(null);
 
   /**
    * Observer to listen to page scroll
    */
-  public scrollObserver$ = fromEvent(window, 'scroll')
+  const scrollObserverRef = useRef(
+    fromEvent(window, 'scroll')
     .pipe(
       // throttled by the animation frame
       debounceTime(0, animationFrameScheduler),
@@ -62,43 +61,32 @@ export class Page<T extends PageProps> extends React.PureComponent<
           scrollOffset,
         };
       }),
-    );
+    ),
+  );
 
   /**
    * Observer to listen to window resize
    */
-  public resizeObserver$ = fromEvent(window, 'resize')
+  const resizeObserverRef = useRef(
+    fromEvent(window, 'resize')
     .pipe(
-      debounceTime(this.props.resizeThrottleTime),
+      debounceTime(resizeThrottleTime),
+    ),
   );
 
-  // tslint:disable-next-line:function-name
-  public _setCurrentActiveId(activeSectionId: sectionID) {
-    this.setState({ activeSectionId });
-  }
-
-  public setCurrentActiveId = this._setCurrentActiveId.bind(this);
-
-  public state: PageContextInterface = {
-    activeSectionId: null,
-    scrollObserver$: this.scrollObserver$,
-    resizeObserver$: this.resizeObserver$,
-    setCurrentActiveId: this.setCurrentActiveId,
+  const { Provider } = PageContext;
+  const context: PageContextInterface = {
+    activeSectionId,
+    setActiveSectionId,
+    scrollObserver$: scrollObserverRef.current,
+    resizeObserver$: resizeObserverRef.current,
   };
 
-  public render() {
-    const { Provider } = PageContext;
-
-    const {
-      children,
-    } = this.props;
-
-    return (
-      <Provider
-        value={this.state}
-      >
-        {children}
-      </Provider>
-    );
-  }
-}
+  return (
+    <Provider
+      value={context}
+    >
+      {children}
+    </Provider>
+  );
+};
