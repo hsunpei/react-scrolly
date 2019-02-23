@@ -1,4 +1,5 @@
 import { Subscription } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 import React, {
   useState,
   useEffect,
@@ -11,12 +12,14 @@ import { ScrollPosition } from '../page/Page';
 import { IntersectionInfo } from './useIntersectionObserver';
 
 export function usePageScroll(
-  pageScrollObsr$: PageContextInterface['scrollObserver$'],
+  sectionRef: React.RefObject<HTMLElement>,
+  scrollObsr$: PageContextInterface['scrollObserver$'],
+  resizeObsr$: PageContextInterface['resizeObserver$'],
   activeSectionId: PageContextInterface['activeSectionId'],
   setActiveSectionId: PageContextInterface['setActiveSectionId'],
 ) {
-  const intersectingRef = useRef<boolean>(false);
-  const scrollSubscriptionRef = useRef<Subscription | null>(null);
+  const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
+
   const [scrollInfo, setScrollInfo] = useState({
     scrollTop: 0,
     scrollBottom: 0,
@@ -24,6 +27,32 @@ export function usePageScroll(
     scrollOffset: 0,
     scrolledRatio: 0,
   });
+  const pageScrollObsrRef = useRef(scrollObsr$.pipe(
+    takeWhile(() => {
+      // subscribe only when the section is in the viewport
+      return isIntersecting;
+    }),
+  ));
+  const scrollSubscriptionRef = useRef<Subscription | null>(null);
+
+  const [sectionPosition, setSectionPosition] = useState({
+    sectionTop: 0,
+    sectionHeight: 1,
+    sectionBoundingRect: {
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      height: 1,
+      width: 1,
+    },
+  });
+  const resizeObsrRef = useRef(resizeObsr$.pipe(
+    takeWhile(() => {
+      return isIntersecting;
+    }),
+  ));
+  const resizeSubscriptionRef = useRef<Subscription | null>(null);
 
   useEffect(() => {
     return () => {
@@ -37,7 +66,7 @@ export function usePageScroll(
   /** Sets the scroll position information calculated in <Page> to the state */
   const recordPageScroll = (scrollPos: ScrollPosition) => {
     const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
-    const { sectionTop, sectionHeight } = scrollInfo;
+    const { sectionTop, sectionHeight } = sectionPosition;
 
     let scrolledRatio = (scrollBottom - sectionTop) / sectionHeight;
 
@@ -63,8 +92,8 @@ export function usePageScroll(
   };
 
   /** Subscribe to the `scrollObserver` from <Page> */
-  const subscribeScrollPos = () => {
-    scrollSubscriptionRef.current = pageScrollObsr$.subscribe({
+  const subscribeScrolling = () => {
+    scrollSubscriptionRef.current = pageScrollObsrRef.current.subscribe({
       next: recordPageScroll,
       complete: () => {
         if (activeSectionId) {
@@ -74,18 +103,52 @@ export function usePageScroll(
     });
   };
 
+  /** updates the section bound when the window resizes */
+  const updateSectionBounds = () => {
+    const currentSect = sectionRef.current;
+    // only update the resized `<Section>` if it is in the viewport
+    if (currentSect) {
+      const sectionBoundingRect = currentSect.getBoundingClientRect();
+      setSectionPosition({
+        sectionBoundingRect,
+        sectionTop: sectionBoundingRect.top,
+        sectionHeight: sectionBoundingRect.height,
+      });
+    }
+  };
+
+  /** Subscribe to the `resizeObserver` from <Page> */
+  const subscribeResizing = () => {
+    resizeSubscriptionRef.current = resizeObsrRef.current.subscribe({
+      next: updateSectionBounds,
+    });
+  };
+
   const setIntersecting = (intersection: IntersectionInfo) => {
-    const preIntersecting = intersectingRef.current;
-    const currentIntersecting = intersection.isIntersecting;
-    intersectingRef.current = currentIntersecting;
+    const {
+      isIntersecting: curIntersecting,
+      sectionTop,
+      sectionHeight,
+      sectionBoundingRect,
+    } = intersection;
 
     // If Section enters the viewport, start subscribing to the page scrolling observer
-    if (!preIntersecting && currentIntersecting) {
-      subscribeScrollPos();
+    if (!isIntersecting && curIntersecting) {
+      subscribeScrolling();
+      subscribeResizing();
     }
+
+    // update the intersecting status
+    setIsIntersecting(curIntersecting);
+
+    //  update the section position
+    setSectionPosition({ sectionTop, sectionHeight, sectionBoundingRect });
   };
 
   return {
     setIntersecting,
+    isIntersecting
+    scrollInfo,
+    sectionPosition,
   };
 }
