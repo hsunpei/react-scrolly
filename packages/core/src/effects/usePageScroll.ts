@@ -12,6 +12,22 @@ import { ScrollPosition } from '../page/Page';
 
 import { IntersectionInfo } from './useIntersectionObserver';
 
+export interface ScrollInfo extends ScrollPosition {
+  /** Ratio of the Page being scrolled */
+  scrolledRatio: number;
+}
+
+export interface SectionPosition {
+   /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
+  sectionTop: number;
+
+   /** From IntersectionObserver: the height of the `<Section>` */
+  sectionHeight: number;
+
+   /** The bounding rectangle of `<Section>` */
+  sectionBoundingRect: ClientRect;
+}
+
 export function usePageScroll(
   sectionRef: React.RefObject<HTMLElement>,
 ) {
@@ -24,7 +40,7 @@ export function usePageScroll(
   } = context!;
   const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
 
-  const [scrollInfo, setScrollInfo] = useState({
+  const [scrollInfo, setScrollInfo] = useState<ScrollInfo>({
     scrollTop: 0,
     scrollBottom: 0,
     windowHeight: 0,
@@ -39,7 +55,7 @@ export function usePageScroll(
   ));
   const scrollSubscriptionRef = useRef<Subscription | null>(null);
 
-  const [sectionPosition, setSectionPosition] = useState({
+  const [sectionPosition, setSectionPosition] = useState<SectionPosition>({
     sectionTop: 0,
     sectionHeight: 1,
     sectionBoundingRect: {
@@ -63,6 +79,10 @@ export function usePageScroll(
       // stop subscribing to the window scrolling events from <Page>
       if (scrollSubscriptionRef.current) {
         scrollSubscriptionRef.current.unsubscribe();
+      }
+      // stop subscribing to the window resizing events from <Page>
+      if (resizeSubscriptionRef.current) {
+        resizeSubscriptionRef.current.unsubscribe();
       }
     };
   },        []);
@@ -150,10 +170,19 @@ export function usePageScroll(
   };
 
   return {
-    // TODO: mark the types
+    /**
+     * Function to be passed in `useIntersectionObserver` to get the information
+     * related to the intersection of the section with the viewport.
+     */
     setIntersecting,
+
+    /** Whether the section is intersecting with the viewport */
     isIntersecting,
+
+    /** Information related to the window scrolling and the ratio of the section being scrolled */
     scrollInfo,
+
+    /** The position of the section */
     sectionPosition,
   };
 }
