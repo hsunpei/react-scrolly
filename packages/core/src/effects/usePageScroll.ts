@@ -4,20 +4,24 @@ import React, {
   useState,
   useEffect,
   useRef,
+  useContext,
 } from 'react';
 
-import { PageContextInterface } from '../context/PageContext';
+import { PageContext, PageContextInterface } from '../context/PageContext';
 import { ScrollPosition } from '../page/Page';
 
 import { IntersectionInfo } from './useIntersectionObserver';
 
 export function usePageScroll(
   sectionRef: React.RefObject<HTMLElement>,
-  scrollObsr$: PageContextInterface['scrollObserver$'],
-  resizeObsr$: PageContextInterface['resizeObserver$'],
-  activeSectionId: PageContextInterface['activeSectionId'],
-  setActiveSectionId: PageContextInterface['setActiveSectionId'],
 ) {
+  const context = useContext<PageContextInterface | null>(PageContext);
+  const {
+    scrollObserver$,
+    resizeObserver$,
+    activeSectionId,
+    setActiveSectionId,
+  } = context!;
   const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
 
   const [scrollInfo, setScrollInfo] = useState({
@@ -27,7 +31,7 @@ export function usePageScroll(
     scrollOffset: 0,
     scrolledRatio: 0,
   });
-  const pageScrollObsrRef = useRef(scrollObsr$.pipe(
+  const pageScrollObsrRef = useRef(scrollObserver$.pipe(
     takeWhile(() => {
       // subscribe only when the section is in the viewport
       return isIntersecting;
@@ -47,7 +51,7 @@ export function usePageScroll(
       width: 1,
     },
   });
-  const resizeObsrRef = useRef(resizeObsr$.pipe(
+  const resizeObsrRef = useRef(resizeObserver$.pipe(
     takeWhile(() => {
       return isIntersecting;
     }),
@@ -146,8 +150,9 @@ export function usePageScroll(
   };
 
   return {
+    // TODO: mark the types
     setIntersecting,
-    isIntersecting
+    isIntersecting,
     scrollInfo,
     sectionPosition,
   };
