@@ -20,24 +20,10 @@ export interface IntersectionInfo {
 }
 
 export function useIntersectionObserver(
-  threshold: number,
   sectionRef: React.RefObject<HTMLElement>,
-  onIntersectionUpdated = (inters: IntersectionInfo) => inters,
+  onIntersectionUpdated: (inters: IntersectionInfo) => void,
+  threshold: number[] | 1 = [0, 0.5, 1],
 ) {
-  const [intersection, setIntersection] = useState<IntersectionInfo>({
-    isIntersecting: false,
-    sectionTop: 0,
-    sectionHeight: 1,
-    sectionBoundingRect: {
-      top: 0,
-      right: 0,
-      left: 0,
-      bottom: 0,
-      height: 1,
-      width: 1,
-    },
-  });
-
   /**
    * Stores references to the observer listening to section intersection with the viewport
    */
@@ -56,8 +42,6 @@ export function useIntersectionObserver(
       sectionHeight: height,
       sectionBoundingRect: boundingClientRect,
     };
-
-    setIntersection(intersecting);
 
     onIntersectionUpdated(intersecting);
   };
@@ -82,9 +66,11 @@ export function useIntersectionObserver(
 
     // unsubscribe to the intersection observer on unmounting
     return () => {
-      intersectionObserverRef.current!.disconnect();
+      if (intersectionObserverRef.current) {
+        intersectionObserverRef.current.disconnect();
+      }
     };
   },        []);
 
-  return intersection;
+  return intersectionObserverRef.current;
 }

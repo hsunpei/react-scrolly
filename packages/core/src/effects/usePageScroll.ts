@@ -10,7 +10,7 @@ import React, {
 import { PageContext, PageContextInterface } from '../context/PageContext';
 import { ScrollPosition } from '../page/Page';
 
-import { IntersectionInfo } from './useIntersectionObserver';
+import { useIntersectionObserver, IntersectionInfo } from './useIntersectionObserver';
 
 export interface ScrollInfo extends ScrollPosition {
   /** Ratio of the Page being scrolled */
@@ -29,7 +29,11 @@ export interface SectionPosition {
 }
 
 export function usePageScroll(
+  /** Ref of the section being tracked */
   sectionRef: React.RefObject<HTMLElement>,
+
+  /** Only track the section using the IntersectionObserver once */
+  trackOnce: boolean,
 ) {
   const context = useContext<PageContextInterface | null>(PageContext);
   const {
@@ -39,6 +43,8 @@ export function usePageScroll(
     setActiveSectionId,
   } = context!;
   const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
+
+  const intersectObsr = useIntersectionObserver(sectionRef, onIntersectionUpdated);
 
   const [scrollInfo, setScrollInfo] = useState<ScrollInfo>({
     scrollTop: 0,
@@ -88,7 +94,7 @@ export function usePageScroll(
   },        []);
 
   /** Sets the scroll position information calculated in <Page> to the state */
-  const recordPageScroll = (scrollPos: ScrollPosition) => {
+  function recordPageScroll(scrollPos: ScrollPosition) {
     const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
     const { sectionTop, sectionHeight } = sectionPosition;
 
@@ -113,42 +119,26 @@ export function usePageScroll(
     if (activeSectionId) {
       setActiveSectionId(activeSectionId);
     }
-  };
+  }
 
   /** Subscribe to the `scrollObserver` from <Page> */
-  const subscribeScrolling = () => {
+  function subscribeScrolling() {
     scrollSubscriptionRef.current = pageScrollObsrRef.current.subscribe({
       next: recordPageScroll,
       complete: () => {
         if (activeSectionId) {
+          // clear the section ID tracked in the page
           setActiveSectionId(null);
+        }
+        // unobserve IntersectionObserver if the section is only tracked once
+        if (trackOnce && intersectObsr) {
+          intersectObsr.disconnect();
         }
       },
     });
-  };
+  }
 
-  /** updates the section bound when the window resizes */
-  const updateSectionBounds = () => {
-    const currentSect = sectionRef.current;
-    // only update the resized `<Section>` if it is in the viewport
-    if (currentSect) {
-      const sectionBoundingRect = currentSect.getBoundingClientRect();
-      setSectionPosition({
-        sectionBoundingRect,
-        sectionTop: sectionBoundingRect.top,
-        sectionHeight: sectionBoundingRect.height,
-      });
-    }
-  };
-
-  /** Subscribe to the `resizeObserver` from <Page> */
-  const subscribeResizing = () => {
-    resizeSubscriptionRef.current = resizeObsrRef.current.subscribe({
-      next: updateSectionBounds,
-    });
-  };
-
-  const setIntersecting = (intersection: IntersectionInfo) => {
+  function onIntersectionUpdated(intersection: IntersectionInfo) {
     const {
       isIntersecting: curIntersecting,
       sectionTop,
@@ -167,15 +157,30 @@ export function usePageScroll(
 
     //  update the section position
     setSectionPosition({ sectionTop, sectionHeight, sectionBoundingRect });
-  };
+  }
+
+  /** updates the section bound when the window resizes */
+  function updateSectionBounds() {
+    const currentSect = sectionRef.current;
+    // only update the resized `<Section>` if it is in the viewport
+    if (currentSect) {
+      const sectionBoundingRect = currentSect.getBoundingClientRect();
+      setSectionPosition({
+        sectionBoundingRect,
+        sectionTop: sectionBoundingRect.top,
+        sectionHeight: sectionBoundingRect.height,
+      });
+    }
+  }
+
+  /** Subscribe to the `resizeObserver` from <Page> */
+  function subscribeResizing() {
+    resizeSubscriptionRef.current = resizeObsrRef.current.subscribe({
+      next: updateSectionBounds,
+    });
+  }
 
   return {
-    /**
-     * Function to be passed in `useIntersectionObserver` to get the information
-     * related to the intersection of the section with the viewport.
-     */
-    setIntersecting,
-
     /** Whether the section is intersecting with the viewport */
     isIntersecting,
 
