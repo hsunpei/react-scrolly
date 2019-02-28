@@ -1,16 +1,17 @@
-import { Subscription } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { map, pairwise, takeWhile, combineLatest } from 'rxjs/operators';
 import React, {
   useState,
   useEffect,
   useRef,
   useContext,
+  useCallback,
 } from 'react';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
 import { ScrollPosition } from '../page/Page';
 
-import { useIntersectionObserver, IntersectionInfo } from './useIntersectionObserver';
+import { useIntersectionObservable } from './useIntersectionObservable';
+import { useSubscription } from './useSubscription';
 
 export interface ScrollInfo extends ScrollPosition {
   /** Ratio of the Page being scrolled */
@@ -28,23 +29,37 @@ export interface SectionPosition {
   sectionBoundingRect: ClientRect;
 }
 
+export interface SectionInfo {
+  /** Whether the section is intersecting with the viewport */
+  isIntersecting: boolean;
+
+  /** Information related to the window scrolling and the ratio of the section being scrolled */
+  scrollInfo: ScrollInfo;
+
+  /** The position of the section */
+  sectionPosition: SectionPosition;
+}
+
 export function usePageScroll(
   /** Ref of the section being tracked */
   sectionRef: React.RefObject<HTMLElement>,
 
-  /** Only track the section using the IntersectionObserver once */
-  trackOnce: boolean,
-) {
-  const context = useContext<PageContextInterface | null>(PageContext);
-  const {
-    scrollObserver$,
-    resizeObserver$,
-    activeSectionId,
-    setActiveSectionId,
-  } = context!;
-  const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
+  /**
+   * By setting an unique Section ID, you can know which section the user is currently viewing.
+   * If `trackingId` is not null,
+   * `usePageScroll` will set it to `activeSectionId` of the `<Page>`
+   * Please make sure that on the same `scrollTop`,
+   * there is **NO** more than one tracked section (section with `trackingId`).
+   */
+  trackingId?: string,
 
-  const intersectObsr = useIntersectionObserver(sectionRef, onIntersectionUpdated);
+  /** Only track the section using the IntersectionObserver once */
+  trackOnce = false,
+): SectionInfo {
+  const [intersectingState, setIntersectingState] = useState<boolean>(false);
+
+  const context = useContext<PageContextInterface | null>(PageContext);
+  const { scrollObserver$, setActiveSectionId } = context!;
 
   const [scrollInfo, setScrollInfo] = useState<ScrollInfo>({
     scrollTop: 0,
@@ -53,13 +68,6 @@ export function usePageScroll(
     scrollOffset: 0,
     scrolledRatio: 0,
   });
-  const pageScrollObsrRef = useRef(scrollObserver$.pipe(
-    takeWhile(() => {
-      // subscribe only when the section is in the viewport
-      return isIntersecting;
-    }),
-  ));
-  const scrollSubscriptionRef = useRef<Subscription | null>(null);
 
   const [sectionPosition, setSectionPosition] = useState<SectionPosition>({
     sectionTop: 0,
@@ -73,121 +81,98 @@ export function usePageScroll(
       width: 1,
     },
   });
-  const resizeObsrRef = useRef(resizeObserver$.pipe(
-    takeWhile(() => {
-      return isIntersecting;
-    }),
+
+  /** Function to set the subscription to the IntersectionObservable  */
+  const { setSubscription: setIntersectSubscpt } = useSubscription(null);
+
+  /** Function to set the subscription to the page scrolling  */
+  const { setSubscription: setPageSubscpt } = useSubscription(null);
+
+  // convert the intersecting state as [preIntersecting, currentIntersecting]
+  const intersectObsr$ = useIntersectionObservable(sectionRef);
+  const intersectingRef = useRef(intersectObsr$.pipe(
+    map(({ isIntersecting }) => isIntersecting),
   ));
-  const resizeSubscriptionRef = useRef<Subscription | null>(null);
+  const intersectingPairRef = useRef(intersectingRef.current.pipe(pairwise()));
 
-  useEffect(() => {
-    return () => {
-      // stop subscribing to the window scrolling events from <Page>
-      if (scrollSubscriptionRef.current) {
-        scrollSubscriptionRef.current.unsubscribe();
-      }
-      // stop subscribing to the window resizing events from <Page>
-      if (resizeSubscriptionRef.current) {
-        resizeSubscriptionRef.current.unsubscribe();
-      }
-    };
-  },        []);
+  /** Observer to the page scrolling when the section is in the viewport */
+  const pageScrollObsrRef = useRef(intersectingRef.current.pipe(
+    combineLatest(scrollObserver$),
+    // take the page scrolling only when the section is in viewport
+    takeWhile(latest => latest[0]),
+    // emit the information related to the scrolling position
+    map(latest => latest[1]),
+  ));
 
-  /** Sets the scroll position information calculated in <Page> to the state */
-  function recordPageScroll(scrollPos: ScrollPosition) {
-    const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
-    const { sectionTop, sectionHeight } = sectionPosition;
+  /** Function to subscribe to the page scrolling */
+  const subscribeScrolling = useCallback(
+    () => {
+      setPageSubscpt(pageScrollObsrRef.current.subscribe({
+        // record the page scrolling
+        next: (scrollPos: ScrollPosition) => {
+          const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
+          const { sectionTop, sectionHeight } = sectionPosition;
 
-    let scrolledRatio = (scrollBottom - sectionTop) / sectionHeight;
+          let scrolledRatio = (scrollBottom - sectionTop) / sectionHeight;
 
-    if (scrolledRatio > 1) {
-      scrolledRatio = 1;
-    } else if (scrolledRatio < 0) {
-      scrolledRatio = 0;
-    }
+          if (scrolledRatio > 1) {
+            scrolledRatio = 1;
+          } else if (scrolledRatio < 0) {
+            scrolledRatio = 0;
+          }
 
-    // updates the ratio of the section being scrolled and the scroll positions
-    setScrollInfo({
-      scrollTop,
-      scrollBottom,
-      windowHeight,
-      scrollOffset,
-      scrolledRatio,
-    });
+          console.log('recordPageScroll', scrollPos, scrollInfo);
 
-    // updates the section currently being scrolled
-    if (activeSectionId) {
-      setActiveSectionId(activeSectionId);
-    }
-  }
+          // updates the ratio of the section being scrolled and the scroll positions
+          setScrollInfo({
+            scrollTop,
+            scrollBottom,
+            windowHeight,
+            scrollOffset,
+            scrolledRatio,
+          });
 
-  /** Subscribe to the `scrollObserver` from <Page> */
-  function subscribeScrolling() {
-    scrollSubscriptionRef.current = pageScrollObsrRef.current.subscribe({
-      next: recordPageScroll,
-      complete: () => {
-        if (activeSectionId) {
-          // clear the section ID tracked in the page
-          setActiveSectionId(null);
-        }
-        // unobserve IntersectionObserver if the section is only tracked once
-        if (trackOnce && intersectObsr) {
-          intersectObsr.disconnect();
-        }
-      },
-    });
-  }
+          // TODO: updates the section currently being scrolled
+        },
+        complete: () => {
+          if (trackingId) {
+            // TODO: clear the section ID tracked in the page
+            setActiveSectionId(null);
+          }
+        },
+      }));
+    },
+    [],
+  );
 
-  function onIntersectionUpdated(intersection: IntersectionInfo) {
-    const {
-      isIntersecting: curIntersecting,
-      sectionTop,
-      sectionHeight,
-      sectionBoundingRect,
-    } = intersection;
+  useEffect(
+    () => {
+    // TODO: subscribe page scrolling here instead
+    // 1. change useIntersectionObserver as state passing
+    // 2. move onIntersectionUpdated here
+      setIntersectSubscpt(intersectingPairRef.current.subscribe(
+        ([preIntersecting, curIntersecting]) => {
+          setIntersectingState(curIntersecting);
+          // If Section enters the viewport, start subscribing to the page scrolling observer
+          if (!preIntersecting && curIntersecting) {
+            subscribeScrolling();
+          }
+        },
+      ));
+    },
+    [],
+  );
 
-    // If Section enters the viewport, start subscribing to the page scrolling observer
-    if (!isIntersecting && curIntersecting) {
-      subscribeScrolling();
-      subscribeResizing();
-    }
-
-    // update the intersecting status
-    setIsIntersecting(curIntersecting);
-
-    //  update the section position
-    setSectionPosition({ sectionTop, sectionHeight, sectionBoundingRect });
-  }
-
-  /** updates the section bound when the window resizes */
-  function updateSectionBounds() {
-    const currentSect = sectionRef.current;
-    // only update the resized `<Section>` if it is in the viewport
-    if (currentSect) {
-      const sectionBoundingRect = currentSect.getBoundingClientRect();
-      setSectionPosition({
-        sectionBoundingRect,
-        sectionTop: sectionBoundingRect.top,
-        sectionHeight: sectionBoundingRect.height,
-      });
-    }
-  }
-
-  /** Subscribe to the `resizeObserver` from <Page> */
-  function subscribeResizing() {
-    resizeSubscriptionRef.current = resizeObsrRef.current.subscribe({
-      next: updateSectionBounds,
-    });
-  }
+  useEffect(
+    () => {
+      console.log('**********', intersectingState, scrollInfo);
+    },
+    [intersectingState],
+  );
 
   return {
-    /** Whether the section is intersecting with the viewport */
-    isIntersecting,
-
-    /** Information related to the window scrolling and the ratio of the section being scrolled */
     scrollInfo,
-
-    /** The position of the section */
     sectionPosition,
+    isIntersecting: intersectingState,
   };
 }
