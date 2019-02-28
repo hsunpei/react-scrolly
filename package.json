@@ -13,6 +13,7 @@
     "tslint": "^5.12.1",
     "tslint-config-airbnb": "^5.11.1",
     "tslint-react": "^3.6.0",
+    "tslint-react-hooks": "^1.1.0",
     "typescript": "^3.3.3"
   },
   "private": true,

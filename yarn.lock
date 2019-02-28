@@ -8684,6 +8684,10 @@ tslint-microsoft-contrib@~5.2.1:
   dependencies:
     tsutils "^2.27.2 <2.29.0"
 
+tslint-react-hooks@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tslint-react-hooks/-/tslint-react-hooks-1.1.0.tgz#f1b96ec5177790ce9298e8d2d767b68de1f42c73"
+
 tslint-react@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/tslint-react/-/tslint-react-3.6.0.tgz#7f462c95c4a0afaae82507f06517ff02942196a1"

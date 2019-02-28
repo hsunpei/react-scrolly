@@ -5,7 +5,8 @@
     "tslint:recommended",
     "tslint-eslint-rules",
     "tslint-config-airbnb",
-    "tslint-react"
+    "tslint-react",
+    "tslint-react-hooks"
   ],
   "jsRules": {},
   "rules": {
