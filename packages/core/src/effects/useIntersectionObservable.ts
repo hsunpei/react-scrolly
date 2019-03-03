@@ -9,12 +9,6 @@ export interface IntersectionInfo {
   /** From IntersectionObserver: whether the `<Section>` is intersecting the root */
   isIntersecting: boolean;
 
-   /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
-  sectionTop: number;
-
-  /** From IntersectionObserver: the height of the `<Section>` */
-  sectionHeight: number;
-
   /** The bounding rectangle of `<Section>` */
   sectionBoundingRect: ClientRect;
 }
@@ -36,13 +30,8 @@ export function useIntersectionObservable(
   const recordIntersection = (entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
     const { isIntersecting, boundingClientRect } = entry;
-
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const { top, height } = boundingClientRect;
     const intersecting: IntersectionInfo = {
       isIntersecting,
-      sectionTop: top + scrollTop,
-      sectionHeight: height,
       sectionBoundingRect: boundingClientRect,
     };
 

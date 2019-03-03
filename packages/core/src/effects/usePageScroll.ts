@@ -37,7 +37,7 @@ export interface SectionInfo {
   scrollInfo: ScrollInfo;
 
   /** The position of the section */
-  sectionPosition: SectionPosition;
+  sectionPosition: ClientRect;
 }
 
 export function usePageScroll(
@@ -69,17 +69,13 @@ export function usePageScroll(
     scrolledRatio: 0,
   });
 
-  const [sectionPosition, setSectionPosition] = useState<SectionPosition>({
-    sectionTop: 0,
-    sectionHeight: 1,
-    sectionBoundingRect: {
-      top: 0,
-      right: 0,
-      left: 0,
-      bottom: 0,
-      height: 1,
-      width: 1,
-    },
+  const [sectionPosition, setSectionPosition] = useState<ClientRect>({
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+    height: 1,
+    width: 1,
   });
 
   /** Function to set the subscription to the IntersectionObservable  */
@@ -111,9 +107,10 @@ export function usePageScroll(
         // record the page scrolling
         next: (scrollPos: ScrollPosition) => {
           const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
-          const { sectionTop, sectionHeight } = sectionPosition;
+          const { top, height } = sectionPosition;
+          const sectionTop = top + scrollTop;
 
-          let scrolledRatio = (scrollBottom - sectionTop) / sectionHeight;
+          let scrolledRatio = (scrollBottom - sectionTop) / height;
 
           if (scrolledRatio > 1) {
             scrolledRatio = 1;
@@ -150,6 +147,7 @@ export function usePageScroll(
     // TODO: subscribe page scrolling here instead
     // 1. change useIntersectionObserver as state passing
     // 2. move onIntersectionUpdated here
+    // TODO: try to use repeat of RX instead
       setIntersectSubscpt(intersectingPairRef.current.subscribe(
         ([preIntersecting, curIntersecting]) => {
           setIntersectingState(curIntersecting);
