@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { map, filter, pairwise, takeWhile, combineLatest } from 'rxjs/operators';
 import React, {
   useState,
@@ -9,25 +10,13 @@ import React, {
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
 
-import { useIntersectionObservable } from './useIntersectionObservable';
+import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
-
 
 export function useSectionPosition(
   /** Ref of the section being tracked */
   sectionRef: React.RefObject<HTMLElement>,
-
-  /**
-   * By setting an unique Section ID, you can know which section the user is currently viewing.
-   * If `trackingId` is not null,
-   * `usePageScroll` will set it to `activeSectionId` of the `<Page>`
-   * Please make sure that on the same `scrollTop`,
-   * there is **NO** more than one tracked section (section with `trackingId`).
-   */
-  trackingId?: string,
-
-  /** Only track the section using the IntersectionObserver once */
-  trackOnce = false,
+  intersectObsr$: Observable<IntersectionInfo>,
 ) {
 
   const context = useContext<PageContextInterface | null>(PageContext);
@@ -52,7 +41,6 @@ export function useSectionPosition(
   const { setSubscription: setPageSubscpt } = useSubscription(null);
 
   // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const intersectObsr$ = useIntersectionObservable(sectionRef);
   const intersectingRef = useRef(intersectObsr$.pipe(
     map(({ isIntersecting }) => isIntersecting),
   ));
@@ -117,7 +105,5 @@ export function useSectionPosition(
     [sectionPosition],
   );
 
-  return {
-    sectionPosition,
-  };
+  return sectionPosition;
 }

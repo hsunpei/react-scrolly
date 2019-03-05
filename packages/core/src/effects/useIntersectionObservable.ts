@@ -2,7 +2,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 // TODO: add the polyfill of IntersectionObserver
 
 export interface IntersectionInfo {
@@ -16,14 +16,14 @@ export interface IntersectionInfo {
 export function useIntersectionObservable(
   sectionRef: React.RefObject<HTMLElement>,
   threshold: number[] | 1 = [0, 0.5, 1],
-) {
+): Observable<IntersectionInfo> {
   /**
    * Stores references to the observer listening to section intersection with the viewport
    */
   const intersectionObserverRef = useRef<IntersectionObserver | null>(null);
 
   // transform the intersectionObserver as a RX Observable
-  const intersectSubjectRef = useRef(new Subject());
+  const intersectSubjectRef = useRef(new Subject<IntersectionInfo>());
   const intersectObservableRef = useRef(intersectSubjectRef.current.asObservable());
 
   /** Use browser's IntersectionObserver to record whether the section is inside the viewport */

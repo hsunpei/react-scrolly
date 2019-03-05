@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { map, pairwise, takeWhile, combineLatest } from 'rxjs/operators';
 import React, {
   useState,
@@ -10,7 +11,7 @@ import React, {
 import { PageContext, PageContextInterface } from '../context/PageContext';
 import { ScrollPosition } from '../page/Page';
 
-import { useIntersectionObservable } from './useIntersectionObservable';
+import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
 
 export interface ScrollInfo extends ScrollPosition {
@@ -29,20 +30,8 @@ export interface SectionPosition {
   sectionBoundingRect: ClientRect;
 }
 
-export interface SectionInfo {
-  /** Whether the section is intersecting with the viewport */
-  isIntersecting: boolean;
-
-  /** Information related to the window scrolling and the ratio of the section being scrolled */
-  scrollInfo: ScrollInfo;
-
-  /** The position of the section */
-  sectionPosition: ClientRect;
-}
-
 export function usePageScroll(
-  /** Ref of the section being tracked */
-  sectionRef: React.RefObject<HTMLElement>,
+  intersectObsr$: Observable<IntersectionInfo>,
 
   /**
    * By setting an unique Section ID, you can know which section the user is currently viewing.
@@ -55,7 +44,7 @@ export function usePageScroll(
 
   /** Only track the section using the IntersectionObserver once */
   trackOnce = false,
-): SectionInfo {
+) {
   const [intersectingState, setIntersectingState] = useState<boolean>(false);
 
   const context = useContext<PageContextInterface | null>(PageContext);
@@ -85,7 +74,6 @@ export function usePageScroll(
   const { setSubscription: setPageSubscpt } = useSubscription(null);
 
   // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const intersectObsr$ = useIntersectionObservable(sectionRef);
   const intersectingRef = useRef(intersectObsr$.pipe(
     map(({ isIntersecting }) => isIntersecting),
   ));
@@ -170,7 +158,6 @@ export function usePageScroll(
 
   return {
     scrollInfo,
-    sectionPosition,
     isIntersecting: intersectingState,
   };
 }
