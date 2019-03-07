@@ -1,5 +1,15 @@
 import { Observable } from 'rxjs';
-import { map, filter, pairwise, takeWhile, combineLatest } from 'rxjs/operators';
+import {
+  map,
+  filter,
+  pairwise,
+  startWith,
+  takeWhile,
+  combineLatest,
+  tap,
+  merge,
+  repeat,
+ } from 'rxjs/operators';
 import React, {
   useState,
   useEffect,
@@ -48,52 +58,74 @@ export function useSectionPosition(
 
   /** Observer to the window resizing events */
   // TODO: simplify it: using map (IntersectionObserver) + merge
-  const resizeObsrRef = useRef(intersectingRef.current.pipe(
-    // take the page scrolling only when the section is in viewport
-    takeWhile(isIntersecting => isIntersecting),
-    combineLatest(resizeObserver$.pipe(
-      map(() => {
-        const currentSect = sectionRef.current;
-        if (currentSect) {
-          const sectionBoundingRect = currentSect.getBoundingClientRect();
-          return sectionBoundingRect;
-        }
-        return undefined;
-      }),
-      filter(rect => typeof rect !== 'undefined'),
-    )),
-    map(latest => latest[1]),
+  const resizeObsrRef = useRef(intersectObsr$.pipe(
+    // // take the page scrolling only when the section is in viewport
+    // takeWhile(({ isIntersecting }) => isIntersecting),
+    // map(({ sectionBoundingRect }) => sectionBoundingRect),
+    map(({ isIntersecting }) => isIntersecting),
+    startWith(true),
+    combineLatest(
+      resizeObserver$.pipe(
+        map(() => {
+          const currentSect = sectionRef.current;
+          if (currentSect) {
+            const sectionBoundingRect = currentSect.getBoundingClientRect();
+            return sectionBoundingRect;
+          }
+          return undefined;
+        }),
+        filter(rect => typeof rect !== 'undefined'),
+        tap(latest => {
+          console.log('%%% resizeObserver', latest)
+        }),
+      ),
+      (isIntersecting, sectionBoundingRect) => {
+        return { isIntersecting, sectionBoundingRect };
+      },
+    ),
+    merge(intersectObsr$),
+    takeWhile(({ isIntersecting }) => isIntersecting),
+    map(({ sectionBoundingRect }) => sectionBoundingRect),
+    tap(latest => {
+      console.log('%%% Latest', latest)
+    }),
   ));
 
   /** updates the section bound when the window resizes */
   const updateSectionBounds = useCallback(
     () => {
-      setPageSubscpt(resizeObsrRef.current.subscribe({
-        next: (sectionBoundingRect) => {
-          setSectionPosition(sectionBoundingRect!);
-        },
-      }));
+      // setPageSubscpt(resizeObsrRef.current.subscribe({
+      //   next: (sectionBoundingRect) => {
+      //     setSectionPosition(sectionBoundingRect!);
+      //   },
+      // }));
     },
     [],
   );
 
   useEffect(
     () => {
-      setIntersectSubscpt(intersectingPairRef.current.subscribe(
-        ([preIntersecting, curIntersecting]) => {
-          // If Section enters the viewport, start subscribing to the window resizing observer
-          if (!preIntersecting && curIntersecting) {
-            updateSectionBounds();
-          }
-        },
-      ));
+      // setIntersectSubscpt(intersectingPairRef.current.subscribe(
+      //   ([preIntersecting, curIntersecting]) => {
+      //     // If Section enters the viewport, start subscribing to the window resizing observer
+      //     if (!preIntersecting && curIntersecting) {
+      //       updateSectionBounds();
+      //     }
+      //   },
+      // ));
 
-      // update the section bounds provided by IntersectionObserver
-      setSectionSubscrpt(intersectObsr$.pipe(
-        map(({ sectionBoundingRect }) => (
-          setSectionPosition(sectionBoundingRect)
-        )),
-      ));
+      // // update the section bounds provided by IntersectionObserver
+      // setSectionSubscrpt(intersectObsr$.pipe(
+      //   map(({ sectionBoundingRect }) => (
+      //     setSectionPosition(sectionBoundingRect)
+      //   )),
+      // ));
+
+      setPageSubscpt(resizeObsrRef.current.subscribe({
+        next: (sectionBoundingRect) => {
+          setSectionPosition(sectionBoundingRect!);
+        },
+      }));
     },
     [],
   );
