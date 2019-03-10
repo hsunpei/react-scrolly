@@ -1,21 +1,14 @@
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {
   map,
   filter,
-  pairwise,
-  startWith,
-  takeWhile,
-  combineLatest,
-  tap,
-  merge,
-  repeat,
+  switchMap,
  } from 'rxjs/operators';
 import React, {
   useState,
   useEffect,
   useRef,
   useContext,
-  useCallback,
 } from 'react';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
@@ -41,100 +34,45 @@ export function useSectionPosition(
     width: 1,
   });
 
-  /** Function to set the subscription to the IntersectionObservable  */
-  const { setSubscription: setIntersectSubscpt } = useSubscription(null);
-
-  /** Function to set the subscription to the IntersectionObservable  */
-  const { setSubscription: setSectionSubscrpt } = useSubscription(null);
-
-  /** Function to set the subscription to the page scrolling  */
+  /** Function to set the subscription to the page resizing  */
   const { setSubscription: setPageSubscpt } = useSubscription(null);
 
-  // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const intersectingRef = useRef(intersectObsr$.pipe(
-    map(({ isIntersecting }) => isIntersecting),
-  ));
-  const intersectingPairRef = useRef(intersectingRef.current.pipe(pairwise()));
-
   /** Observer to the window resizing events */
-  // TODO: simplify it: using map (IntersectionObserver) + merge
-  const resizeObsrRef = useRef(intersectObsr$.pipe(
-    // // take the page scrolling only when the section is in viewport
-    // takeWhile(({ isIntersecting }) => isIntersecting),
-    // map(({ sectionBoundingRect }) => sectionBoundingRect),
-    map(({ isIntersecting }) => isIntersecting),
-    startWith(true),
-    combineLatest(
-      resizeObserver$.pipe(
-        map(() => {
-          const currentSect = sectionRef.current;
-          if (currentSect) {
-            const sectionBoundingRect = currentSect.getBoundingClientRect();
-            return sectionBoundingRect;
-          }
-          return undefined;
-        }),
-        filter(rect => typeof rect !== 'undefined'),
-        tap(latest => {
-          console.log('%%% resizeObserver', latest)
-        }),
-      ),
-      (isIntersecting, sectionBoundingRect) => {
-        return { isIntersecting, sectionBoundingRect };
-      },
-    ),
-    merge(intersectObsr$),
-    takeWhile(({ isIntersecting }) => isIntersecting),
-    map(({ sectionBoundingRect }) => sectionBoundingRect),
-    tap(latest => {
-      console.log('%%% Latest', latest)
+  const combinedResizeObsRef = useRef(intersectObsr$.pipe(
+    switchMap((intersectInfo) => {
+      const { isIntersecting, sectionBoundingRect } = intersectInfo;
+      return isIntersecting
+        ? resizeObserver$.pipe(
+          map(() => {
+            const currentSect = sectionRef.current;
+            if (currentSect) {
+              const rect = currentSect.getBoundingClientRect();
+              return rect;
+            }
+            return undefined;
+          }),
+          filter(rect => typeof rect !== 'undefined'),
+        )
+        // when the section is scrolled out of the viewport, update its dimension
+        : of(sectionBoundingRect);
     }),
   ));
 
-  /** updates the section bound when the window resizes */
-  const updateSectionBounds = useCallback(
-    () => {
-      // setPageSubscpt(resizeObsrRef.current.subscribe({
-      //   next: (sectionBoundingRect) => {
-      //     setSectionPosition(sectionBoundingRect!);
-      //   },
-      // }));
-    },
-    [],
-  );
-
   useEffect(
     () => {
-      // setIntersectSubscpt(intersectingPairRef.current.subscribe(
-      //   ([preIntersecting, curIntersecting]) => {
-      //     // If Section enters the viewport, start subscribing to the window resizing observer
-      //     if (!preIntersecting && curIntersecting) {
-      //       updateSectionBounds();
-      //     }
-      //   },
-      // ));
+      // update the dimension of the section when it's mounted
+      if (sectionRef.current) {
+        setSectionPosition(sectionRef.current.getBoundingClientRect());
+      }
 
-      // // update the section bounds provided by IntersectionObserver
-      // setSectionSubscrpt(intersectObsr$.pipe(
-      //   map(({ sectionBoundingRect }) => (
-      //     setSectionPosition(sectionBoundingRect)
-      //   )),
-      // ));
-
-      setPageSubscpt(resizeObsrRef.current.subscribe({
+      // set the subscription to the page resizing events and intersection events
+      setPageSubscpt(combinedResizeObsRef.current.subscribe({
         next: (sectionBoundingRect) => {
           setSectionPosition(sectionBoundingRect!);
         },
       }));
     },
     [],
-  );
-
-  useEffect(
-    () => {
-      console.log('^^^^^^^^^', sectionPosition);
-    },
-    [sectionPosition],
   );
 
   return sectionPosition;
