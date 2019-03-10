@@ -49,7 +49,7 @@ export function useSectionRatio(
 ): SectionInfo {
 
   // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const intersectObsr$ = useIntersectionObservable(sectionRef);
+  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
 
   const sectionPosition = useSectionPosition(sectionRef, intersectObsr$);
 

@@ -9,12 +9,15 @@ export interface IntersectionInfo {
   /** From IntersectionObserver: whether the `<Section>` is intersecting the root */
   isIntersecting: boolean;
 
+  trackingId?: string;
+
   /** The bounding rectangle of `<Section>` */
   sectionBoundingRect: ClientRect;
 }
 
 export function useIntersectionObservable(
   sectionRef: React.RefObject<HTMLElement>,
+  trackingId: IntersectionInfo['trackingId'],
   threshold: number[] | 1 = [0, 0.5, 1],
 ): Observable<IntersectionInfo> {
   /**
@@ -32,10 +35,11 @@ export function useIntersectionObservable(
     const { isIntersecting, boundingClientRect } = entry;
     const intersecting: IntersectionInfo = {
       isIntersecting,
+      trackingId,
       sectionBoundingRect: boundingClientRect,
     };
 
-    console.log('recordIntersection', intersecting)
+    // console.log('recordIntersection', intersecting)
 
     intersectSubjectRef.current.next(intersecting);
   };
