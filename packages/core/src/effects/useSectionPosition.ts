@@ -9,6 +9,7 @@ import React, {
   useEffect,
   useRef,
   useContext,
+  useCallback,
 } from 'react';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
@@ -16,22 +17,33 @@ import { PageContext, PageContextInterface } from '../context/PageContext';
 import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
 
+export interface SectionPosition {
+  /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
+  sectionTop: number;
+
+  /** The bounding rectangle of `<Section>` */
+  boundingRect: ClientRect;
+}
+
 export function useSectionPosition(
   /** Ref of the section being tracked */
   sectionRef: React.RefObject<HTMLElement>,
   intersectObsr$: Observable<IntersectionInfo>,
-) {
+): SectionPosition {
 
   const context = useContext<PageContextInterface | null>(PageContext);
   const { resizeObserver$ } = context!;
 
-  const [sectionPosition, setSectionPosition] = useState<ClientRect>({
-    top: 0,
-    right: 0,
-    left: 0,
-    bottom: 0,
-    height: 1,
-    width: 1,
+  const [sectionPosition, setSectionPosition] = useState<SectionPosition>({
+    sectionTop: 0,
+    boundingRect: {
+      top: 0,
+      right: 0,
+      left: 0,
+      bottom: 0,
+      height: 1,
+      width: 1,
+    },
   });
 
   /** Function to set the subscription to the page resizing  */
@@ -58,17 +70,33 @@ export function useSectionPosition(
     }),
   ));
 
+  /**
+   * Update the absolute position of the section
+   */
+  const updateSectionPosition = useCallback(
+    (boundingClientRect) => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const { top } = boundingClientRect;
+
+      setSectionPosition({
+        sectionTop: top + scrollTop,
+        boundingRect: boundingClientRect,
+      });
+    },
+    [],
+  );
+
   useEffect(
     () => {
       // update the dimension of the section when it's mounted
       if (sectionRef.current) {
-        setSectionPosition(sectionRef.current.getBoundingClientRect());
+        updateSectionPosition(sectionRef.current.getBoundingClientRect());
       }
 
       // set the subscription to the page resizing events and intersection events
       setPageSubscpt(combinedResizeObsRef.current.subscribe({
         next: (sectionBoundingRect) => {
-          setSectionPosition(sectionBoundingRect!);
+          updateSectionPosition(sectionBoundingRect!);
         },
       }));
     },

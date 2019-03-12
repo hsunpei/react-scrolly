@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { map, pairwise, takeWhile, combineLatest } from 'rxjs/operators';
-import React, {
+import {
   useState,
   useEffect,
   useRef,
@@ -13,11 +13,6 @@ import { ScrollPosition } from '../page/Page';
 
 import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
-
-export interface ScrollInfo extends ScrollPosition {
-  /** Ratio of the Page being scrolled */
-  scrolledRatio: number;
-}
 
 export interface SectionPosition {
    /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
@@ -50,21 +45,11 @@ export function usePageScroll(
   const context = useContext<PageContextInterface | null>(PageContext);
   const { scrollObserver$, setActiveSectionId } = context!;
 
-  const [scrollInfo, setScrollInfo] = useState<ScrollInfo>({
+  const [scrollInfo, setScrollInfo] = useState<ScrollPosition>({
     scrollTop: 0,
     scrollBottom: 0,
     windowHeight: 0,
     scrollOffset: 0,
-    scrolledRatio: 0,
-  });
-
-  const [sectionPosition, setSectionPosition] = useState<ClientRect>({
-    top: 0,
-    right: 0,
-    left: 0,
-    bottom: 0,
-    height: 1,
-    width: 1,
   });
 
   /** Function to set the subscription to the IntersectionObservable  */
@@ -95,18 +80,8 @@ export function usePageScroll(
         // record the page scrolling
         next: (scrollPos: ScrollPosition) => {
           const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
-          const { top, height } = sectionPosition;
-          const sectionTop = top + scrollTop;
 
-          let scrolledRatio = (scrollBottom - sectionTop) / height;
-
-          if (scrolledRatio > 1) {
-            scrolledRatio = 1;
-          } else if (scrolledRatio < 0) {
-            scrolledRatio = 0;
-          }
-
-          console.log('recordPageScroll', scrollPos, scrollInfo);
+          // console.log('recordPageScroll', scrollPos, scrollInfo);
 
           // updates the ratio of the section being scrolled and the scroll positions
           setScrollInfo({
@@ -114,12 +89,12 @@ export function usePageScroll(
             scrollBottom,
             windowHeight,
             scrollOffset,
-            scrolledRatio,
           });
 
           // TODO: updates the section currently being scrolled
         },
         complete: () => {
+          // TODO: change it using finally
           if (trackingId) {
             // TODO: clear the section ID tracked in the page
             setActiveSectionId(null);
@@ -149,12 +124,12 @@ export function usePageScroll(
     [],
   );
 
-  useEffect(
-    () => {
-      console.log('**********', intersectingState, scrollInfo);
-    },
-    [intersectingState],
-  );
+  // useEffect(
+  //   () => {
+  //     console.log('**********', intersectingState, scrollInfo);
+  //   },
+  //   [intersectingState],
+  // );
 
   return {
     scrollInfo,

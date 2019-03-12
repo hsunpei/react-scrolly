@@ -1,34 +1,20 @@
+import { useMemo } from 'react';
+
 import { ScrollPosition } from '../page/Page';
 
 import { useIntersectionObservable } from './useIntersectionObservable';
-import { useSectionPosition } from './useSectionPosition';
+import { useSectionPosition, SectionPosition } from './useSectionPosition';
 import { usePageScroll } from './usePageScroll';
 
-export interface ScrollInfo extends ScrollPosition {
-  /** Ratio of the Page being scrolled */
-  scrolledRatio: number;
-}
-
-export interface SectionPosition {
-   /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
-  sectionTop: number;
-
-   /** From IntersectionObserver: the height of the `<Section>` */
-  sectionHeight: number;
-
-   /** The bounding rectangle of `<Section>` */
-  sectionBoundingRect: ClientRect;
-}
-
-export interface SectionInfo {
+export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */
   isIntersecting: boolean;
 
   /** Information related to the window scrolling and the ratio of the section being scrolled */
-  scrollInfo: ScrollInfo;
+  scrollInfo: ScrollPosition;
 
-  /** The position of the section */
-  sectionPosition: ClientRect;
+  /** Ratio of the Page being scrolled */
+  scrolledRatio: number;
 }
 
 export function useSectionRatio(
@@ -51,14 +37,34 @@ export function useSectionRatio(
   // convert the intersecting state as [preIntersecting, currentIntersecting]
   const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
 
-  const sectionPosition = useSectionPosition(sectionRef, intersectObsr$);
+  const { sectionTop, boundingRect } = useSectionPosition(sectionRef, intersectObsr$);
 
   const { scrollInfo, isIntersecting } = usePageScroll(intersectObsr$, trackingId, trackOnce);
 
-  // TODO: move the calculation of scrolledRatio here
+  const scrolledRatio = useMemo(
+    () => {
+      const { scrollBottom } = scrollInfo;
+      const { height } = boundingRect;
+
+      let ratio = (scrollBottom - sectionTop) / height;
+
+      if (ratio > 1) {
+        ratio = 1;
+      } else if (ratio < 0) {
+        ratio = 0;
+      }
+
+      console.log('ratio', trackingId, scrollBottom, sectionTop, (scrollBottom - sectionTop), height, ratio)
+      return ratio;
+    },
+    [sectionTop, boundingRect, scrollInfo],
+  );
+
   return {
-    scrollInfo,
-    sectionPosition,
     isIntersecting,
+    scrolledRatio,
+    sectionTop,
+    scrollInfo,
+    boundingRect,
   };
 }
