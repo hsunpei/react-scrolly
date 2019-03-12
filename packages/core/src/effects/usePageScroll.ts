@@ -1,11 +1,10 @@
-import { Observable } from 'rxjs';
-import { map, pairwise, takeWhile, combineLatest } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import {
   useState,
   useEffect,
   useRef,
   useContext,
-  useCallback,
 } from 'react';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
@@ -52,44 +51,49 @@ export function usePageScroll(
     scrollOffset: 0,
   });
 
-  /** Function to set the subscription to the IntersectionObservable  */
-  const { setSubscription: setIntersectSubscpt } = useSubscription(null);
-
   /** Function to set the subscription to the page scrolling  */
   const { setSubscription: setPageSubscpt } = useSubscription(null);
 
-  // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const intersectingRef = useRef(intersectObsr$.pipe(
-    map(({ isIntersecting }) => isIntersecting),
-  ));
-  const intersectingPairRef = useRef(intersectingRef.current.pipe(pairwise()));
-
   /** Observer to the page scrolling when the section is in the viewport */
-  const pageScrollObsrRef = useRef(intersectingRef.current.pipe(
-    combineLatest(scrollObserver$),
-    // take the page scrolling only when the section is in viewport
-    takeWhile(latest => latest[0]),
-    // emit the information related to the scrolling position
-    map(latest => latest[1]),
+  const pageScrollObsrRef = useRef(intersectObsr$.pipe(
+    switchMap((intersectInfo) => {
+      const { isIntersecting } = intersectInfo;
+      return isIntersecting
+        ? scrollObserver$.pipe(
+          map((scrollPos: ScrollPosition) => ({
+            isIntersecting,
+            scrollPos,
+          })),
+        )
+        // when the section is scrolled out of the viewport, update its dimension
+        : of({
+          isIntersecting,
+          scrollPos: null,
+        });
+    }),
   ));
 
-  /** Function to subscribe to the page scrolling */
-  const subscribeScrolling = useCallback(
+  useEffect(
     () => {
       setPageSubscpt(pageScrollObsrRef.current.subscribe({
         // record the page scrolling
-        next: (scrollPos: ScrollPosition) => {
-          const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
+        next: ({ isIntersecting, scrollPos }) => {
+          console.log('***value',isIntersecting, scrollPos)
+          if (isIntersecting && scrollPos) {
+            const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
 
-          // console.log('recordPageScroll', scrollPos, scrollInfo);
+            // console.log('recordPageScroll', scrollPos, scrollInfo);
 
-          // updates the ratio of the section being scrolled and the scroll positions
-          setScrollInfo({
-            scrollTop,
-            scrollBottom,
-            windowHeight,
-            scrollOffset,
-          });
+            // updates the ratio of the section being scrolled and the scroll positions
+            setScrollInfo({
+              scrollTop,
+              scrollBottom,
+              windowHeight,
+              scrollOffset,
+            });
+
+            setIntersectingState(isIntersecting);
+          }
 
           // TODO: updates the section currently being scrolled
         },
@@ -101,25 +105,6 @@ export function usePageScroll(
           }
         },
       }));
-    },
-    [],
-  );
-
-  useEffect(
-    () => {
-    // TODO: subscribe page scrolling here instead
-    // 1. change useIntersectionObserver as state passing
-    // 2. move onIntersectionUpdated here
-    // TODO: try to use repeat of RX instead
-      setIntersectSubscpt(intersectingPairRef.current.subscribe(
-        ([preIntersecting, curIntersecting]) => {
-          setIntersectingState(curIntersecting);
-          // If Section enters the viewport, start subscribing to the page scrolling observer
-          if (!preIntersecting && curIntersecting) {
-            subscribeScrolling();
-          }
-        },
-      ));
     },
     [],
   );
