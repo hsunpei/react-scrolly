@@ -44,32 +44,35 @@ export function useIntersectionObservable(
     intersectSubjectRef.current.next(intersecting);
   };
 
-  useEffect(() => {
-    // start observing whether the section is scrolled into the viewport
-    intersectionObserverRef.current = new IntersectionObserver(recordIntersection, {
-      threshold,
+  useEffect(
+    () => {
+      // start observing whether the section is scrolled into the viewport
+      intersectionObserverRef.current = new IntersectionObserver(recordIntersection, {
+        threshold,
 
-      /**  Observe changes in visibility of the section relative to the document's viewport */
-      root: null,
+        /**  Observe changes in visibility of the section relative to the document's viewport */
+        root: null,
 
-      /**
-       * Watch only the changes in the intersection between the section and the viewport,
-       * without any added or substracted space
-       */
-      // TODO: make this string changeable
-      rootMargin: '0px',
-    });
+        /**
+         * Watch only the changes in the intersection between the section and the viewport,
+         * without any added or substracted space
+         */
+        // TODO: make this string changeable
+        rootMargin: '0px',
+      });
 
-    intersectionObserverRef.current.observe(sectionRef.current!);
+      intersectionObserverRef.current.observe(sectionRef.current!);
 
-    // unsubscribe to the intersection observer on unmounting
-    return () => {
-      if (intersectionObserverRef.current) {
-        intersectionObserverRef.current.disconnect();
-        intersectSubjectRef.current.complete();
-      }
-    };
-  },        []);
+      // unsubscribe to the intersection observer on unmounting
+      return () => {
+        if (intersectionObserverRef.current) {
+          intersectionObserverRef.current.disconnect();
+          intersectSubjectRef.current.complete();
+        }
+      };
+    },
+    [],
+  );
 
   // TODO: return isIntersecting, RxJS stream
   return intersectObservableRef.current;
