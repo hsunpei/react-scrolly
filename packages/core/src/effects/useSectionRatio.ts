@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 
 import { ScrollPosition } from '../page/Page';
 
@@ -35,11 +35,11 @@ export function useSectionRatio(
 ): SectionInfo {
 
   // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
+  const { intersectObsr$, isIntersecting } = useIntersectionObservable(sectionRef, trackingId);
 
   const { sectionTop, boundingRect } = useSectionPosition(sectionRef, intersectObsr$);
 
-  const { scrollInfo, isIntersecting } = usePageScroll(intersectObsr$, trackingId, trackOnce);
+  const scrollInfo = usePageScroll(intersectObsr$, trackingId, trackOnce);
 
   const scrolledRatio = useMemo(
     () => {
@@ -58,6 +58,18 @@ export function useSectionRatio(
       return ratio;
     },
     [sectionTop, boundingRect, scrollInfo],
+  );
+
+   useEffect(
+    () => {
+      console.log('>///<', {
+        isIntersecting,
+        scrolledRatio,
+        sectionTop,
+        scrollInfo,
+        boundingRect,
+      });
+    },
   );
 
   return {

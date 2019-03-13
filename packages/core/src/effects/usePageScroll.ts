@@ -36,11 +36,10 @@ export function usePageScroll(
    */
   trackingId?: string,
 
+  // TODO: deal with trackOnce
   /** Only track the section using the IntersectionObserver once */
   trackOnce = false,
 ) {
-  const [intersectingState, setIntersectingState] = useState<boolean>(false);
-
   const context = useContext<PageContextInterface | null>(PageContext);
   const { scrollObserver$, setActiveSectionId } = context!;
 
@@ -91,8 +90,6 @@ export function usePageScroll(
               windowHeight,
               scrollOffset,
             });
-
-            setIntersectingState(isIntersecting);
           }
 
           // TODO: updates the section currently being scrolled
@@ -105,19 +102,14 @@ export function usePageScroll(
           }
         },
       }));
+
+      // // cancel the initial update on the scrolling position if it has not been executed
+      // return () => {
+      //   window.cancelAnimationFrame(animationID);
+      // };
     },
     [],
   );
 
-  // useEffect(
-  //   () => {
-  //     console.log('**********', intersectingState, scrollInfo);
-  //   },
-  //   [intersectingState],
-  // );
-
-  return {
-    scrollInfo,
-    isIntersecting: intersectingState,
-  };
+  return scrollInfo;
 }

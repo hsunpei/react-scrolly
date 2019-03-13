@@ -1,6 +1,7 @@
 import React, {
   useEffect,
   useRef,
+  useState,
 } from 'react';
 import { Observable, Subject } from 'rxjs';
 // TODO: add the polyfill of IntersectionObserver
@@ -19,11 +20,16 @@ export function useIntersectionObservable(
   sectionRef: React.RefObject<HTMLElement>,
   trackingId: IntersectionInfo['trackingId'],
   threshold: number[] | 1 = [0, 0.5, 1],
-): Observable<IntersectionInfo> {
+): {
+  isIntersecting: boolean,
+  intersectObsr$: Observable<IntersectionInfo>,
+} {
   /**
    * Stores references to the observer listening to section intersection with the viewport
    */
   const intersectionObserverRef = useRef<IntersectionObserver | null>(null);
+
+  const [intersectingState, setIntersectingState] = useState<boolean>(false);
 
   // transform the intersectionObserver as a RX Observable
   const intersectSubjectRef = useRef(new Subject<IntersectionInfo>());
@@ -39,7 +45,8 @@ export function useIntersectionObservable(
       sectionBoundingRect: boundingClientRect,
     };
 
-    // console.log('recordIntersection', intersecting)
+    // update the isIntersecting state
+    setIntersectingState(isIntersecting);
 
     intersectSubjectRef.current.next(intersecting);
   };
@@ -75,5 +82,8 @@ export function useIntersectionObservable(
   );
 
   // TODO: return isIntersecting, RxJS stream
-  return intersectObservableRef.current;
+  return {
+    isIntersecting: intersectingState,
+    intersectObsr$: intersectObservableRef.current,
+  };
 }
