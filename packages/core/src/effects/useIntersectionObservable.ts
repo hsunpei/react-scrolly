@@ -20,16 +20,11 @@ export function useIntersectionObservable(
   sectionRef: React.RefObject<HTMLElement>,
   trackingId: IntersectionInfo['trackingId'],
   threshold: number[] | 1 = [0, 0.5, 1],
-): {
-  isIntersecting: boolean,
-  intersectObsr$: Observable<IntersectionInfo>,
-} {
+): Observable<IntersectionInfo> {
   /**
    * Stores references to the observer listening to section intersection with the viewport
    */
   const intersectionObserverRef = useRef<IntersectionObserver | null>(null);
-
-  const [intersectingState, setIntersectingState] = useState<boolean>(false);
 
   // transform the intersectionObserver as a RX Observable
   const intersectSubjectRef = useRef(new Subject<IntersectionInfo>());
@@ -44,9 +39,6 @@ export function useIntersectionObservable(
       trackingId,
       sectionBoundingRect: boundingClientRect,
     };
-
-    // update the isIntersecting state
-    setIntersectingState(isIntersecting);
 
     intersectSubjectRef.current.next(intersecting);
   };
@@ -81,9 +73,5 @@ export function useIntersectionObservable(
     [],
   );
 
-  // TODO: return isIntersecting, RxJS stream
-  return {
-    isIntersecting: intersectingState,
-    intersectObsr$: intersectObservableRef.current,
-  };
+  return intersectObservableRef.current;
 }

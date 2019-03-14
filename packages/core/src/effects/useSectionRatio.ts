@@ -1,10 +1,11 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 
 import { ScrollPosition } from '../page/Page';
 
 import { useIntersectionObservable } from './useIntersectionObservable';
 import { useSectionPosition, SectionPosition } from './useSectionPosition';
 import { usePageScroll } from './usePageScroll';
+import { useSubscription } from './useSubscription';
 
 export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */
@@ -34,8 +35,13 @@ export function useSectionRatio(
   trackOnce = false,
 ): SectionInfo {
 
+  const [isIntersecting, setIntersectingState] = useState<boolean>(false);
+
+  /** Function to set the subscription to the intersection  */
+  const { setSubscription } = useSubscription(null);
+
   // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const { intersectObsr$, isIntersecting } = useIntersectionObservable(sectionRef, trackingId);
+  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
 
   const { sectionTop, boundingRect } = useSectionPosition(sectionRef, intersectObsr$);
 
@@ -53,14 +59,25 @@ export function useSectionRatio(
       } else if (ratio < 0) {
         ratio = 0;
       }
-
-      console.log('ratio', trackingId, scrollBottom, sectionTop, (scrollBottom - sectionTop), height, ratio)
       return ratio;
     },
     [sectionTop, boundingRect, scrollInfo],
   );
 
-   useEffect(
+  useEffect(
+    () => {
+      // set the subscription to the intersection events on mounted
+      setSubscription(intersectObsr$.subscribe({
+        next: ({ isIntersecting: interseting }) => {
+          // update the isIntersecting state
+          setIntersectingState(interseting);
+        },
+      }));
+    },
+    [],
+  );
+
+  useEffect(
     () => {
       console.log('>///<', {
         isIntersecting,
