@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useState, useRef } from 'react';
-import { fromEvent, animationFrameScheduler } from 'rxjs';
-import { debounceTime, map, pairwise } from 'rxjs/operators';
+import React, { FunctionComponent, useState, useRef, useEffect } from 'react';
+import { Subject, fromEvent, animationFrameScheduler } from 'rxjs';
+import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
 import { PageContext, PageContextInterface, sectionID } from '../context/PageContext';
 import { getScrollPosition } from '../utils/getScrollPosition';
@@ -38,30 +38,36 @@ export const Page: FunctionComponent<PageProps> = ({
   // TODO: change it with dispatch
   const [activeSectionId, setActiveSectionId] = useState<sectionID>(null);
 
+  const scrollSubjectRef = useRef(new Subject<ScrollPosition>());
+
   /**
    * Observer to listen to page scroll
    */
   const scrollObserverRef = useRef(
-    fromEvent(window, 'scroll')
-    .pipe(
-      // throttled by the animation frame
-      debounceTime(0, animationFrameScheduler),
-      map(() => getScrollPosition()),
-      // use pairwise to group pairs of consecutive emissions
-      // so that we can calculate `scrollOffset`
-      pairwise(),
-      map(([previousScroll, currentScroll]): ScrollPosition => {
-        // amount of pixels scrolled by
-        // - postive: scroll down
-        // - negative: scroll up
-        const scrollOffset = currentScroll.scrollTop - previousScroll.scrollTop;
+    scrollSubjectRef.current.asObservable().pipe(
+      merge(
+        fromEvent(window, 'scroll')
+          .pipe(
+            // throttled by the animation frame
+            debounceTime(0, animationFrameScheduler),
+            map(() => getScrollPosition()),
+            // use pairwise to group pairs of consecutive emissions
+            // so that we can calculate `scrollOffset`
+            pairwise(),
+            map(([previousScroll, currentScroll]): ScrollPosition => {
+              // amount of pixels scrolled by
+              // - postive: scroll down
+              // - negative: scroll up
+              const scrollOffset = currentScroll.scrollTop - previousScroll.scrollTop;
 
-        return {
-          ...currentScroll,
-          scrollOffset,
-        };
-      }),
-    ),
+              return {
+                ...currentScroll,
+                scrollOffset,
+              };
+            }),
+        ),
+      )
+    )
   );
 
   /**
@@ -81,6 +87,25 @@ export const Page: FunctionComponent<PageProps> = ({
     scrollObserver$: scrollObserverRef.current,
     resizeObserver$: resizeObserverRef.current,
   };
+
+  // TODO: dispatch a scroll event on mounted
+  useEffect(
+    () => {
+      const initialScroll = {
+        ...getScrollPosition(),
+        scrollOffset: 0,
+      };
+
+      // send the initial window scrolling position on mounted
+      scrollSubjectRef.current.next(initialScroll);
+
+      return () => {
+        // complete the scrolling subject
+        scrollSubjectRef.current.complete();
+      };
+    },
+    [],
+  );
 
   return (
     <Provider
