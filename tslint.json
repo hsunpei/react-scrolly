@@ -20,7 +20,13 @@
     "trailing-comma": [
       true,
       {
-        "multiline": "always",
+        "multiline": {
+          "objects": "always",
+          "arrays": "always",
+          "imports": "always",
+          "exports": "always",
+          "functions": "ignore"
+        },
         "singleline": "never",
         "esSpecCompliant": true
       }
@@ -34,6 +40,7 @@
         "named-imports-order": "any"
       }
     ],
+    "no-console": [true, "log"],
     // This rule is here for now because of https://github.com/palantir/tslint-react/issues/120
     "variable-name": [
       true,
@@ -41,9 +48,12 @@
       "check-format",
       "allow-pascal-case"
     ],
-    "import-name": [true, {
-      "react": "React"
-    }],
+    "import-name": [
+      true,
+      {
+        "react": "React"
+      }
+    ],
     // ============= from tslint-eslint-rules =============
     "object-curly-spacing": [true, "always"],
     "ter-max-len": [
