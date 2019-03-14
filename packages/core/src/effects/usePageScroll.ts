@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, merge } from 'rxjs/operators';
 import {
   useState,
   useEffect,
@@ -52,32 +52,44 @@ export function usePageScroll(
 
   /** Function to set the subscription to the page scrolling  */
   const { setSubscription: setPageSubscpt } = useSubscription(null);
+  const isIntersectingObs = useRef(intersectObsr$.pipe(
+    map(({ isIntersecting }) => isIntersecting)
+  ));
 
   /** Observer to the page scrolling when the section is in the viewport */
-  const pageScrollObsrRef = useRef(intersectObsr$.pipe(
-    switchMap((intersectInfo) => {
-      const { isIntersecting } = intersectInfo;
-      return isIntersecting
-        ? scrollObserver$.pipe(
-          map((scrollPos: ScrollPosition) => ({
+  const pageScrollObsrRef = useRef(
+    // first emit `{ isIntersecting: true }`
+    // in order to take the scroll position emitted when Page is mounted
+    of({ isIntersecting: true })
+    // merge it with the intersection observer
+    .pipe(
+      merge(isIntersectingObs.current)
+    )
+    // use `isIntersecting` to determine whether to take the scrolling info
+    .pipe(
+      switchMap((isIntersecting) => {
+        return isIntersecting
+          ? scrollObserver$.pipe(
+            map((scrollPos: ScrollPosition) => ({
+              isIntersecting,
+              scrollPos,
+            })),
+          )
+          // when the section is scrolled out of the viewport, update its dimension
+          : of({
             isIntersecting,
-            scrollPos,
-          })),
-        )
-        // when the section is scrolled out of the viewport, update its dimension
-        : of({
-          isIntersecting,
-          scrollPos: null,
-        });
-    }),
-  ));
+            scrollPos: null,
+          });
+      }),
+    )
+  );
 
   useEffect(
     () => {
+      // subscribe to the page scrolling
       setPageSubscpt(pageScrollObsrRef.current.subscribe({
         // record the page scrolling
         next: ({ isIntersecting, scrollPos }) => {
-          console.log('***value',isIntersecting, scrollPos)
           if (isIntersecting && scrollPos) {
             const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
 
@@ -102,11 +114,6 @@ export function usePageScroll(
           }
         },
       }));
-
-      // // cancel the initial update on the scrolling position if it has not been executed
-      // return () => {
-      //   window.cancelAnimationFrame(animationID);
-      // };
     },
     [],
   );
