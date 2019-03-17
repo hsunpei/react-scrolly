@@ -1,9 +1,10 @@
-import React, { FunctionComponent, useState, useRef, useEffect } from 'react';
+import React, { FunctionComponent, useRef, useEffect } from 'react';
 import { Subject, fromEvent, animationFrameScheduler } from 'rxjs';
 import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
-import { PageContext, PageContextInterface, sectionID } from '../context/PageContext';
+import { PageContext, PageContextInterface } from '../context/PageContext';
 import { getScrollPosition } from '../utils/getScrollPosition';
+import { useActiveSection } from '../effects/useActiveSection';
 
 export interface ScrollPosition {
   /** The pageYOffset of the window obtained in <Page>  */
@@ -36,10 +37,13 @@ export const Page: FunctionComponent<PageProps> = ({
   resizeThrottleTime = 300,
 }) => {
   // TODO: change it with dispatch
-  const [activeSectionId, setActiveSectionId] = useState<sectionID>(null);
+  const { activeSectionId, addActiveSection, removeActiveSection } = useActiveSection();
 
+  /**
+   * Subject to be combined with `scrollSubjectRef`
+   * in order to listen to the initial window scroll position on mounted
+   */
   const scrollSubjectRef = useRef(new Subject<ScrollPosition>());
-
   /**
    * Observer to listen to page scroll
    */
@@ -83,12 +87,12 @@ export const Page: FunctionComponent<PageProps> = ({
   const { Provider } = PageContext;
   const context: PageContextInterface = {
     activeSectionId,
-    setActiveSectionId,
+    addActiveSection,
+    removeActiveSection,
     scrollObserver$: scrollObserverRef.current,
     resizeObserver$: resizeObserverRef.current,
   };
 
-  // TODO: dispatch a scroll event on mounted
   useEffect(
     () => {
       const initialScroll = {

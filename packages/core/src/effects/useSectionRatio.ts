@@ -1,6 +1,14 @@
-import { useMemo, useEffect, useState } from 'react';
+import {
+  useRef,
+  useMemo,
+  useEffect,
+  useState,
+  useContext,
+} from 'react';
+import { pairwise, map } from 'rxjs/operators';
 
 import { ScrollPosition } from '../page/Page';
+import { PageContext, PageContextInterface } from '../context/PageContext';
 
 import { useIntersectionObservable } from './useIntersectionObservable';
 import { useSectionPosition, SectionPosition } from './useSectionPosition';
@@ -34,8 +42,11 @@ export function useSectionRatio(
   /** Only track the section using the IntersectionObserver once */
   trackOnce = false,
 ): SectionInfo {
+  const context = useContext<PageContextInterface | null>(PageContext);
+  const { addActiveSection, removeActiveSection } = context!;
 
-  const [isIntersecting, setIntersectingState] = useState<boolean>(false);
+  const [intersectingPair, setIntersectingPair] = useState<boolean[]>([false, false]);
+  const [preInter, curInter] = intersectingPair;
 
   /** Function to set the subscription to the intersection  */
   const { setSubscription } = useSubscription(null);
@@ -64,23 +75,47 @@ export function useSectionRatio(
     [sectionTop, boundingRect, scrollInfo],
   );
 
+  const intersectPairRef = useRef(
+    intersectObsr$.pipe(
+      map(({ isIntersecting: intersecting }) => intersecting),
+      pairwise(),
+    )
+  );
+
+  // subscribe to `intersectPairRef.current`
   useEffect(
     () => {
       // set the subscription to the intersection events on mounted
-      setSubscription(intersectObsr$.subscribe({
-        next: ({ isIntersecting: interseting }) => {
+      setSubscription(intersectPairRef.current.subscribe({
+        next: (pair) => {
           // update the isIntersecting state
-          setIntersectingState(interseting);
+          setIntersectingPair(pair);
         },
       }));
     },
     [],
   );
 
+  // update the active section info if `isIntersecting` changes
+  useEffect(
+    () => {
+      if (trackingId) {
+        if (!preInter && curInter) {
+          // update the section currently being scrolled
+          addActiveSection(trackingId, scrollInfo.scrollBottom, sectionTop);
+        } else if (preInter && !curInter) {
+          // clear the section ID tracked in the page
+          removeActiveSection(trackingId, scrollInfo.scrollBottom);
+        }
+      }
+    },
+    [intersectingPair, trackingId, scrollInfo, sectionTop],
+  );
+
   useEffect(
     () => {
       console.log('>///<', {
-        isIntersecting,
+        isIntersecting: curInter,
         scrolledRatio,
         sectionTop,
         scrollInfo,
@@ -90,10 +125,10 @@ export function useSectionRatio(
   );
 
   return {
-    isIntersecting,
     scrolledRatio,
     sectionTop,
     scrollInfo,
     boundingRect,
+    isIntersecting: curInter,
   };
 }

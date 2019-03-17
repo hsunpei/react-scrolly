@@ -41,7 +41,7 @@ export function usePageScroll(
   trackOnce = false,
 ) {
   const context = useContext<PageContextInterface | null>(PageContext);
-  const { scrollObserver$, setActiveSectionId } = context!;
+  const { scrollObserver$ } = context!;
 
   const [scrollInfo, setScrollInfo] = useState<ScrollPosition>({
     scrollTop: 0,
