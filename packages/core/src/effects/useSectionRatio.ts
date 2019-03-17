@@ -4,6 +4,7 @@ import {
   useEffect,
   useState,
   useContext,
+  useCallback,
 } from 'react';
 import { pairwise, map } from 'rxjs/operators';
 
@@ -102,14 +103,14 @@ export function useSectionRatio(
       if (trackingId) {
         if (!preInter && curInter) {
           // update the section currently being scrolled
-          addActiveSection(trackingId, scrollInfo.scrollBottom, sectionTop);
+          addActiveSection(trackingId, scrollInfo.scrollBottom - sectionTop);
         } else if (preInter && !curInter) {
           // clear the section ID tracked in the page
-          removeActiveSection(trackingId, scrollInfo.scrollBottom);
+          removeActiveSection(trackingId);
         }
       }
     },
-    [intersectingPair, trackingId, scrollInfo, sectionTop],
+    [intersectingPair, scrollInfo, sectionTop, trackingId],
   );
 
   useEffect(

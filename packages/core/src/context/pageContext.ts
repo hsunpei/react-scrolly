@@ -11,8 +11,8 @@ interface ScrollPosition {
 
 export interface PageContextInterface {
   activeSectionId: sectionID;
-  addActiveSection: (trackingId: string, scrollBottom: number, sectionTop: number) => void;
-  removeActiveSection: (trackingId: string, scrollBottom: number) => void;
+  addActiveSection: (trackingId: string, bottomDistance: number) => void;
+  removeActiveSection: (trackingId: string) => void;
   scrollObserver$: Observable<ScrollPosition>;
   resizeObserver$: Observable<Event>;
 }

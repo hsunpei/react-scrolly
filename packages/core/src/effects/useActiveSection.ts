@@ -2,6 +2,7 @@ import {
   useState,
   useRef,
   useCallback,
+  useEffect,
 } from 'react';
 
 import { sectionID } from '../context/PageContext';
@@ -25,23 +26,22 @@ export function useActiveSection() {
    * closest to the bottom of the viewport
    */
   const updateActiveSection = useCallback(
-    (scrollBottom: number) => {
+    () => {
       const trackedSects = activeSections.current;
 
       // find the item closest to the bottom of the viewport
       const closest: SectionDistance = Object.keys(trackedSects).reduce(
         (accum: SectionDistance, idx) => {
-          const sectionTop = trackedSects[idx];
-          const distance = sectionTop - scrollBottom;
-          if (!accum
-            || (distance > 0 && distance < accum.distance)
-          ) {
+          const distance = trackedSects[idx];
+          if (!accum || distance < accum.distance) {
             return { idx, distance };
           }
           return accum;
         },
         null,
       );
+
+      console.log('######## closest', closest)
 
       if (!closest) {
         setActiveSectionId(null);
@@ -56,20 +56,27 @@ export function useActiveSection() {
    * Add a section that is in the viewport
    */
   const addActiveSection = useCallback(
-    (trackingId: string, scrollBottom: number, sectionTop: number) => {
-      activeSections.current[trackingId] = sectionTop;
-      updateActiveSection(scrollBottom);
+    (trackingId: string, bottomDistance: number) => {
+      activeSections.current[trackingId] = bottomDistance;
+      console.log('########!!! ', trackingId, 'scrolledRatio:', bottomDistance, activeSections.current)
+      updateActiveSection();
     },
     [],
+  );
+
+  useEffect(
+    () => {
+      console.log('######## activeSectionId', activeSectionId)
+    },
   );
 
   /**
    * Remove a section from the active sections
    */
   const removeActiveSection = useCallback(
-    (trackingId: string, scrollBottom: number) => {
+    (trackingId: string) => {
       delete activeSections.current[trackingId];
-      updateActiveSection(scrollBottom);
+      updateActiveSection();
     },
     [],
   );
