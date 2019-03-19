@@ -43,6 +43,8 @@ export function usePageScroll(
   const context = useContext<PageContextInterface | null>(PageContext);
   const { scrollObserver$ } = context!;
 
+  const [intersecting, setIntersecting] = useState<boolean>(false);
+
   const [scrollInfo, setScrollInfo] = useState<ScrollPosition>({
     scrollTop: 0,
     scrollBottom: 0,
@@ -67,7 +69,7 @@ export function usePageScroll(
     )
     // use `isIntersecting` to determine whether to take the scrolling info
     .pipe(
-      switchMap((isIntersecting) => {
+      switchMap((isIntersecting: boolean) => {
         return isIntersecting
           ? scrollObserver$.pipe(
             map((scrollPos: ScrollPosition) => ({
@@ -104,19 +106,15 @@ export function usePageScroll(
             });
           }
 
-          // TODO: updates the section currently being scrolled
-        },
-        complete: () => {
-          // TODO: change it using finally
-          if (trackingId) {
-            // TODO: clear the section ID tracked in the page
-            setActiveSectionId(null);
-          }
+          setIntersecting(isIntersecting);
         },
       }));
     },
     [],
   );
 
-  return scrollInfo;
+  return {
+    scrollInfo,
+    isIntersecting: intersecting,
+  };
 }

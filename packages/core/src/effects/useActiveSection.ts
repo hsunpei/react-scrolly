@@ -26,13 +26,14 @@ export function useActiveSection() {
    * closest to the bottom of the viewport
    */
   const updateActiveSection = useCallback(
-    () => {
+    (scrollBottom: number) => {
       const trackedSects = activeSections.current;
 
       // find the item closest to the bottom of the viewport
       const closest: SectionDistance = Object.keys(trackedSects).reduce(
         (accum: SectionDistance, idx) => {
-          const distance = trackedSects[idx];
+          const sectionTop = trackedSects[idx];
+          const distance = scrollBottom - sectionTop;
           if (!accum || distance < accum.distance) {
             return { idx, distance };
           }
@@ -56,10 +57,10 @@ export function useActiveSection() {
    * Add a section that is in the viewport
    */
   const addActiveSection = useCallback(
-    (trackingId: string, bottomDistance: number) => {
-      activeSections.current[trackingId] = bottomDistance;
-      console.log('########!!! ', trackingId, 'scrolledRatio:', bottomDistance, activeSections.current)
-      updateActiveSection();
+    (trackingId: string, sectionTop: number, scrollBottom: number) => {
+      activeSections.current[trackingId] = sectionTop;
+      console.log('########!!! ', trackingId, 'scrolledRatio:', sectionTop, activeSections.current)
+      updateActiveSection(scrollBottom);
     },
     [],
   );
@@ -74,9 +75,9 @@ export function useActiveSection() {
    * Remove a section from the active sections
    */
   const removeActiveSection = useCallback(
-    (trackingId: string) => {
+    (trackingId: string, scrollBottom: number) => {
       delete activeSections.current[trackingId];
-      updateActiveSection();
+      updateActiveSection(scrollBottom);
     },
     [],
   );

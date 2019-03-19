@@ -1,7 +1,6 @@
 import React, {
   useEffect,
   useRef,
-  useState,
 } from 'react';
 import { Observable, Subject } from 'rxjs';
 // TODO: add the polyfill of IntersectionObserver

@@ -2,11 +2,8 @@ import {
   useRef,
   useMemo,
   useEffect,
-  useState,
   useContext,
-  useCallback,
 } from 'react';
-import { pairwise, map } from 'rxjs/operators';
 
 import { ScrollPosition } from '../page/Page';
 import { PageContext, PageContextInterface } from '../context/PageContext';
@@ -14,7 +11,6 @@ import { PageContext, PageContextInterface } from '../context/PageContext';
 import { useIntersectionObservable } from './useIntersectionObservable';
 import { useSectionPosition, SectionPosition } from './useSectionPosition';
 import { usePageScroll } from './usePageScroll';
-import { useSubscription } from './useSubscription';
 
 export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */
@@ -46,77 +42,61 @@ export function useSectionRatio(
   const context = useContext<PageContextInterface | null>(PageContext);
   const { addActiveSection, removeActiveSection } = context!;
 
-  const [intersectingPair, setIntersectingPair] = useState<boolean[]>([false, false]);
-  const [preInter, curInter] = intersectingPair;
-
-  /** Function to set the subscription to the intersection  */
-  const { setSubscription } = useSubscription(null);
-
   // convert the intersecting state as [preIntersecting, currentIntersecting]
   const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
 
   const { sectionTop, boundingRect } = useSectionPosition(sectionRef, intersectObsr$);
 
-  const scrollInfo = usePageScroll(intersectObsr$, trackingId, trackOnce);
+  const { isIntersecting, scrollInfo } = usePageScroll(intersectObsr$, trackingId, trackOnce);
+
+  const preIntersecting = useRef(false);
 
   const scrolledRatio = useMemo(
     () => {
       const { scrollBottom } = scrollInfo;
       const { height } = boundingRect;
 
-      let ratio = (scrollBottom - sectionTop) / height;
+      const distance = scrollBottom - sectionTop;
+      let ratio = distance / height;
 
-      if (ratio > 1) {
+      if (ratio >= 1) {
         ratio = 1;
-      } else if (ratio < 0) {
+      } else if (ratio <= 0) {
         ratio = 0;
       }
+
+      // console.log('######## trackingId = ', trackingId, distance)
       return ratio;
     },
     [sectionTop, boundingRect, scrollInfo],
   );
 
-  const intersectPairRef = useRef(
-    intersectObsr$.pipe(
-      map(({ isIntersecting: intersecting }) => intersecting),
-      pairwise(),
-    )
-  );
-
-  // subscribe to `intersectPairRef.current`
-  useEffect(
-    () => {
-      // set the subscription to the intersection events on mounted
-      setSubscription(intersectPairRef.current.subscribe({
-        next: (pair) => {
-          // update the isIntersecting state
-          setIntersectingPair(pair);
-        },
-      }));
-    },
-    [],
-  );
-
   // update the active section info if `isIntersecting` changes
   useEffect(
     () => {
+      const curInter = isIntersecting;
+      const preInter = preIntersecting.current;
+
       if (trackingId) {
-        if (!preInter && curInter) {
+        if (!preInter && curInter){
+          console.log('######## trackingId:', trackingId, preInter, curInter)
           // update the section currently being scrolled
-          addActiveSection(trackingId, scrollInfo.scrollBottom - sectionTop);
+          addActiveSection(trackingId, sectionTop, scrollInfo.scrollBottom);
         } else if (preInter && !curInter) {
           // clear the section ID tracked in the page
-          removeActiveSection(trackingId);
+          removeActiveSection(trackingId, scrollInfo.scrollBottom);
         }
       }
+
+      preIntersecting.current = curInter;
     },
-    [intersectingPair, scrollInfo, sectionTop, trackingId],
+    [isIntersecting, sectionTop, scrollInfo],
   );
 
   useEffect(
     () => {
       console.log('>///<', {
-        isIntersecting: curInter,
+        isIntersecting,
         scrolledRatio,
         sectionTop,
         scrollInfo,
@@ -126,10 +106,10 @@ export function useSectionRatio(
   );
 
   return {
+    isIntersecting,
     scrolledRatio,
     sectionTop,
     scrollInfo,
     boundingRect,
-    isIntersecting: curInter,
   };
 }
