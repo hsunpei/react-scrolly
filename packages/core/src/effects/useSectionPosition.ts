@@ -52,7 +52,7 @@ export function useSectionPosition(
   /** Observer to the window resizing events */
   const combinedResizeObsRef = useRef(intersectObsr$.pipe(
     switchMap((intersectInfo) => {
-      const { isIntersecting, sectionBoundingRect } = intersectInfo;
+      const { isIntersecting } = intersectInfo;
       return isIntersecting
         ? resizeObserver$.pipe(
           map(() => {
@@ -63,11 +63,11 @@ export function useSectionPosition(
             }
             return undefined;
           }),
-          filter(rect => typeof rect !== 'undefined'),
         )
         // when the section is scrolled out of the viewport, update its dimension
-        : of(sectionBoundingRect);
+        : of(undefined);
     }),
+    filter(rect => typeof rect !== 'undefined'),
   ));
 
   /**
