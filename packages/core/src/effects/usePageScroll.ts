@@ -94,8 +94,6 @@ export function usePageScroll(
           if (isIntersecting && scrollPos) {
             const { scrollTop, scrollBottom, windowHeight, scrollOffset } = scrollPos;
 
-            // console.log('recordPageScroll', scrollPos, scrollInfo);
-
             // updates the ratio of the section being scrolled and the scroll positions
             setScrollInfo({
               scrollTop,

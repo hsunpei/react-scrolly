@@ -79,7 +79,6 @@ export function useSectionRatio(
 
       if (trackingId) {
         if (!preInter && curInter){
-          console.log('######## trackingId:', trackingId, preInter, curInter)
           // update the section currently being scrolled
           addActiveSection(trackingId, sectionTop, scrollInfo.scrollBottom);
         } else if (preInter && !curInter) {

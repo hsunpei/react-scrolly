@@ -2,7 +2,6 @@ import {
   useState,
   useRef,
   useCallback,
-  useEffect,
 } from 'react';
 
 import { ActiveSection, sectionID } from '../context/PageContext';
@@ -42,8 +41,6 @@ export function useActiveSection(): ActiveSection {
         null,
       );
 
-      console.log('######## closest', closest)
-
       if (!closest) {
         setActiveSectionId(null);
       } else {
@@ -59,16 +56,9 @@ export function useActiveSection(): ActiveSection {
   const addActiveSection = useCallback(
     (trackingId: string, sectionTop: number, scrollBottom: number) => {
       activeSections.current[trackingId] = sectionTop;
-      console.log('########!!! ', trackingId, 'scrolledRatio:', sectionTop, activeSections.current)
       updateActiveSection(scrollBottom);
     },
     [],
-  );
-
-  useEffect(
-    () => {
-      console.log('######## activeSectionId', activeSectionId)
-    },
   );
 
   /**
