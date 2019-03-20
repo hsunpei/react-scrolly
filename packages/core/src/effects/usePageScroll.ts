@@ -60,9 +60,8 @@ export function usePageScroll(
 
   /** Observer to the page scrolling when the section is in the viewport */
   const pageScrollObsrRef = useRef(
-    // first emit `{ isIntersecting: true }`
-    // in order to take the scroll position emitted when Page is mounted
-    of({ isIntersecting: true })
+    // first emit true in order to take the scroll position emitted when Page is mounted
+    of(true)
     // merge it with the intersection observer
     .pipe(
       merge(isIntersectingObs.current)
@@ -106,6 +105,7 @@ export function usePageScroll(
             });
           }
 
+          // update the intersecting state
           setIntersecting(isIntersecting);
         },
       }));
