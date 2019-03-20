@@ -5,7 +5,7 @@ import {
   useEffect,
 } from 'react';
 
-import { sectionID } from '../context/PageContext';
+import { ActiveSection, sectionID } from '../context/PageContext';
 
 type SectionDistance = {
   idx: string,
@@ -16,7 +16,7 @@ type SectionDistance = {
  * Manage the current active section tracking ID
  * by selecting the section closest to the scroll bottom
  */
-export function useActiveSection() {
+export function useActiveSection(): ActiveSection {
   const [activeSectionId, setActiveSectionId] = useState<sectionID>(null);
 
   const activeSections = useRef({});

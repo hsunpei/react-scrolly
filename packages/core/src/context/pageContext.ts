@@ -9,10 +9,13 @@ interface ScrollPosition {
   windowHeight: number;
 }
 
-export interface PageContextInterface {
+export interface ActiveSection {
   activeSectionId: sectionID;
-  addActiveSection: (trackingId: string, bottomDistance: number) => void;
-  removeActiveSection: (trackingId: string) => void;
+  addActiveSection: (trackingId: string,  sectionTop: number, scrollBottom: number) => void;
+  removeActiveSection: (trackingId: string, scrollBottom: number) => void;
+}
+
+export interface PageContextInterface extends ActiveSection {
   scrollObserver$: Observable<ScrollPosition>;
   resizeObserver$: Observable<Event>;
 }
