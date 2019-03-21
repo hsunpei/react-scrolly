@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-import { Section, SectionState, SectionProps } from './Section';
+import { SectionInfo, useSectionRatio } from '../effects/useSectionRatio';
+
+import { SectionProps } from './Section';
 
 export interface StickySectionProps {
   trackingId: SectionProps['trackingId'];
   className?: string;
   style?: React.CSSProperties;
   children: SectionProps['children'];
+
+  /** Only track the section using the IntersectionObserver once */
+  trackOnce: boolean;
 
   /**
    * Render the non-sticky part of the section,
@@ -40,16 +45,15 @@ const positions: {
  * Returns the position of the inner div of the StickySection
  */
 function getStickyPosition(
-  section: SectionState,
+  section: SectionInfo,
 ): React.CSSProperties {
   const {
-    scrollTop,
-    scrollBottom,
+    scrollInfo,
     sectionTop,
-    sectionHeight,
-    sectionBoundingRect,
+    boundingRect,
   } = section;
-  const sectionBottom = sectionTop + sectionHeight;
+  const { scrollTop, scrollBottom } = scrollInfo;
+  const sectionBottom = sectionTop + boundingRect.height;
 
   if (scrollTop < sectionTop) {
     // appears on the top of the page
@@ -60,8 +64,8 @@ function getStickyPosition(
     // sticks to the viewport
     return {
       ...positions.fixed,
-      left: sectionBoundingRect.left,
-      width: sectionBoundingRect.width,
+      left: boundingRect.left,
+      width: boundingRect.width,
     };
   }
 
@@ -69,41 +73,41 @@ function getStickyPosition(
   return positions.absBottom;
 }
 
-export const StickySection: React.SFC<StickySectionProps> = ({
-  trackingId,
+export const StickySection = ({
   className,
   style,
   children,
+  trackingId,
+  trackOnce = false,
   renderNonSticky,
-}) => {
+  ...restProps
+}: StickySectionProps) => {
   const outerStyle: React.CSSProperties = {
     ...style,
     position: 'relative',
   };
 
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const pageScroll = useSectionRatio(sectionRef, trackingId, trackOnce);
+
+  const stickyStyle: React.CSSProperties = {
+    ...getStickyPosition(pageScroll),
+    height: `${pageScroll.scrollInfo.windowHeight}px`,
+  };
+
   return (
-    <Section
-      trackingId={trackingId}
+    <div
+      ref={sectionRef}
       className={className}
       style={outerStyle}
+      {...restProps}
     >
-      {(section) => {
-        const stickyStyle: React.CSSProperties = {
-          ...getStickyPosition(section),
-          height: `${section.windowHeight}px`,
-        };
-
-        return (
-          <>
-            <div style={stickyStyle}>
-              {children(section)}
-            </div>
-            <div style={{ position: 'relative' }}>
-              {renderNonSticky}
-            </div>
-          </>
-        );
-      }}
-    </Section>
+      <div style={stickyStyle}>
+        {children(pageScroll)}
+      </div>
+      <div style={{ position: 'relative' }}>
+        {renderNonSticky}
+      </div>
+    </div>
   );
 };
