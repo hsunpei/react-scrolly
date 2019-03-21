@@ -2,17 +2,9 @@ import React, { useRef } from 'react';
 
 import { SectionInfo, useSectionRatio } from '../effects/useSectionRatio';
 
-import { SectionProps } from './Section';
+import { Section, SectionProps } from './Section';
 
-export interface StickySectionProps {
-  trackingId: SectionProps['trackingId'];
-  className?: string;
-  style?: React.CSSProperties;
-  children: SectionProps['children'];
-
-  /** Only track the section using the IntersectionObserver once */
-  trackOnce: boolean;
-
+export interface StickySectionProps extends SectionProps {
   /**
    * Render the non-sticky part of the section,
    * which is placed on top of the children
@@ -78,7 +70,7 @@ export const StickySection = ({
   style,
   children,
   trackingId,
-  trackOnce = false,
+  trackOnce,
   renderNonSticky,
   ...restProps
 }: StickySectionProps) => {
@@ -111,3 +103,4 @@ export const StickySection = ({
     </div>
   );
 };
+StickySection.defaultProps = Section.defaultProps;

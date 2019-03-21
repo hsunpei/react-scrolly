@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import { ScrollPosition } from '../page/Page';
 import { SectionInfo, useSectionRatio } from '../effects/useSectionRatio';
@@ -43,16 +43,19 @@ export interface SectionProps {
   trackOnce: boolean;
 }
 
-export const Section: FunctionComponent<SectionProps> = ({
+const defaultProps = {
+  trackOnce: false,
+};
+
+export const Section = ({
   className,
   style,
   children,
   trackingId,
   trackOnce = false,
   ...restProps
-}) => {
+}: SectionProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
-
   const pageScroll = useSectionRatio(sectionRef, trackingId, trackOnce);
 
   return (
@@ -66,3 +69,4 @@ export const Section: FunctionComponent<SectionProps> = ({
     </div>
   );
 };
+Section.defaultProps = defaultProps;
