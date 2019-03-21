@@ -3,6 +3,7 @@ import {
   map,
   filter,
   switchMap,
+  merge,
  } from 'rxjs/operators';
 import React, {
   useState,
@@ -52,19 +53,26 @@ export function useSectionPosition(
   /** Observer to the window resizing events */
   const combinedResizeObsRef = useRef(intersectObsr$.pipe(
     switchMap((intersectInfo) => {
-      const { isIntersecting } = intersectInfo;
+      const { isIntersecting, sectionBoundingRect } = intersectInfo;
       return isIntersecting
-        ? resizeObserver$.pipe(
-          map(() => {
-            const currentSect = sectionRef.current;
-            if (currentSect) {
-              const rect = currentSect.getBoundingClientRect();
-              return rect;
-            }
-            return undefined;
-          }),
+        ? (
+          // return the bounding rect from `intersectObsr$` when it appears in the viewport
+          of(sectionBoundingRect)
+          // merge it with the intersection observer
+          .pipe(
+            merge(resizeObserver$.pipe(
+              map(() => {
+                const currentSect = sectionRef.current;
+                if (currentSect) {
+                  const rect = currentSect.getBoundingClientRect();
+                  return rect;
+                }
+                return undefined;
+              }),
+            ))
+          )
         )
-        // when the section is scrolled out of the viewport, update its dimension
+        // when the section is scrolled out of the viewport
         : of(undefined);
     }),
     filter(rect => typeof rect !== 'undefined'),

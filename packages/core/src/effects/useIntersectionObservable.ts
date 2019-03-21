@@ -18,7 +18,7 @@ export interface IntersectionInfo {
 export function useIntersectionObservable(
   sectionRef: React.RefObject<HTMLElement>,
   trackingId: IntersectionInfo['trackingId'],
-  threshold: number[] | 1 = [0, 0.5, 1],
+  threshold: number[] | 1 = [0, 1],
 ): Observable<IntersectionInfo> {
   /**
    * Stores references to the observer listening to section intersection with the viewport
