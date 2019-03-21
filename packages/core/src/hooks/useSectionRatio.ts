@@ -35,9 +35,6 @@ export function useSectionRatio(
    * there is **NO** more than one tracked section (section with `trackingId`).
    */
   trackingId?: string,
-
-  /** Only track the section using the IntersectionObserver once */
-  trackOnce = false,
 ): SectionInfo {
   const context = useContext<PageContextInterface | null>(PageContext);
   const { addActiveSection, removeActiveSection } = context!;
@@ -47,7 +44,7 @@ export function useSectionRatio(
 
   const { sectionTop, boundingRect } = useSectionPosition(sectionRef, intersectObsr$);
 
-  const { isIntersecting, scrollInfo } = usePageScroll(intersectObsr$, trackingId, trackOnce);
+  const { isIntersecting, scrollInfo } = usePageScroll(intersectObsr$);
 
   const preIntersecting = useRef(false);
 

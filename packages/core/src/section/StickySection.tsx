@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { SectionInfo, useSectionRatio } from '../hooks/useSectionRatio';
 
-import { Section, SectionProps } from './Section';
+import { SectionProps } from './Section';
 
 export interface StickySectionProps extends SectionProps {
   /**
@@ -70,7 +70,6 @@ export const StickySection = ({
   style,
   children,
   trackingId,
-  trackOnce,
   renderNonSticky,
   ...restProps
 }: StickySectionProps) => {
@@ -80,7 +79,7 @@ export const StickySection = ({
   };
 
   const sectionRef = useRef<HTMLDivElement>(null);
-  const pageScroll = useSectionRatio(sectionRef, trackingId, trackOnce);
+  const pageScroll = useSectionRatio(sectionRef, trackingId);
 
   const stickyStyle: React.CSSProperties = {
     ...getStickyPosition(pageScroll),
@@ -103,4 +102,3 @@ export const StickySection = ({
     </div>
   );
 };
-StickySection.defaultProps = Section.defaultProps;

@@ -26,19 +26,6 @@ export interface SectionPosition {
 
 export function usePageScroll(
   intersectObsr$: Observable<IntersectionInfo>,
-
-  /**
-   * By setting an unique Section ID, you can know which section the user is currently viewing.
-   * If `trackingId` is not null,
-   * `usePageScroll` will set it to `activeSectionId` of the `<Page>`
-   * Please make sure that on the same `scrollTop`,
-   * there is **NO** more than one tracked section (section with `trackingId`).
-   */
-  trackingId?: string,
-
-  // TODO: deal with trackOnce
-  /** Only track the section using the IntersectionObserver once */
-  trackOnce = false,
 ) {
   const context = useContext<PageContextInterface | null>(PageContext);
   const { scrollObserver$ } = context!;

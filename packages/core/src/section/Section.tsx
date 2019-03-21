@@ -38,25 +38,17 @@ export interface SectionProps {
   className?: string;
   style?: React.CSSProperties;
   children: (section: SectionInfo) => React.ReactNode;
-
-  /** Only track the section using the IntersectionObserver once */
-  trackOnce: boolean;
 }
-
-const defaultProps = {
-  trackOnce: false,
-};
 
 export const Section = ({
   className,
   style,
   children,
   trackingId,
-  trackOnce = false,
   ...restProps
 }: SectionProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const pageScroll = useSectionRatio(sectionRef, trackingId, trackOnce);
+  const pageScroll = useSectionRatio(sectionRef, trackingId);
 
   return (
     <div
@@ -69,4 +61,3 @@ export const Section = ({
     </div>
   );
 };
-Section.defaultProps = defaultProps;
