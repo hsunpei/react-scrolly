@@ -13,17 +13,6 @@ import { ScrollPosition } from '../page/Page';
 import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
 
-export interface SectionPosition {
-   /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
-  sectionTop: number;
-
-   /** From IntersectionObserver: the height of the `<Section>` */
-  sectionHeight: number;
-
-   /** The bounding rectangle of `<Section>` */
-  sectionBoundingRect: ClientRect;
-}
-
 export function usePageScroll(
   intersectObsr$: Observable<IntersectionInfo>,
 ) {

@@ -10,17 +10,6 @@ import {
   IntersectionObserverConfig,
 } from '../utils/getIntersectionObserver';
 
-export interface IntersectionInfo {
-  /** From IntersectionObserver: whether the `<Section>` is intersecting the root */
-  isIntersecting: boolean;
-
-  /** Tracking ID of the container  */
-  trackingId?: string;
-
-  /** The bounding rectangle of `<Section>` */
-  sectionBoundingRect: ClientRect;
-}
-
 export function useIntersectingDetection(
   /** Ref which is binded to the container */
   containerRef: React.RefObject<HTMLElement>,
