@@ -1,14 +1,20 @@
 import React, {
   useEffect,
   useRef,
+  useCallback,
 } from 'react';
 import { Observable, Subject } from 'rxjs';
-// TODO: add the polyfill of IntersectionObserver
+
+import {
+  getIntersectionObserver,
+  IntersectionObserverConfig,
+} from '../utils/getIntersectionObserver';
 
 export interface IntersectionInfo {
   /** From IntersectionObserver: whether the `<Section>` is intersecting the root */
   isIntersecting: boolean;
 
+  /** Tracking ID of the section  */
   trackingId?: string;
 
   /** The bounding rectangle of `<Section>` */
@@ -16,9 +22,14 @@ export interface IntersectionInfo {
 }
 
 export function useIntersectionObservable(
+  /** Ref which is binded to the section */
   sectionRef: React.RefObject<HTMLElement>,
+
+  /** Provide the ID if the section is going to be tracked on the page */
   trackingId: IntersectionInfo['trackingId'],
-  threshold: number[] | 1 = [0, 1],
+
+  /** Margin and threshold configurations for IntersectionObserver */
+  intersectionConfig: IntersectionObserverConfig,
 ): Observable<IntersectionInfo> {
   /**
    * Stores references to the observer listening to section intersection with the viewport
@@ -30,34 +41,28 @@ export function useIntersectionObservable(
   const intersectObservableRef = useRef(intersectSubjectRef.current.asObservable());
 
   /** Use browser's IntersectionObserver to record whether the section is inside the viewport */
-  const recordIntersection = (entries: IntersectionObserverEntry[]) => {
-    const [entry] = entries;
-    const { isIntersecting, boundingClientRect } = entry;
-    const intersecting: IntersectionInfo = {
-      isIntersecting,
-      trackingId,
-      sectionBoundingRect: boundingClientRect,
-    };
+  const recordIntersection = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      const { isIntersecting, boundingClientRect } = entry;
+      const intersecting: IntersectionInfo = {
+        isIntersecting,
+        trackingId,
+        sectionBoundingRect: boundingClientRect,
+      };
 
-    intersectSubjectRef.current.next(intersecting);
-  };
+      intersectSubjectRef.current.next(intersecting);
+    },
+    []
+  );
 
   useEffect(
     () => {
       // start observing whether the section is scrolled into the viewport
-      intersectionObserverRef.current = new IntersectionObserver(recordIntersection, {
-        threshold,
-
-        /**  Observe changes in visibility of the section relative to the document's viewport */
-        root: null,
-
-        /**
-         * Watch only the changes in the intersection between the section and the viewport,
-         * without any added or substracted space
-         */
-        // TODO: make this string changeable
-        rootMargin: '0px',
-      });
+      intersectionObserverRef.current = getIntersectionObserver(
+        recordIntersection,
+        intersectionConfig
+      );
 
       intersectionObserverRef.current.observe(sectionRef.current!);
 
@@ -69,7 +74,7 @@ export function useIntersectionObservable(
         }
       };
     },
-    [],
+    []
   );
 
   return intersectObservableRef.current;
