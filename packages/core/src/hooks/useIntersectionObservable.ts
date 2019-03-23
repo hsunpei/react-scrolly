@@ -29,7 +29,7 @@ export function useIntersectionObservable(
   trackingId: IntersectionInfo['trackingId'],
 
   /** Margin and threshold configurations for IntersectionObserver */
-  intersectionConfig: IntersectionObserverConfig,
+  intersectionConfig?: IntersectionObserverConfig,
 ): Observable<IntersectionInfo> {
   /**
    * Stores references to the observer listening to section intersection with the viewport
