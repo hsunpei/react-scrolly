@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export interface FooProps {
-  framework : string;
+  framework: string;
 }
 
 // 'FooProps' describes the shape of props. State is never set so we use the

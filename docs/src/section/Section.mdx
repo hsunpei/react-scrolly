@@ -1,6 +1,6 @@
 ---
 name: Section
-route: /section/Section
+route: /section/section
 menu: Sections
 ---
 
@@ -11,10 +11,9 @@ import { sectionStyle } from './styles'
 
 # Section
 <Playground>
-  <div style={{ width: '100%', background: '#B0E0E6' }}>
+  <div style={{ width: '100%', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
     <Page>
       <StickySection
-        trackingId="sticky"
         renderNonSticky={
           <>
             <Section trackingId="section1" trackOnce style={sectionStyle}>
@@ -34,7 +33,7 @@ import { sectionStyle } from './styles'
               width: '50%',
               height: '100%',
               margin: '0 auto',
-              background: '#B0A0E6',
+              background: 'linear-gradient(to right, #43e97b 0%, #38f9d7 100%)',
               display: 'flex',
               justifyContent: 'center',
               alignContent: 'center',
