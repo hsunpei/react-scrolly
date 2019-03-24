@@ -15,10 +15,10 @@ export function useIntersectingDetection(
   containerRef: React.RefObject<HTMLElement>,
 
   /** If true, the container will not be tracked again once it is visible in the viewport */
-  trackOnce: boolean,
+  trackOnce: boolean = false,
 
   /** Margin and threshold configurations for IntersectionObserver */
-  intersectionConfig: IntersectionObserverConfig,
+  intersectionConfig?: IntersectionObserverConfig,
 ) {
   const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
   const preIntersecting = useRef(false);
