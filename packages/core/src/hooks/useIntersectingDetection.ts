@@ -44,7 +44,9 @@ export function useIntersectingDetection(
       const { isIntersecting: curIntersecting } = entry;
       setIsIntersecting(curIntersecting);
 
-      if (!preIntersecting.current && curIntersecting) {
+      if (trackOnce &&
+        (!preIntersecting.current && curIntersecting)
+      ) {
         disconnectIntersection();
       }
 
