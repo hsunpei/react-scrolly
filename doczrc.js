@@ -29,15 +29,15 @@ export default {
     codemirrorTheme: 'material',
     showPlaygroundEditor: true, // always display the code in <Playground>
     colors: {
-      primary: '#ff9f00',
+      primary: '#0acc5a',
       background: '#edeeef',
       text: '#0a2c43',
       blue: '#5211de',
       sidebarBg: '#edeeef',
-      sidebarBorder: '#0078e0',
-      border: '#0078e0',
+      sidebarBorder: '#a3a4a5',
+      border: '#a3a4a5',
       codeBg: '#ffffff',
-      codeColor: '#ff9f00',
+      codeColor: '#0acc5a',
       theadColor: '#79878e'
     },
     styles: {
