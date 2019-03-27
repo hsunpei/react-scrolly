@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import {
   useRef,
   useMemo,
@@ -7,9 +8,9 @@ import {
 
 import { ScrollPosition } from '../../page/Page';
 import { PageContext, PageContextInterface } from '../../context/PageContext';
-import { useIntersectionObservable } from '../useIntersectionObservable';
 import { useSectionPosition, SectionPosition } from '../useSectionPosition';
 import { usePageScroll } from '../usePageScroll';
+import { IntersectionInfo } from '../useIntersectionObservable';
 
 export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */
@@ -26,6 +27,8 @@ export function useSectionRatio(
   /** Ref of the section being tracked */
   sectionRef: React.RefObject<HTMLElement>,
 
+  intersectObsr$: Observable<IntersectionInfo>,
+
   /**
    * By setting an unique Section ID, you can know which section the user is currently viewing.
    * If `trackingId` is not null,
@@ -37,9 +40,6 @@ export function useSectionRatio(
 ): SectionInfo {
   const context = useContext<PageContextInterface | null>(PageContext);
   const { addActiveSection, removeActiveSection, updateScrollRatio } = context!;
-
-  // convert the intersecting state as [preIntersecting, currentIntersecting]
-  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
 
   const { sectionTop, boundingRect } = useSectionPosition(sectionRef, intersectObsr$);
 

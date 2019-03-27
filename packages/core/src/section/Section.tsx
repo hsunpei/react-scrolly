@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 
+import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
 import { ScrollPosition } from '../page/Page';
 import { SectionInfo, useSectionRatio } from '../hooks/section/useSectionRatio';
 
@@ -48,7 +49,8 @@ export const Section = ({
   ...restProps
 }: SectionProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const pageScroll = useSectionRatio(sectionRef, trackingId);
+  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
+  const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
 
   return (
     <div
@@ -57,7 +59,7 @@ export const Section = ({
       style={style}
       {...restProps}
     >
-      {children(pageScroll)}
+      {children(sectionInfo)}
     </div>
   );
 };

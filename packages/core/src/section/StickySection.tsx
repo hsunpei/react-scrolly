@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 
+import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
 import { SectionInfo, useSectionRatio } from '../hooks/section/useSectionRatio';
 
 import { SectionProps } from './Section';
@@ -79,11 +80,12 @@ export const StickySection = ({
   };
 
   const sectionRef = useRef<HTMLDivElement>(null);
-  const pageScroll = useSectionRatio(sectionRef, trackingId);
+  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
+  const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
 
   const stickyStyle: React.CSSProperties = {
-    ...getStickyPosition(pageScroll),
-    height: `${pageScroll.scrollInfo.windowHeight}px`,
+    ...getStickyPosition(sectionInfo),
+    height: `${sectionInfo.scrollInfo.windowHeight}px`,
   };
 
   return (
@@ -94,7 +96,7 @@ export const StickySection = ({
       {...restProps}
     >
       <div style={stickyStyle}>
-        {children(pageScroll)}
+        {children(sectionInfo)}
       </div>
       <div style={{ position: 'relative' }}>
         {renderNonSticky}
