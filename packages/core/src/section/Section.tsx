@@ -1,25 +1,7 @@
 import React, { useRef } from 'react';
 
 import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
-import { ScrollPosition } from '../page/Page';
 import { SectionInfo, useSectionRatio } from '../hooks/section/useSectionRatio';
-
-export interface SectionState extends ScrollPosition {
-  /** From IntersectionObserver: whether the `<Section>` is intersecting the root */
-  isIntersecting: boolean;
-
-   /** From IntersectionObserver: the top of the `<Section>` + scrollTop */
-  sectionTop: number;
-
-  /** From IntersectionObserver: the height of the `<Section>` */
-  sectionHeight: number;
-
-  /** The bounding rectangle of `<Section>` */
-  sectionBoundingRect: ClientRect;
-
-  /** Ratio of the Page being scrolled */
-  scrolledRatio: number;
-}
 
 export interface SectionProps {
   /**

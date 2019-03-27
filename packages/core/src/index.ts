@@ -4,6 +4,7 @@ export * from './section/Section';
 export * from './section/StickySection';
 export * from './context/PageContext';
 export * from './utils/getIntersectionObserver';
+export * from './utils/getStickyPosition';
 export * from './hooks/page/useActiveSectionTracker';
 export * from './hooks/useIntersectingDetection';
 export * from './hooks/useIntersectionObservable';
