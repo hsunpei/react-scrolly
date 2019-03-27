@@ -48,7 +48,7 @@ export function useSectionPosition(
   });
 
   /** Function to set the subscription to the page resizing  */
-  const { setSubscription: setPageSubscpt } = useSubscription(null);
+  const { setSubscription } = useSubscription(null);
 
   /** Observer to the window resizing events */
   const combinedResizeObsRef = useRef(intersectObsr$.pipe(
@@ -102,7 +102,7 @@ export function useSectionPosition(
       }
 
       // set the subscription to the page resizing events and intersection events
-      setPageSubscpt(combinedResizeObsRef.current.subscribe({
+      setSubscription(combinedResizeObsRef.current.subscribe({
         next: (sectionBoundingRect) => {
           updateSectionPosition(sectionBoundingRect!);
         },
