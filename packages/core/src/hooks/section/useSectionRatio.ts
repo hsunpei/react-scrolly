@@ -94,18 +94,6 @@ export function useSectionRatio(
     [isIntersecting, sectionTop, scrollInfo],
   );
 
-  useEffect(
-    () => {
-      console.log('>///<', {
-        isIntersecting,
-        scrolledRatio,
-        sectionTop,
-        scrollInfo,
-        boundingRect,
-      });
-    },
-  );
-
   return {
     isIntersecting,
     scrolledRatio,
