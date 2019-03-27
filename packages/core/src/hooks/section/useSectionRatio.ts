@@ -32,7 +32,7 @@ export function useSectionRatio(
   /**
    * By setting an unique Section ID, you can know which section the user is currently viewing.
    * If `trackingId` is not null,
-   * `usePageScroll` will set it to `activeSectionId` of the `<Page>`
+   * it will trigger the update of the active section infomation managed in `<Page>`.
    * Please make sure that on the same `scrollTop`,
    * there is **NO** more than one tracked section (section with `trackingId`).
    */

@@ -5,7 +5,11 @@ menu: Sections
 ---
 
 import { Playground, PropsTable } from 'docz'
-import { Page, Section, StickySection, PageContext } from '@intrasections/core'
+import {
+  Page,
+  Section,
+  StickySectionWithActiveInfo,
+} from '@intrasections/core'
 
 import { sectionStyle } from './styles'
 
@@ -13,10 +17,10 @@ import { sectionStyle } from './styles'
 <Playground>
   <div style={{ width: '100%', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
     <Page>
-      <StickySection
+      <StickySectionWithActiveInfo
         renderNonSticky={
           <>
-            <Section trackingId="section1" trackOnce style={sectionStyle}>
+            <Section trackingId="section1" style={sectionStyle}>
               {({isIntersecting, scrolledRatio}) => <div>Section # 1: {`${isIntersecting}`}, {scrolledRatio}</div>}
             </Section>
             <Section trackingId="section2" style={sectionStyle}>
@@ -28,7 +32,7 @@ import { sectionStyle } from './styles'
           </>
         }
       >
-        {() => (
+        {({activeSection}) => (
           <div style={{
               width: '50%',
               height: '100%',
@@ -40,14 +44,12 @@ import { sectionStyle } from './styles'
               flexDirection: 'column',
             }}
           >
-            <PageContext.Consumer>
-              {({ activeSectionId }) => (
-                <span>{activeSectionId}</span>
-              )}
-            </PageContext.Consumer>
+            {activeSection &&
+              <span>{activeSection.id}: {activeSection.ratio}</span>
+            }
           </div>
         )}
-      </StickySection>
+      </StickySectionWithActiveInfo>
     </Page>
   </div>
 </Playground>

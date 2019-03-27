@@ -7,7 +7,8 @@ export interface SectionProps {
   /**
    * By setting an unique Section ID, you can know which section the user is currently viewing.
    * If `trackingId` is not null,
-   * `<Section>` will set it to `activeSectionId` of the `<Page>`
+   * `<Section>` will notify the `<Page>` to keep track of the sections in the viewport,
+   * and determine which is closest to the bottom of the viewport.
    * Please make sure that on the same `scrollTop`,
    * there is **NO** more than one tracked section (section with `trackingId`).
    */
