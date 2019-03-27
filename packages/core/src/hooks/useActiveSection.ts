@@ -1,10 +1,10 @@
 import {
-  useState,
   useRef,
   useCallback,
 } from 'react';
+import { Subject } from 'rxjs';
 
-import { ActiveSection, sectionID } from '../context/PageContext';
+import { ActiveSectionInfo, ActiveSectionController, sectionID } from '../context/PageContext';
 
 type SectionDistance = {
   idx: string,
@@ -15,10 +15,31 @@ type SectionDistance = {
  * Manage the current active section tracking ID
  * by selecting the section closest to the scroll bottom
  */
-export function useActiveSection(): ActiveSection {
-  const [activeSectionId, setActiveSectionId] = useState<sectionID>(null);
-
+export function useActiveSection(): ActiveSectionController {
+  /** keep track of the all the sections appeared in the viewport */
   const activeSections = useRef({});
+
+  /** keep track of the `trackingId` of the section closet to the bottom of the viewport */
+  const activeSectionId = useRef<sectionID>(null);
+
+  // make a Subject to take all the changes and transform it as a RX Observable
+  const activeSectionSubjectRef = useRef(new Subject<ActiveSectionInfo>());
+  const activeSectionObservableRef = useRef(activeSectionSubjectRef.current.asObservable());
+
+  /**
+   * Let Section set the scrolled ratio if it is active
+   */
+  const updateScrollRatio = useCallback(
+    (trackingId: string, scrolledRatio: number) => {
+      if (activeSectionId.current === trackingId) {
+        activeSectionSubjectRef.current.next({
+          id: trackingId,
+          ratio: scrolledRatio,
+        });
+      }
+    },
+    [],
+  );
 
   /**
    * Update the current active section by selecting the section
@@ -42,9 +63,9 @@ export function useActiveSection(): ActiveSection {
       );
 
       if (!closest) {
-        setActiveSectionId(null);
+        activeSectionId.current = null;
       } else {
-        setActiveSectionId(closest.idx);
+        activeSectionId.current = closest.idx;
       }
     },
     [],
@@ -55,7 +76,10 @@ export function useActiveSection(): ActiveSection {
    */
   const addActiveSection = useCallback(
     (trackingId: string, sectionTop: number, scrollBottom: number) => {
-      activeSections.current[trackingId] = sectionTop;
+      activeSections.current[trackingId] = {
+        sectionTop,
+        scrolledRatio: 0,
+      };
       updateActiveSection(scrollBottom);
     },
     [],
@@ -73,8 +97,9 @@ export function useActiveSection(): ActiveSection {
   );
 
   return {
-    activeSectionId,
     addActiveSection,
     removeActiveSection,
+    updateScrollRatio,
+    activeSectionObs$: activeSectionObservableRef.current,
   };
 }

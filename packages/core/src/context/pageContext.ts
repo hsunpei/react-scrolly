@@ -9,15 +9,24 @@ interface ScrollPosition {
   windowHeight: number;
 }
 
-export interface ActiveSection {
-  activeSectionId: sectionID;
-  addActiveSection: (trackingId: string,  sectionTop: number, scrollBottom: number) => void;
-  removeActiveSection: (trackingId: string, scrollBottom: number) => void;
+export interface ActiveSectionInfo {
+  /** `trackingId` of the active section (section closest to the bottom of the viewport) */
+  id: sectionID;
+
+  /** Ratio of the active section being scrolled  */
+  ratio: number | null;
 }
 
-export interface PageContextInterface extends ActiveSection {
-  scrollObserver$: Observable<ScrollPosition>;
-  resizeObserver$: Observable<Event>;
+export interface ActiveSectionController {
+  addActiveSection: (trackingId: string,  sectionTop: number, scrollBottom: number) => void;
+  removeActiveSection: (trackingId: string, scrollBottom: number) => void;
+  updateScrollRatio: (trackingId: string, scrolledRatio: number) => void;
+  activeSectionObs$: Observable<ActiveSectionInfo>;
+}
+
+export interface PageContextInterface extends ActiveSectionController {
+  scrollObs$: Observable<ScrollPosition>;
+  resizeObs$: Observable<Event>;
 }
 
 export const PageContext = createContext<PageContextInterface | null>(null);

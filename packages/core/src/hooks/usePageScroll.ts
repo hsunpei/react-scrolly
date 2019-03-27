@@ -17,7 +17,7 @@ export function usePageScroll(
   intersectObsr$: Observable<IntersectionInfo>,
 ) {
   const context = useContext<PageContextInterface | null>(PageContext);
-  const { scrollObserver$ } = context!;
+  const { scrollObs$ } = context!;
 
   const [intersecting, setIntersecting] = useState<boolean>(false);
 
@@ -46,7 +46,7 @@ export function usePageScroll(
     .pipe(
       switchMap((isIntersecting: boolean) => {
         return isIntersecting
-          ? scrollObserver$.pipe(
+          ? scrollObs$.pipe(
             map((scrollPos: ScrollPosition) => ({
               isIntersecting,
               scrollPos,

@@ -33,7 +33,7 @@ export function useSectionPosition(
 ): SectionPosition {
 
   const context = useContext<PageContextInterface | null>(PageContext);
-  const { resizeObserver$ } = context!;
+  const { resizeObs$ } = context!;
 
   const [sectionPosition, setSectionPosition] = useState<SectionPosition>({
     sectionTop: 0,
@@ -60,7 +60,7 @@ export function useSectionPosition(
           of(sectionBoundingRect)
           // merge it with the intersection observer
           .pipe(
-            merge(resizeObserver$.pipe(
+            merge(resizeObs$.pipe(
               map(() => {
                 const currentSect = sectionRef.current;
                 if (currentSect) {

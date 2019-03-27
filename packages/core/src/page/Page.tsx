@@ -36,8 +36,12 @@ export const Page: FunctionComponent<PageProps> = ({
   children,
   resizeThrottleTime = 300,
 }) => {
-  // TODO: change it with dispatch
-  const { activeSectionId, addActiveSection, removeActiveSection } = useActiveSection();
+  const {
+    updateScrollRatio,
+    addActiveSection,
+    removeActiveSection,
+    activeSectionObs$,
+  } = useActiveSection();
 
   /**
    * Subject to be combined with `scrollSubjectRef`
@@ -86,11 +90,12 @@ export const Page: FunctionComponent<PageProps> = ({
 
   const { Provider } = PageContext;
   const context: PageContextInterface = {
-    activeSectionId,
     addActiveSection,
     removeActiveSection,
-    scrollObserver$: scrollObserverRef.current,
-    resizeObserver$: resizeObserverRef.current,
+    updateScrollRatio,
+    activeSectionObs$,
+    scrollObs$: scrollObserverRef.current,
+    resizeObs$: resizeObserverRef.current,
   };
 
   useEffect(

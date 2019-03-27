@@ -37,7 +37,7 @@ export function useSectionRatio(
   trackingId?: string,
 ): SectionInfo {
   const context = useContext<PageContextInterface | null>(PageContext);
-  const { addActiveSection, removeActiveSection } = context!;
+  const { addActiveSection, removeActiveSection, updateScrollRatio } = context!;
 
   // convert the intersecting state as [preIntersecting, currentIntersecting]
   const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
@@ -62,7 +62,12 @@ export function useSectionRatio(
         ratio = 0;
       }
 
-      // console.log('######## trackingId = ', trackingId, distance)
+      // if the section is tracked, let `useActiveSection()`to determine whether it is active,
+      // and if it is active, the scrolled ratio which it keeps track of will be updated
+      if (trackingId) {
+        updateScrollRatio(trackingId, ratio);
+      }
+
       return ratio;
     },
     [sectionTop, boundingRect, scrollInfo],
@@ -75,7 +80,7 @@ export function useSectionRatio(
       const preInter = preIntersecting.current;
 
       if (trackingId) {
-        if (!preInter && curInter){
+        if (!preInter && curInter) {
           // update the section currently being scrolled
           addActiveSection(trackingId, sectionTop, scrollInfo.scrollBottom);
         } else if (preInter && !curInter) {
