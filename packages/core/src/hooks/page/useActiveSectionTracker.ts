@@ -23,7 +23,7 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
   const activeSectionId = useRef<sectionID>(null);
 
   // make a Subject to take all the changes and transform it as a RX Observable
-  const activeSectionSubjectRef = useRef(new Subject<ActiveSectionInfo>());
+  const activeSectionSubjectRef = useRef(new Subject<ActiveSectionInfo | null>());
   const activeSectionObservableRef = useRef(activeSectionSubjectRef.current.asObservable());
 
   /**
@@ -31,7 +31,9 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
    */
   const updateScrollRatio = useCallback(
     (trackingId: string, scrolledRatio: number) => {
-      if (activeSectionId.current === trackingId) {
+      const activeId = activeSectionId.current;
+      if (activeId && activeId === trackingId) {
+        // notify all sections subscribing to ActiveSectionInfo
         activeSectionSubjectRef.current.next({
           id: trackingId,
           ratio: scrolledRatio,
@@ -63,7 +65,11 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
       );
 
       if (!closest) {
+        // there is no section in the viewport
         activeSectionId.current = null;
+
+        // notify all sections subscribing to ActiveSectionInfo
+        activeSectionSubjectRef.current.next(null);
       } else {
         activeSectionId.current = closest.idx;
       }
