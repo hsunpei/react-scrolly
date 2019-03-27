@@ -41,8 +41,11 @@ export function useActiveSectionInfo(
     .pipe(
       switchMap((isIntersecting: boolean) => {
         return isIntersecting
-          ? activeSectionObs$
-          // when the section is scrolled out of the viewport, update its dimension
+          ? activeSectionObs$.pipe(
+            map((activeSectionInfo) => {
+              return activeSectionInfo;
+            })
+          )
           : of(undefined);
       }),
       filter(info => typeof info !== 'undefined'),

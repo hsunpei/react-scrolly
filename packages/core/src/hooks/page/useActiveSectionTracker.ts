@@ -16,8 +16,15 @@ type SectionDistance = {
  * by selecting the section closest to the scroll bottom
  */
 export function useActiveSectionTracker(): ActiveSectionTracker {
-  /** keep track of the all the sections appeared in the viewport */
-  const activeSections = useRef({});
+  /**
+   * keep track of the all the sections appeared in the viewport,
+   * - Key: `trackingId`
+   * - Value: `sectionTop`.
+   * @example {
+   *  'section-2': 1000,
+   * }
+   */
+  const visibleSections = useRef({});
 
   /** keep track of the `trackingId` of the section closet to the bottom of the viewport */
   const activeSectionId = useRef<sectionID>(null);
@@ -49,7 +56,7 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
    */
   const updateActiveSection = useCallback(
     (scrollBottom: number) => {
-      const trackedSects = activeSections.current;
+      const trackedSects = visibleSections.current;
 
       // find the item closest to the bottom of the viewport
       const closest: SectionDistance = Object.keys(trackedSects).reduce(
@@ -82,10 +89,8 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
    */
   const addActiveSection = useCallback(
     (trackingId: string, sectionTop: number, scrollBottom: number) => {
-      activeSections.current[trackingId] = {
-        sectionTop,
-        scrolledRatio: 0,
-      };
+      visibleSections.current[trackingId] = sectionTop;
+
       updateActiveSection(scrollBottom);
     },
     [],
@@ -96,7 +101,7 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
    */
   const removeActiveSection = useCallback(
     (trackingId: string, scrollBottom: number) => {
-      delete activeSections.current[trackingId];
+      delete visibleSections.current[trackingId];
       updateActiveSection(scrollBottom);
     },
     [],
