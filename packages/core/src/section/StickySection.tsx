@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import { SectionInfo, useSectionRatio } from '../hooks/useSectionRatio';
+import { SectionInfo, useSectionRatio } from '../hooks/section/useSectionRatio';
 
 import { SectionProps } from './Section';
 

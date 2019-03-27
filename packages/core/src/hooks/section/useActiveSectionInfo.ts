@@ -7,10 +7,9 @@ import {
   useContext,
 } from 'react';
 
-import { ActiveSectionInfo, PageContext, PageContextInterface } from '../context/PageContext';
-
-import { IntersectionInfo } from './useIntersectionObservable';
-import { useSubscription } from './useSubscription';
+import { ActiveSectionInfo, PageContext, PageContextInterface } from '../../context/PageContext';
+import { IntersectionInfo } from '../useIntersectionObservable';
+import { useSubscription } from '../useSubscription';
 
 export function useActiveSectionInfo(
   intersectObsr$: Observable<IntersectionInfo>,

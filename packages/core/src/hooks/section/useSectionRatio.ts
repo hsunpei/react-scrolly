@@ -5,12 +5,11 @@ import {
   useContext,
 } from 'react';
 
-import { ScrollPosition } from '../page/Page';
-import { PageContext, PageContextInterface } from '../context/PageContext';
-
-import { useIntersectionObservable } from './useIntersectionObservable';
-import { useSectionPosition, SectionPosition } from './useSectionPosition';
-import { usePageScroll } from './usePageScroll';
+import { ScrollPosition } from '../../page/Page';
+import { PageContext, PageContextInterface } from '../../context/PageContext';
+import { useIntersectionObservable } from '../useIntersectionObservable';
+import { useSectionPosition, SectionPosition } from '../useSectionPosition';
+import { usePageScroll } from '../usePageScroll';
 
 export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */

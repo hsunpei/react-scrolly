@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 import { ScrollPosition } from '../page/Page';
-import { SectionInfo, useSectionRatio } from '../hooks/useSectionRatio';
+import { SectionInfo, useSectionRatio } from '../hooks/section/useSectionRatio';
 
 export interface SectionState extends ScrollPosition {
   /** From IntersectionObserver: whether the `<Section>` is intersecting the root */

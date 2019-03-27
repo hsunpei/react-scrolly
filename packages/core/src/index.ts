@@ -9,5 +9,5 @@ export * from './hooks/useIntersectingDetection';
 export * from './hooks/useIntersectionObservable';
 export * from './hooks/usePageScroll';
 export * from './hooks/useSectionPosition';
-export * from './hooks/useSectionRatio';
+export * from './hooks/section/useSectionRatio';
 export * from './hooks/useSubscription';
