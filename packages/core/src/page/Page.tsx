@@ -4,7 +4,7 @@ import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
 import { getScrollPosition } from '../utils/getScrollPosition';
-import { useActiveSection } from '../hooks/useActiveSection';
+import { useActiveSection } from '../hooks/page/useActiveSection';
 
 export interface ScrollPosition {
   /** The pageYOffset of the window obtained in <Page>  */
