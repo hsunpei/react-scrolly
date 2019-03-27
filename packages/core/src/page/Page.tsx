@@ -4,7 +4,7 @@ import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
 import { getScrollPosition } from '../utils/getScrollPosition';
-import { useActiveSection } from '../hooks/page/useActiveSection';
+import { useActiveSectionTracker } from '../hooks/page/useActiveSectionTracker';
 
 export interface ScrollPosition {
   /** The pageYOffset of the window obtained in <Page>  */
@@ -41,7 +41,7 @@ export const Page: FunctionComponent<PageProps> = ({
     addActiveSection,
     removeActiveSection,
     activeSectionObs$,
-  } = useActiveSection();
+  } = useActiveSectionTracker();
 
   /**
    * Subject to be combined with `scrollSubjectRef`

@@ -62,7 +62,8 @@ export function useSectionRatio(
         ratio = 0;
       }
 
-      // if the section is tracked, let `useActiveSection()`to determine whether it is active,
+      // if the section is tracked,
+      // let `useActiveSectionTracker()`to determine whether it is active,
       // and if it is active, the scrolled ratio which it keeps track of will be updated
       if (trackingId) {
         updateScrollRatio(trackingId, ratio);

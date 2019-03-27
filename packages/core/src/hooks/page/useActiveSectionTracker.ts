@@ -4,7 +4,7 @@ import {
 } from 'react';
 import { Subject } from 'rxjs';
 
-import { ActiveSectionInfo, ActiveSectionController, sectionID } from '../context/PageContext';
+import { ActiveSectionInfo, ActiveSectionTracker, sectionID } from '../../context/PageContext';
 
 type SectionDistance = {
   idx: string,
@@ -15,7 +15,7 @@ type SectionDistance = {
  * Manage the current active section tracking ID
  * by selecting the section closest to the scroll bottom
  */
-export function useActiveSection(): ActiveSectionController {
+export function useActiveSectionTracker(): ActiveSectionTracker {
   /** keep track of the all the sections appeared in the viewport */
   const activeSections = useRef({});
 
