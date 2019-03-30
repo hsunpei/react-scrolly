@@ -39,6 +39,7 @@
     "url": "https://github.com/garfieldduck/intrasections/issues"
   },
   "dependencies": {
+    "intersection-observer": "^0.5.1",
     "rxjs": "^6.4.0"
   }
 }

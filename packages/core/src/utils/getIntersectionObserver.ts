@@ -1,4 +1,4 @@
-// TODO: add the polyfill of IntersectionObserver
+import 'intersection-observer';
 
 export interface Margin {
   top: number;
