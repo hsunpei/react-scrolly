@@ -19,7 +19,12 @@
     "noUnusedLocals": true,
     "removeComments": false,
     "allowSyntheticDefaultImports": true,
-    "typeRoots": ["../node_modules/@types", "../types"]
+    "typeRoots": [
+      "react",
+      "react-spring",
+      "styled-components",
+      "../types"
+    ]
   },
   "exclude": [
     "node_modules",
