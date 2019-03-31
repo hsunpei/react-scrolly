@@ -2,7 +2,10 @@ import * as path from 'path';
 
 const modifyBundlerConfig = config => {
   config.resolve.alias = Object.assign({}, config.resolve.alias, {
-    '@react-scrolly/core': path.resolve(__dirname, 'packages/core/src')
+    '@react-scrolly/core': path.resolve(__dirname, 'packages/core/src'),
+    '@react-scrolly/scene': path.resolve(__dirname, 'packages/scene/src'),
+    '@react-scrolly/plot': path.resolve(__dirname, 'packages/plot/src'),
+    '@react-scrolly/magic': path.resolve(__dirname, 'packages/magic/src')
   });
   return config;
 };
