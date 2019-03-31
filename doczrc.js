@@ -2,13 +2,13 @@ import * as path from 'path';
 
 const modifyBundlerConfig = config => {
   config.resolve.alias = Object.assign({}, config.resolve.alias, {
-    '@intrasections/core': path.resolve(__dirname, 'packages/core/src')
+    '@react-scrolly/core': path.resolve(__dirname, 'packages/core/src')
   });
   return config;
 };
 
 export default {
-  title : 'Intrasections',
+  title : 'React-Scrolly',
   typescript : true,
   htmlContext : {
     head: {

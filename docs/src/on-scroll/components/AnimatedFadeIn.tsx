@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import styledComponents from 'styled-components';
-import { useIntersectingDetection } from '@intrasections/core';
+import { useIntersectingDetection } from '@react-scrolly/core';
 
 const Wrapper = styledComponents.div<{isIntersecting: boolean}>`
   padding: 4em;

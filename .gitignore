@@ -4,6 +4,7 @@ node_modules/
 .next/
 out/
 lib/
+dist/
 .docz/
 *-debug.log
 *-error.log

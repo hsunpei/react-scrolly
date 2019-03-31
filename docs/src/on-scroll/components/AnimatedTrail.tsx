@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import styledComponents from 'styled-components';
 import { useTrail, animated } from 'react-spring';
-import { useIntersectingDetection } from '@intrasections/core';
+import { useIntersectingDetection } from '@react-scrolly/core';
 
 const Wrapper = styledComponents.div`
   padding: 5rem;

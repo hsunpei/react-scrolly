@@ -1,13 +1,22 @@
 {
-  "name": "intrasections",
+  "name": "react-scrolly",
   "workspaces": [
     "packages/*"
   ],
   "private": true,
+  "scripts": {
+    "start": "yarn run clean && yarn run dev",
+    "dev": "docz dev --port 5000",
+    "clean": "lerna run --parallel clean",
+    "build:doc": "docz build",
+    "prepublish": "lerna run prepublish && yarn build:doc",
+    "lint": "lerna run lint --parallel --stream"
+  },
   "devDependencies": {
     "@types/node": "^10.12.18",
     "@types/react": "^16.8.10",
     "@types/styled-components": "^4.1.12",
+    "ts-loader": "^5.3.3",
     "docz-theme-default": "^0.13.7",
     "lerna": "^3.8.0",
     "npm-run-all": "^4.1.5",
@@ -21,15 +30,9 @@
     "tslint-config-airbnb": "^5.11.1",
     "tslint-react": "^3.6.0",
     "tslint-react-hooks": "^1.1.0",
-    "typescript": "^3.3.3"
-  },
-  "scripts": {
-    "start": "npm run clean && npm run dev",
-    "dev": "docz dev --port 5000",
-    "clean": "lerna run --parallel clean",
-    "build:doc": "docz build",
-    "prepublish": "lerna run prepublish",
-    "lint": "lerna run lint --parallel --stream"
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
   },
   "resolutions": {
     "ansi-styles": "^3.2.0"

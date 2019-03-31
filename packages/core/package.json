@@ -1,5 +1,5 @@
 {
-  "name": "@intrasections/core",
+  "name": "@react-scrolly/core",
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "garfieldduck <garfieldduck@gmail.com>",
@@ -23,10 +23,11 @@
     "url": "git+https://github.com/garfieldduck/intrasections.git"
   },
   "scripts": {
-    "prepublish": "npm run clean && npm run build",
+    "prepublish": "yarn run clean && yarn run build",
     "build": "run-p \"build:*\"",
     "build:esm": "tsc -p ./src",
     "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
+    "build:dist": "webpack --config=webpack.config.dist.js",
     "clean": "rimraf ./dist ./lib ./es5 ./deploy",
     "lint": "tslint --project ./src"
   },
