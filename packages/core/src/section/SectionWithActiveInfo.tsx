@@ -4,7 +4,7 @@ import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
 import { useSectionRatio } from '../hooks/section/useSectionRatio';
 import { useActiveSectionInfo } from '../hooks/section/useActiveSectionInfo';
 
-import { SectionProps } from './Section';
+import { SectionProps } from '../components/Section';
 
 export const SectionWithActiveInfo = ({
   className,

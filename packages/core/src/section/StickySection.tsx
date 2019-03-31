@@ -4,7 +4,7 @@ import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
 import { useSectionRatio } from '../hooks/section/useSectionRatio';
 import { getStickyPosition } from '../utils/getStickyPosition';
 
-import { SectionProps } from './Section';
+import { SectionProps } from '../components/Section';
 
 export interface StickySectionProps extends SectionProps {
   /**

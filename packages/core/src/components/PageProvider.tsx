@@ -7,17 +7,17 @@ import { getScrollPosition } from '../utils/getScrollPosition';
 import { useActiveSectionTracker } from '../hooks/page/useActiveSectionTracker';
 
 export interface ScrollPosition {
-  /** The pageYOffset of the window obtained in <Page>  */
+  /** The pageYOffset of the window obtained in <PageProvider>  */
   scrollTop: number;
 
-  /** The pageYOffset + height of the window obtained in <Page> */
+  /** The pageYOffset + height of the window obtained in <PageProvider> */
   scrollBottom: number;
 
-  /** The height of the window obtained in <Page> */
+  /** The height of the window obtained in <PageProvider> */
   windowHeight: number;
 
   /**
-   * The difference between the current scrolltop and previous scrolltop obtained in <Page>.
+   * The difference between the current scrolltop and previous scrolltop obtained in <PageProvider>.
    * Positive: if the user scroll down the page.
    */
   scrollOffset: number;
@@ -32,7 +32,7 @@ export interface PageProps {
   resizeThrottleTime: number;
 }
 
-export const Page: FunctionComponent<PageProps> = ({
+export const PageProvider: FunctionComponent<PageProps> = ({
   children,
   resizeThrottleTime = 300,
 }) => {

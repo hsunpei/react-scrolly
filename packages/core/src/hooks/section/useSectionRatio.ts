@@ -6,7 +6,7 @@ import {
   useContext,
 } from 'react';
 
-import { ScrollPosition } from '../../page/Page';
+import { ScrollPosition } from '../../components/PageProvider';
 import { PageContext, PageContextInterface } from '../../context/PageContext';
 import { useSectionPosition, SectionPosition } from '../useSectionPosition';
 import { usePageScroll } from '../usePageScroll';

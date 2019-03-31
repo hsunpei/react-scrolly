@@ -1,5 +1,5 @@
-export * from './page/Page';
-export * from './section/Section';
+export * from './components/PageProvider';
+export * from './components/Section';
 export * from './section/SectionWithActiveInfo';
 export * from './section/StickySection';
 export * from './section/StickySectionWithActiveInfo';
