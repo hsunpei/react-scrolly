@@ -1,8 +1,8 @@
 {
-  "name": "@react-scrolly/core",
+  "name": "@react-scrolly/plot",
   "version": "0.0.0",
   "description": "> TODO: description",
-  "author": "garfieldduck <garfieldduck@gmail.com>",
+  "author": "Mika Wang <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
   "main": "lib/cjs/index.js",
@@ -35,10 +35,6 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.5",
     "react-dom": "^16.8.5"
-  },
-  "dependencies": {
-    "intersection-observer": "^0.5.1",
-    "rxjs": "^6.4.0"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
