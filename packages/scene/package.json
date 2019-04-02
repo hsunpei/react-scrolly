@@ -36,6 +36,9 @@
     "react": "^16.8.5",
     "react-dom": "^16.8.5"
   },
+  "dependencies": {
+    "@react-scrolly/core": "^0.0.0"
+  },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
   }

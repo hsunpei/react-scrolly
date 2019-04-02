@@ -3686,7 +3686,7 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-docz-core@1.0.0-rc.5, docz-core@^1.0.0-rc.4:
+docz-core@^1.0.0-rc.4:
   version "1.0.0-rc.5"
   resolved "https://registry.yarnpkg.com/docz-core/-/docz-core-1.0.0-rc.5.tgz#0a2cba85b368b572da8926b2cd575dc6afc522a3"
   dependencies:

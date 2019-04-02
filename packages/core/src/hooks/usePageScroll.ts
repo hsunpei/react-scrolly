@@ -8,7 +8,7 @@ import {
 } from 'react';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
-import { ScrollPosition } from '../page/Page';
+import { ScrollPosition } from '../components/PageProvider';
 
 import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
