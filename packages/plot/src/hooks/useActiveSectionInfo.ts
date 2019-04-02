@@ -6,10 +6,16 @@ import {
   useRef,
   useContext,
 } from 'react';
-
-import { ActiveSectionInfo, PageContext, PageContextInterface } from '../../context/PageContext';
-import { IntersectionInfo } from '../useIntersectionObservable';
-import { useSubscription } from '../useSubscription';
+import {
+  // hooks
+  useSubscription,
+  // context
+  PageContext,
+  // types
+  IntersectionInfo,
+  ActiveSectionInfo,
+  PageContextInterface,
+ } from '@react-scrolly/core';
 
 export function useActiveSectionInfo(
   intersectObsr$: Observable<IntersectionInfo>,

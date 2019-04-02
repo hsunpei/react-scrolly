@@ -1,12 +1,15 @@
 import React, { useRef } from 'react';
+import {
+  // hooks
+  useIntersectionObservable,
+  useSectionRatio,
+  // types
+  SectionProps,
+ } from '@react-scrolly/core';
 
-import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
-import { useSectionRatio } from '../hooks/section/useSectionRatio';
-import { useActiveSectionInfo } from '../hooks/section/useActiveSectionInfo';
+import { useActiveSectionInfo } from '../hooks/useActiveSectionInfo';
 
-import { SectionProps } from '../components/Section';
-
-export const SectionWithActiveInfo = ({
+export const Plot = ({
   className,
   style,
   children,

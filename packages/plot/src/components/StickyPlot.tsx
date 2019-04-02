@@ -1,20 +1,32 @@
 import React, { useRef } from 'react';
+import {
+  // hooks
+  useIntersectionObservable,
+  useSectionRatio,
+  // utils
+  getStickyPosition,
+  // types
+  SectionProps,
+ } from '@react-scrolly/core';
 
-import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
-import { useSectionRatio } from '../hooks/section/useSectionRatio';
-import { useActiveSectionInfo } from '../hooks/section/useActiveSectionInfo';
-import { getStickyPosition } from '../utils/getStickyPosition';
+import { useActiveSectionInfo } from '../hooks/useActiveSectionInfo';
 
-import { StickySectionProps } from './StickySection';
+export interface StickyPlotProps extends SectionProps {
+  /**
+   * Render the non-sticky part of the section,
+   * which is placed on top of the children
+   */
+  renderOverlay: React.ReactNode;
+}
 
-export const StickySectionWithActiveInfo = ({
+export const StickyPlot = ({
   className,
   style,
   children,
   trackingId,
-  renderNonSticky,
+  renderOverlay,
   ...restProps
-}: StickySectionProps) => {
+}: StickyPlotProps) => {
   const outerStyle: React.CSSProperties = {
     ...style,
     position: 'relative',
@@ -41,7 +53,7 @@ export const StickySectionWithActiveInfo = ({
         })}
       </div>
       <div style={{ position: 'relative' }}>
-        {renderNonSticky}
+        {renderOverlay}
       </div>
     </div>
   );

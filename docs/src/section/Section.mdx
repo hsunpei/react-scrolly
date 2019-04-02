@@ -8,12 +8,15 @@ import { Playground, Props } from 'docz'
 import {
   PageProvider,
   Section,
-  StickySectionWithActiveInfo,
 } from '@react-scrolly/core'
 
 import {
   StickyScene,
 } from '@react-scrolly/scene'
+
+import {
+  StickyPlot,
+} from '@react-scrolly/plot'
 
 import { sectionStyle } from './styles'
 
@@ -22,8 +25,8 @@ import { sectionStyle } from './styles'
   <div style={{ width: '100%', background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
     <PageProvider>
       <>
-        <StickySectionWithActiveInfo
-          renderNonSticky={
+        <StickyPlot
+          renderOverlay={
             <>
               <Section trackingId="section1" style={sectionStyle}>
                 {({isIntersecting, scrolledRatio}) => <div>Section # 1: {`${isIntersecting}`}, {scrolledRatio}</div>}
@@ -54,7 +57,7 @@ import { sectionStyle } from './styles'
               }
             </div>
           )}
-        </StickySectionWithActiveInfo>
+        </StickyPlot>
 
         <StickyScene
           renderOverlay={
