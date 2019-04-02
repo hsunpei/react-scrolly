@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import styledComponents from 'styled-components';
 import { useTrail, animated } from 'react-spring';
-import { useIntersectingDetection } from '@react-scrolly/core';
+import { useIntersectingTrigger } from '@react-scrolly/trigger';
 
 const Wrapper = styledComponents.div`
   padding: 5rem;
@@ -21,7 +21,7 @@ const items = ['Lorem', 'ipsum', 'dolor', 'sit'];
 
 export const AnimatedTrail = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isIntersecting = useIntersectingDetection(containerRef);
+  const isIntersecting = useIntersectingTrigger(containerRef);
   const trail = useTrail(items.length, {
     opacity: isIntersecting ? 1 : 0,
     x: isIntersecting ? 0 : 120,

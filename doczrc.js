@@ -5,7 +5,7 @@ const modifyBundlerConfig = config => {
     '@react-scrolly/core': path.resolve(__dirname, 'packages/core/src'),
     '@react-scrolly/scene': path.resolve(__dirname, 'packages/scene/src'),
     '@react-scrolly/plot': path.resolve(__dirname, 'packages/plot/src'),
-    '@react-scrolly/magic': path.resolve(__dirname, 'packages/magic/src')
+    '@react-scrolly/trigger': path.resolve(__dirname, 'packages/trigger/src')
   });
   return config;
 };

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import styledComponents from 'styled-components';
-import { useIntersectingDetection } from '@react-scrolly/core';
+import { useIntersectingTrigger } from '@react-scrolly/trigger';
 
 const Wrapper = styledComponents.div<{isIntersecting: boolean}>`
   padding: 4em;
@@ -13,7 +13,7 @@ const Wrapper = styledComponents.div<{isIntersecting: boolean}>`
 
 export const AnimatedFadeIn = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isIntersecting = useIntersectingDetection(containerRef);
+  const isIntersecting = useIntersectingTrigger(containerRef);
 
   return (
     <Wrapper ref={containerRef} isIntersecting={isIntersecting}>

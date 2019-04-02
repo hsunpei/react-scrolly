@@ -1,11 +1,11 @@
-# `magic`
+# `trigger`
 
 > TODO: description
 
 ## Usage
 
 ```
-const magic = require('magic');
+const trigger = require('trigger');
 
 // TODO: DEMONSTRATE API
 ```

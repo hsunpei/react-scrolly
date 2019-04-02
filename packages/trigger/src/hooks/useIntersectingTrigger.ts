@@ -4,13 +4,12 @@ import React, {
   useCallback,
   useState,
 } from 'react';
-
 import {
   getIntersectionObserver,
   IntersectionObserverConfig,
-} from '../utils/getIntersectionObserver';
+} from '@react-scrolly/core';
 
-export function useIntersectingDetection(
+export function useIntersectingTrigger(
   /** Ref which is binded to the container */
   containerRef: React.RefObject<HTMLElement>,
 
