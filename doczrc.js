@@ -23,6 +23,13 @@ export default {
       ]
     }
   },
+  // order of the menu
+  menu: [
+    'Introduction',
+    'Scroll Tracking',
+    'Pinning Sections',
+    'Revealing Animations'
+  ],
   modifyBundlerConfig,
   themeConfig : {
     // See:
@@ -32,15 +39,15 @@ export default {
     codemirrorTheme: 'material',
     showPlaygroundEditor: true, // always display the code in <Playground>
     colors: {
-      primary: '#0acc5a',
+      primary: '#0CCE8B',
       background: '#edeeef',
-      text: '#0a2c43',
-      blue: '#5211de',
+      text: '#282C34',
+      blue: '#3E7998',
       sidebarBg: '#edeeef',
       sidebarBorder: '#a3a4a5',
       border: '#a3a4a5',
       codeBg: '#ffffff',
-      codeColor: '#0acc5a',
+      codeColor: '#0CCE8B',
       theadColor: '#79878e'
     },
     styles: {

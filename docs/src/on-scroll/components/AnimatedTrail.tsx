@@ -9,7 +9,7 @@ const Wrapper = styledComponents.div`
 
 const Text = styledComponents.span`
   display: block;
-  color: #0acc5a;
+  color: #0CCE8B;
   font-size: 3em;
   font-weight: 800;
   text-transform: uppercase;

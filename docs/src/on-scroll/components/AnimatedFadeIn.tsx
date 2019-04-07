@@ -4,7 +4,7 @@ import { useIntersectingTrigger } from '@react-scrolly/trigger';
 
 const Wrapper = styledComponents.div<{isIntersecting: boolean}>`
   padding: 4em;
-  background: blanchedalmond;
+  background: #F2E48B;
   height: 20rem;
   transition: all 1s ease-in-out;
   opacity: ${ props => props.isIntersecting ? 1 : 0};
