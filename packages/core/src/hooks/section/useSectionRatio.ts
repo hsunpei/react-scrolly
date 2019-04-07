@@ -19,7 +19,7 @@ export interface SectionInfo extends SectionPosition {
   /** Information related to the window scrolling and the ratio of the section being scrolled */
   scrollInfo: ScrollPosition;
 
-  /** Ratio of the Page being scrolled */
+  /** Ratio of the section being scrolled */
   scrolledRatio: number;
 }
 
