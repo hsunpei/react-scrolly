@@ -4,6 +4,27 @@ route: /scroll_tracking/section
 menu: Scroll Tracking
 ---
 
-## Hello
+# Section
+## Basic scroll tracking of a component
 
-Test
+Using `<Section>` and `<PageContext>`, you can track the following information of a component (`<Section>`) when it is scrolling with ease:
+
+- **Visibility**: Whether the component is intersecting with the viewport.
+- **Scroll progress**: The ratio of component being scrolled.
+- **Position**: The position of the component relative to the viewport.
+
+## Example
+
+## Usage
+
+### First, make sure to wrap `<PageContext>` at the page level
+
+Before we get started, it is important to note that you have to wrap the components to track
+with `<PageContext>`.
+
+`<PageContext>` contains Observers which are essential to `<Section>`,
+by allowing it to subscribe to the events such as window scrolling and resizing.
+
+## Advanced usages
+
+## How it works
