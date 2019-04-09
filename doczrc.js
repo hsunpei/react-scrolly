@@ -1,4 +1,5 @@
 import * as path from 'path';
+import { defaultColors } from './docs/src/config/theme';
 
 const modifyBundlerConfig = config => {
   config.resolve.alias = Object.assign({}, config.resolve.alias, {
@@ -39,20 +40,20 @@ export default {
     codemirrorTheme: 'material',
     showPlaygroundEditor: true, // always display the code in <Playground>
     colors: {
-      primary: '#0CCE8B',
-      background: '#edeeef',
-      text: '#282C34',
-      blue: '#3E7998',
-      sidebarBg: '#edeeef',
+      primary: defaultColors.primary,
+      background: defaultColors.background,
+      text: defaultColors.text,
+      blue: defaultColors.blue,
+      sidebarBg: defaultColors.background,
       sidebarBorder: '#a3a4a5',
       border: '#a3a4a5',
-      codeBg: '#ffffff',
-      codeColor: '#0CCE8B',
+      codeBg: defaultColors.white,
+      codeColor: defaultColors.primary,
       theadColor: '#79878e'
     },
     styles: {
       playground: {
-        background: '#ffffff'
+        background: defaultColors.white
       }
     }
   }

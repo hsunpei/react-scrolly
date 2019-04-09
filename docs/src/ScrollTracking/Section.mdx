@@ -4,6 +4,14 @@ route: /scroll_tracking/section
 menu: Scroll Tracking
 ---
 
+import { DemoWrapper } from '../components/DemoWrapper'
+import { DemoSection } from '../components/DemoSection.jsx'
+import { CenterBox } from '../components/CenterBox';
+import {
+  PageProvider,
+  Section,
+} from '@react-scrolly/core'
+
 # Section
 ## Basic scroll tracking of a component
 
@@ -14,6 +22,36 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
 - **Position**: The position of the component relative to the viewport.
 
 ## Example
+<DemoWrapper>
+  <PageProvider>
+    <DemoSection height="80vh">
+      {({isIntersecting, scrolledRatio}) => (
+        <CenterBox>
+          <div>
+            <h5>
+              Section #1
+            </h5>
+            <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+            <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
+          </div>
+        </CenterBox>
+      )}
+    </DemoSection>
+    <DemoSection height="60vh">
+      {({isIntersecting, scrolledRatio}) => (
+        <CenterBox>
+          <div>
+            <h5>
+              Section #2
+            </h5>
+            <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+            <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
+          </div>
+        </CenterBox>
+      )}
+    </DemoSection>
+  </PageProvider>
+</DemoWrapper>
 
 ## Usage
 
