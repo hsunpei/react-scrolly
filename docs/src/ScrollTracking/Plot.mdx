@@ -4,6 +4,90 @@ route: /scroll_tracking/plot
 menu: Scroll Tracking
 ---
 
-## Hello
+import { DemoWrapper } from '../components/DemoWrapper'
+import { BorderedDemoSection } from '../components/DemoSection.jsx'
+import { CenterBox } from '../components/CenterBox';
+import {
+  PageProvider,
+  Section,
+} from '@react-scrolly/core'
+import {
+  StickyPlot,
+} from '@react-scrolly/plot'
 
-Test
+
+# Plot
+## Track the section closet to the bottom of the viewport
+
+Using `<Section>` and `<PageContext>`, you can track the following information of a component (`<Section>`) when it is scrolling with ease:
+
+- **Visibility**: Whether the component is intersecting with the viewport.
+- **Scroll progress**: The ratio of component being scrolled.
+- **Position**: The position of the component relative to the viewport.
+
+## Example
+<DemoWrapper>
+  <PageProvider>
+    <StickyPlot
+        renderOverlay={
+          <>
+            <BorderedDemoSection trackingId="RED" height="100vh">
+              {() => (
+                <h5>
+                  RED
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="ORANGE" height="50vh">
+              {() => (
+                <h5>
+                  ORANGE
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="YELLOW" height="50vh">
+              {() => (
+                <h5>
+                  YELLOW
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="GREEN" height="40vh">
+              {() => (
+                <h5>
+                  GREEN
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="BLUE" height="40vh">
+              {() => (
+                <h5>
+                  BLUE
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="PURPLE" height="40vh">
+              {() => (
+                <h5>
+                  PURPLE
+                </h5>
+              )}
+            </BorderedDemoSection>
+          </>
+        }
+      >
+        {({activeSection}) => (
+          <CenterBox>
+            {activeSection &&
+              <>
+                <p>You are viewing <b>{activeSection.id}</b> section</p>
+                <p>Reading Ratio: {activeSection.ratio.toFixed(4)}</p>
+              </>
+            }
+          </CenterBox>
+        )}
+      </StickyPlot>
+  </PageProvider>
+</DemoWrapper>
+
+## Usage
