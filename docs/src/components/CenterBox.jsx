@@ -26,6 +26,6 @@ export const CenterBox = styledComponents.div`
     padding: 0.05rem 0.25rem;
     border-radius: 3px;
     background: rgba(255, 255, 255, 0.85);
-    color: ${defaultColors.blue};
+    color: ${({ boldColor = defaultColors.blue }) => boldColor};
   }
 `;

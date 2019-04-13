@@ -7313,6 +7313,10 @@ pkg-up@2.0.0:
   dependencies:
     find-up "^2.1.0"
 
+polish@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/polish/-/polish-0.2.3.tgz#4a95296b5501dd10d3b25b8e6ed8339ef4deb147"
+
 polished@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/polished/-/polished-3.2.0.tgz#65045e080704a6ba524fb3f32eb99d4ed2e46c91"

@@ -4,9 +4,6 @@ route: /scroll_tracking/plot
 menu: Scroll Tracking
 ---
 
-import { DemoWrapper } from '../components/DemoWrapper'
-import { BorderedDemoSection } from '../components/DemoSection.jsx'
-import { CenterBox } from '../components/CenterBox';
 import {
   PageProvider,
   Section,
@@ -14,6 +11,11 @@ import {
 import {
   StickyPlot,
 } from '@react-scrolly/plot'
+import { DemoWrapper } from '../components/DemoWrapper'
+import { BorderedDemoSection } from '../components/DemoSection.jsx'
+import { CenterBox } from '../components/CenterBox';
+
+import { defaultColors } from '../config/theme';
 
 
 # Plot
@@ -31,42 +33,42 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
     <StickyPlot
         renderOverlay={
           <>
-            <BorderedDemoSection trackingId="RED" height="100vh">
+            <BorderedDemoSection trackingId="RED" color={defaultColors.red} height="100vh">
               {() => (
                 <h5>
                   RED
                 </h5>
               )}
             </BorderedDemoSection>
-            <BorderedDemoSection trackingId="ORANGE" height="50vh">
+            <BorderedDemoSection trackingId="ORANGE" color={defaultColors.orange} height="50vh">
               {() => (
                 <h5>
                   ORANGE
                 </h5>
               )}
             </BorderedDemoSection>
-            <BorderedDemoSection trackingId="YELLOW" height="50vh">
+            <BorderedDemoSection trackingId="YELLOW" color={defaultColors.yellow} height="50vh">
               {() => (
                 <h5>
                   YELLOW
                 </h5>
               )}
             </BorderedDemoSection>
-            <BorderedDemoSection trackingId="GREEN" height="40vh">
+            <BorderedDemoSection trackingId="GREEN" color={defaultColors.green} height="50vh">
               {() => (
                 <h5>
                   GREEN
                 </h5>
               )}
             </BorderedDemoSection>
-            <BorderedDemoSection trackingId="BLUE" height="40vh">
+            <BorderedDemoSection trackingId="BLUE" color={defaultColors.blue} height="50vh">
               {() => (
                 <h5>
                   BLUE
                 </h5>
               )}
             </BorderedDemoSection>
-            <BorderedDemoSection trackingId="PURPLE" height="40vh">
+            <BorderedDemoSection trackingId="PURPLE" color={defaultColors.purple} height="60vh">
               {() => (
                 <h5>
                   PURPLE
@@ -77,14 +79,12 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
         }
       >
         {({activeSection}) => (
-          <CenterBox>
-            {activeSection &&
-              <>
+          activeSection && (
+            <CenterBox boldColor={defaultColors[activeSection.id.toLowerCase()]}>
                 <p>You are viewing <b>{activeSection.id}</b> section</p>
                 <p>Reading Ratio: {activeSection.ratio.toFixed(4)}</p>
-              </>
-            }
-          </CenterBox>
+              </CenterBox>
+          )
         )}
       </StickyPlot>
   </PageProvider>
