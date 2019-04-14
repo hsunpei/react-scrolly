@@ -4,6 +4,35 @@ route: /pinning_sections/sticky_scene
 menu: Pinning Sections
 ---
 
-## Hello
+import { PageProvider } from '@react-scrolly/core'
+import { StickyScene } from '@react-scrolly/scene'
 
-Test
+import { DemoWrapper } from '../components/DemoWrapper'
+import { CenterBox } from '../components/CenterBox';
+import { BorderedStickyScene } from '../components/DemoStickyScene'
+import { defaultColors } from '../config/theme';
+
+
+# StickyScene
+
+`<StickyScene>` is a section which sticks to the viewport when its top reaches the top of the viewport,
+and un-sticks to the viewport when its bottom is leaving the bottom of the viewport.
+
+## Example
+<DemoWrapper>
+  <PageProvider>
+    <BorderedStickyScene color={defaultColors.gray} height="220vh">
+      {({isIntersecting, scrolledRatio}) => (
+        <CenterBox>
+          <div>
+            <h4>
+              StickyScene
+            </h4>
+            <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+            <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
+          </div>
+        </CenterBox>
+      )}
+    </BorderedStickyScene>
+  </PageProvider>
+</DemoWrapper>

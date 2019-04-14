@@ -1,9 +1,7 @@
 import styled from 'styled-components';
-import { lighten } from 'polished'
 import { Section } from '@react-scrolly/core';
 
-import mq from '../config/media-queries';
-import { defaultColors } from '../config/theme';
+import { borderedStyle } from '../config/shared-styles';
 
 export const DemoSection = styled(Section)`
   position: relative;
@@ -14,24 +12,4 @@ export const DemoSection = styled(Section)`
   margin: 1rem 0;
 `;
 
-export const BorderedDemoSection = styled(Section)`
-  position: relative;
-  margin-top: -3px;
-  height: ${({ height = '100vh' }) => height};
-  border: ${({ color = defaultColors.background }) => `3px solid ${lighten(0.35)(color)}`};
-  border-radius: 2px;
-
-  h5 {
-    font-size: 1.05rem;
-    margin-top: -2px;
-    margin-left: -2px;
-    color: ${defaultColors.white};
-    background-color: ${({ color = defaultColors.text }) => color};
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 2px;
-    ${mq.greaterThan('mobile')`
-      font-size: 1.15rem;
-    `}
-  }
-`;
+export const BorderedDemoSection = styled(Section)`${borderedStyle}`;

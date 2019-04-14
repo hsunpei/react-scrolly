@@ -11,8 +11,9 @@ import {
 import {
   StickyPlot,
 } from '@react-scrolly/plot'
+
 import { DemoWrapper } from '../components/DemoWrapper'
-import { BorderedDemoSection } from '../components/DemoSection.jsx'
+import { BorderedDemoSection } from '../components/DemoSection'
 import { CenterBox } from '../components/CenterBox';
 
 import { defaultColors } from '../config/theme';
@@ -81,9 +82,9 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
         {({activeSection}) => (
           activeSection && (
             <CenterBox boldColor={defaultColors[activeSection.id.toLowerCase()]}>
-                <p>You are viewing <b>{activeSection.id}</b> section</p>
-                <p>Reading Ratio: {activeSection.ratio.toFixed(4)}</p>
-              </CenterBox>
+              <li>You are viewing <b>{activeSection.id}</b> section</li>
+              <li>Reading Ratio: {activeSection.ratio.toFixed(4)}</li>
+            </CenterBox>
           )
         )}
       </StickyPlot>
