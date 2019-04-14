@@ -29,26 +29,22 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
     <BorderedDemoSection color={defaultColors.gray} height="88vh">
       {({isIntersecting, scrolledRatio}) => (
         <CenterBox>
-          <div>
-            <h4>
-              Section #1
-            </h4>
-            <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
-            <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
-          </div>
+          <h4>
+            Section #1
+          </h4>
+          <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+          <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
         </CenterBox>
       )}
     </BorderedDemoSection>
     <BorderedDemoSection color={defaultColors.gray} height="80vh">
       {({isIntersecting, scrolledRatio}) => (
         <CenterBox>
-          <div>
-            <h4>
-              Section #2
-            </h4>
-            <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
-            <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
-          </div>
+          <h4>
+            Section #2
+          </h4>
+          <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+          <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
         </CenterBox>
       )}
     </BorderedDemoSection>

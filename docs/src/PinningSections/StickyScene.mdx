@@ -24,13 +24,11 @@ and un-sticks to the viewport when its bottom is leaving the bottom of the viewp
     <BorderedStickyScene color={defaultColors.gray} height="220vh">
       {({isIntersecting, scrolledRatio}) => (
         <CenterBox>
-          <div>
-            <h4>
-              StickyScene
-            </h4>
-            <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
-            <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
-          </div>
+          <h4>
+            StickyScene
+          </h4>
+          <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+          <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
         </CenterBox>
       )}
     </BorderedStickyScene>

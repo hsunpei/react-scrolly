@@ -8,7 +8,7 @@ export const borderedStyle = css`
   position: relative;
   margin-top: -3px;
   height: ${({ height = '100vh' }) => height};
-  border: ${({ color = defaultColors.background }) => `2.5px solid ${lighten(0.2)(color)}`};
+  border: ${({ color = defaultColors.gray }) => `2.5px solid ${lighten(0.2)(color)}`};
   border-radius: 2px;
 
   h5 {

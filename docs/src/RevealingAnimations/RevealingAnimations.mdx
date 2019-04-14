@@ -4,6 +4,39 @@ route: /revealing_animations/use_intersecting_trigger
 menu: Revealing Animations
 ---
 
-## Hello
+import { DemoWrapper } from '../components/DemoWrapper'
+import { CenterBox } from '../components/CenterBox';
+import { AnimatedFadeIn } from '../components/AnimatedFadeIn'
+import { AnimatedTrail } from '../components/AnimatedTrail'
+import { defaultColors } from '../config/theme';
 
-Test
+
+# useIntersectingTrigger
+
+## Example
+<DemoWrapper>
+  <AnimatedTrail
+    title="Lorem ipsum dolor sit"
+    color={defaultColors.primary}
+  />
+  <AnimatedFadeIn height="20vh">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  </AnimatedFadeIn>
+  <AnimatedTrail
+    title="Ut enim ad minim veniam"
+    color={defaultColors.primary}
+  />
+  <AnimatedFadeIn height="20vh">
+      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  </AnimatedFadeIn>
+  <AnimatedTrail
+    title="Duis aute irure dolor"
+    color={defaultColors.primary}
+  />
+  <AnimatedFadeIn height="20vh">
+      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  </AnimatedFadeIn>
+</DemoWrapper>
+
+
+Unlike `<Section>` ..., `useIntersectingTrigger` does not need to be used inside `<Provider>`
