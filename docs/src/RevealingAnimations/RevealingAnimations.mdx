@@ -20,7 +20,7 @@ instead of getting additional information such as the scroll position to engende
 
 That is the moment when the `useIntersectingTrigger` hook comes into play.
 
-`useIntersectingTrigger` is particulary well-suited for the animations triggered when the elements are scrolled into the viewport.
+`useIntersectingTrigger` is particularly well-suited for the animations triggered when the elements are scrolled into the viewport.
 
 ## Example
 <DemoWrapper>
@@ -56,7 +56,7 @@ Import the `useIntersectingTrigger` hook.
 import { useIntersectingTrigger } from '@react-scrolly/trigger';
 ```
 
-Then, you can know whether a component is inside the viewport by giving the `ref` of a component to `useIntersectingTrigger` hook.
+Then, you can know whether a component is inside the viewport by giving [the `ref` of a component](https://reactjs.org/docs/refs-and-the-dom.html) to `useIntersectingTrigger` hook.
 
 By combining with CSS styles or animation libraries such as [react-spring](https://github.com/react-spring/react-spring),
 you are able to make various visual effects triggered when components are scrolled into the viewport.
@@ -83,8 +83,21 @@ The detection of `isIntersecting` of `useIntersectingTrigger` is implemented usi
 
 ## Advanced Usage
 
-trackOnce
+```
+useIntersectingTrigger(containerRef, trackOnce, intersectionConfig)
+```
 
-## Props
+The `useIntersectingTrigger` hook takes three parameters:
 
-<Props of={useIntersectingTrigger} />
+- `containerRef`: `ref` of a component.
+- `trackOnce`: finish the tracking once the component scrolled into the viewport. Default value: `false`.
+- `intersectionConfig`:
+  custom config of the [IntersectionObserver](https://developers.google.com/web/updates/2016/04/intersectionobserver);
+  Default value: `{ threshold: 0, rootMargin: {top: 0, right: 0, bottom: 0, left: 0} }`.
+
+### Example of trackOnce
+<DemoWrapper>
+  <AnimatedFadeIn trackOnce height="20vh">
+      Play the fade-in effect just once with trackOnce
+  </AnimatedFadeIn>
+</DemoWrapper>

@@ -20,10 +20,11 @@ const Wrapper = styled.div`
 
 export const AnimatedFadeIn = ({
   children,
+  trackOnce,
   ...restProps
 }) => {
   const containerRef = useRef(null);
-  const isIntersecting = useIntersectingTrigger(containerRef);
+  const isIntersecting = useIntersectingTrigger(containerRef, trackOnce);
 
   return (
     <Wrapper ref={containerRef} isIntersecting={isIntersecting} {...restProps}>

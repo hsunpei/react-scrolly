@@ -33,10 +33,11 @@ const AnimatedText = animated(Text);
 export const AnimatedTrail = ({
   color,
   title,
+  trackOnce,
 }) => {
   const items = title.split(' ');
   const containerRef = useRef(null);
-  const isIntersecting = useIntersectingTrigger(containerRef);
+  const isIntersecting = useIntersectingTrigger(containerRef, trackOnce);
   const trail = useTrail(items.length, {
     opacity: isIntersecting ? 1 : 0,
     x: isIntersecting ? 0 : 200,
