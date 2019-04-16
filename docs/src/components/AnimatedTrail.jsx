@@ -53,7 +53,6 @@ export const AnimatedTrail = ({
             color={color}
             style={{
               opacity,
-              // TODO: upgrade react-spring to fix the false alarms about typings
               transform: x.interpolate(pos => `translate3d(0,${pos}%,0)`),
             }}
           >
