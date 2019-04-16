@@ -62,7 +62,7 @@ export function useIntersectingTrigger(
         intersectionConfig
       );
 
-      intersectionObserverRef.current.observe(containerRef.current!);
+      intersectionObserverRef.current!.observe(containerRef.current!);
 
       // unsubscribe to the intersection observer on unmounting
       return () => {
