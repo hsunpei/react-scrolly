@@ -9,10 +9,11 @@ import {
   Section,
 } from '@react-scrolly/core'
 
+import { Playground, Props } from 'docz'
 import { DemoWrapper } from '../components/DemoWrapper'
 import { BorderedDemoSection } from '../components/DemoSection'
 import { CenterBox } from '../components/CenterBox';
-import { defaultColors } from '../config/theme';
+import { defaultColors, sectionStyle } from '../config/theme';
 
 # Section
 ## Basic scroll tracking of a component
@@ -20,13 +21,13 @@ import { defaultColors } from '../config/theme';
 Using `<Section>` and `<PageContext>`, you can track the following information of a component (`<Section>`) when it is scrolling with ease:
 
 - **Visibility**: Whether the component is intersecting with the viewport.
-- **Scroll progress**: The ratio of component being scrolled.
+- **Scroll progress**: The ratio of the component being scrolled.
 - **Position**: The position of the component relative to the viewport.
 
 ## Example
 <DemoWrapper>
   <PageProvider>
-    <BorderedDemoSection color={defaultColors.gray} height="88vh">
+    <BorderedDemoSection color={defaultColors.gray} height="95vh">
       {({isIntersecting, scrolledRatio}) => (
         <CenterBox>
           <h4>
@@ -37,7 +38,7 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
         </CenterBox>
       )}
     </BorderedDemoSection>
-    <BorderedDemoSection color={defaultColors.gray} height="80vh">
+    <BorderedDemoSection color={defaultColors.gray} height="100vh">
       {({isIntersecting, scrolledRatio}) => (
         <CenterBox>
           <h4>
@@ -53,14 +54,84 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
 
 ## Usage
 
-### First, make sure to wrap `<PageContext>` at the page level
+### Make sure to wrap `<PageContext>` at the page level
 
-Before we get started, it is important to note that you have to wrap the components to track
-with `<PageContext>`.
+Before we get started, it is important to note that you have to wrap `<PageContext>` at the page level to track window scrolling and resizing.
 
-`<PageContext>` contains Observers which are essential to `<Section>`,
+`<PageContext>` contains observers which are essential to `<Section>`,
 by allowing it to subscribe to the events such as window scrolling and resizing.
+
+### Use `<Section>` to get `sectionInfo`
+
+```jsx
+import { PageProvider, Section } from '@react-scrolly/core';
+
+...
+<PageProvider>
+  ...
+  <Section>
+    {(sectionInfo) => (
+      <div>{sectionInfo.isIntersecting}, {sectionInfo.scrolledRatio}</div>
+    )}
+  </Section>
+  <Section>...</Section>
+  ...
+</PageProvider>
+```
+
+
+## Properties
+
+What does `sectionInfo` provides?
+
+* **isIntersecting**: `boolean` - Whether the section is intersecting with the viewport.
+* **scrollInfo**: `object` - With the following properties:
+  * **scrollTop**: `number` - The top of the viewport, i.e., `pageYOffset` of the window.
+  * **scrollBottom**: `number` - The bottom of the viewport, i.e., the `pageYOffset` + height of the window.
+  * **windowHeight**: `number` - The height of the window.
+  * **scrollOffset**: `number` - The difference between the current scrolltop and previous scrolltop. Positive: if the user scroll down the page.
+* **scrolledRatio**: `number` - Ratio of the section being scrolled. It is computed by the ratio of the section surpasses the bottom of the viewport.
+
 
 ## Advanced usages
 
-## How it works
+If you don't want to use the render props to get `sectionInfo`, you can also use the hooks to get the same information by yourself:
+
+### `useSectionRatio` hook
+
+```jsx
+import { useIntersectionObservable, useSectionRatio } from '@react-scrolly/core';
+
+...
+const sectionRef = useRef(null);
+const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
+const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
+
+return (
+  <div
+    ref={sectionRef}
+    className={className}
+    style={style}
+    {...restProps}
+  >
+    {children(sectionInfo)}
+  </div>
+)
+```
+
+## Complete Example
+
+<Playground>
+  <div style={{ width: '100%' }}>
+    <PageProvider>
+      <Section trackingId="section1" style={sectionStyle}>
+        {({isIntersecting, scrolledRatio}) => <div>Section # 1: {`${isIntersecting}`}, {scrolledRatio}</div>}
+      </Section>
+      <Section trackingId="section2" style={sectionStyle}>
+        {({isIntersecting, scrolledRatio}) => <div>Section # 2: {`${isIntersecting}`}, {scrolledRatio}</div>}
+      </Section>
+    </PageProvider>
+  </div>
+</Playground>
+
+<Props of={Section} />

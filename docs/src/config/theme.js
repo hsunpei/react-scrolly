@@ -13,3 +13,13 @@ export const defaultColors = {
   green: '#24da74',
   purple: '#8755d6',
 }
+
+export const sectionStyle = {
+  margin: 'auto',
+  height: '30vh',
+  color: defaultColors.blue,
+  border: `3px solid ${defaultColors.gray}`,
+  padding: '1rem',
+  marginTop: '-3px',
+  borderRadius: '3px',
+};
