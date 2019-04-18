@@ -63,10 +63,13 @@ by allowing it to subscribe to the events such as window scrolling and resizing.
 
 ### Use `<Section>` to get `sectionInfo`
 
+Import `<Section>`:
 ```jsx
 import { PageProvider, Section } from '@react-scrolly/core';
+```
 
-...
+Use it in your component:
+```jsx
 <PageProvider>
   ...
   <Section>
@@ -99,10 +102,13 @@ If you don't want to use the render props to get `sectionInfo`, you can also use
 
 ### `useSectionRatio` hook
 
+Import the hooks:
 ```jsx
 import { useIntersectionObservable, useSectionRatio } from '@react-scrolly/core';
+```
 
-...
+Use them in your functional components:
+```jsx
 const sectionRef = useRef(null);
 const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
 const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
