@@ -63,7 +63,7 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
         (accum: SectionDistance, idx) => {
           const sectionTop = trackedSects[idx];
           const distance = scrollBottom - sectionTop;
-          if (!accum || distance < accum.distance) {
+          if (distance > 0 && (!accum || distance < accum.distance)) {
             return { idx, distance };
           }
           return accum;
