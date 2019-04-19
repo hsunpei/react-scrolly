@@ -27,7 +27,7 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
 ## Example
 <DemoWrapper>
   <PageProvider>
-    <BorderedDemoSection color={defaultColors.gray} height="95vh">
+    <BorderedDemoSection color={defaultColors.gray} height="50vh">
       {({isIntersecting, scrolledRatio}) => (
         <CenterBox>
           <h4>
@@ -130,10 +130,10 @@ return (
 <Playground>
   <div style={{ width: '100%' }}>
     <PageProvider>
-      <Section trackingId="section1" style={sectionStyle}>
+      <Section style={sectionStyle}>
         {({isIntersecting, scrolledRatio}) => <div>Section # 1: {`${isIntersecting}`}, {scrolledRatio}</div>}
       </Section>
-      <Section trackingId="section2" style={sectionStyle}>
+      <Section style={sectionStyle}>
         {({isIntersecting, scrolledRatio}) => <div>Section # 2: {`${isIntersecting}`}, {scrolledRatio}</div>}
       </Section>
     </PageProvider>
