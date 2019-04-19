@@ -63,6 +63,10 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
         (accum: SectionDistance, idx) => {
           const sectionTop = trackedSects[idx];
           const distance = scrollBottom - sectionTop;
+
+          // FIXME: have to make sure that distance > 0 here as a temporary fix
+          // because the initial mounting process
+          // will first add all sections as active sections
           if (distance > 0 && (!accum || distance < accum.distance)) {
             return { idx, distance };
           }
