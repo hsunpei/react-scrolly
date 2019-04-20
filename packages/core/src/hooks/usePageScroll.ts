@@ -1,5 +1,10 @@
-import { Observable, of } from 'rxjs';
-import { map, switchMap, merge } from 'rxjs/operators';
+import { Observable, of, zip } from 'rxjs';
+import {
+  map,
+  switchMap,
+  merge,
+  take,
+} from 'rxjs/operators';
 import {
   useState,
   useEffect,
@@ -34,17 +39,36 @@ export function usePageScroll(
     map(({ isIntersecting }) => isIntersecting)
   ));
 
-  /** Observer to the page scrolling when the section is in the viewport */
-  const pageScrollObsrRef = useRef(
-    // first emit true in order to take the scroll position emitted when Page is mounted
-    of(true)
-    // merge it with the intersection observer
-    .pipe(
-      merge(isIntersectingObs.current)
+  /**
+   * Observer to track the scroll position
+   * emitted when Page is mounted
+   */
+  const mountScrollObsRef = useRef(
+    zip(
+      scrollObs$,
+      isIntersectingObs.current,
+    ).pipe(
+      map(([scrollPos, isIntersecting]): {
+        isIntersecting: boolean,
+        scrollPos: ScrollPosition,
+      } => ({
+        isIntersecting,
+        scrollPos: {
+          ...scrollPos,
+          scrollOffset: 0,
+        },
+      })),
+      take(1),
     )
-    // use `isIntersecting` to determine whether to take the scrolling info
-    .pipe(
+  );
+  /**
+   * Observer to track the scroll position
+   * when real scrolling events are triggered
+   */
+  const windowScrollObsRef = useRef(
+    isIntersectingObs.current.pipe(
       switchMap((isIntersecting: boolean) => {
+        // use `isIntersecting` to determine whether to take the scrolling info
         return isIntersecting
           ? scrollObs$.pipe(
             map((scrollPos: ScrollPosition) => ({
@@ -57,7 +81,13 @@ export function usePageScroll(
             isIntersecting,
             scrollPos: null,
           });
-      }),
+      })
+    )
+  );
+  /** Observer to track the page scrolling by combining mountScrollObs and windowScrollObs */
+  const pageScrollObsrRef = useRef(
+    mountScrollObsRef.current.pipe(
+      merge(windowScrollObsRef.current),
     )
   );
 

@@ -1,5 +1,10 @@
 import React, { FunctionComponent, useRef, useEffect } from 'react';
-import { Subject, fromEvent, animationFrameScheduler } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  fromEvent,
+  animationFrameScheduler,
+} from 'rxjs';
 import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
@@ -51,7 +56,7 @@ export const PageProvider: FunctionComponent<PageProps> = ({
   /**
    * Observer to listen to page scroll
    */
-  const scrollObserverRef = useRef(
+  const scrollObserverRef = useRef<Observable<ScrollPosition>>(
     scrollSubjectRef.current.asObservable().pipe(
       merge(
         fromEvent(window, 'scroll')
