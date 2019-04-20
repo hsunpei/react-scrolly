@@ -47,6 +47,27 @@ export function useSectionRatio(
 
   const preIntersecting = useRef(false);
 
+  // update the active section info if `isIntersecting` changes
+  useEffect(
+    () => {
+      const curInter = isIntersecting;
+      const preInter = preIntersecting.current;
+
+      if (trackingId) {
+        if (!preInter && curInter) {
+          // update the section currently being scrolled
+          addActiveSection(trackingId, sectionTop, scrollInfo.scrollBottom);
+        } else if (preInter && !curInter) {
+          // clear the section ID tracked in the page
+          removeActiveSection(trackingId, scrollInfo.scrollBottom);
+        }
+      }
+
+      preIntersecting.current = curInter;
+    },
+    [trackingId, isIntersecting, sectionTop, scrollInfo],
+  );
+
   const scrolledRatio = useMemo(
     () => {
       const { scrollBottom } = scrollInfo;
@@ -70,28 +91,7 @@ export function useSectionRatio(
 
       return ratio;
     },
-    [sectionTop, boundingRect, scrollInfo],
-  );
-
-  // update the active section info if `isIntersecting` changes
-  useEffect(
-    () => {
-      const curInter = isIntersecting;
-      const preInter = preIntersecting.current;
-
-      if (trackingId) {
-        if (!preInter && curInter) {
-          // update the section currently being scrolled
-          addActiveSection(trackingId, sectionTop, scrollInfo.scrollBottom);
-        } else if (preInter && !curInter) {
-          // clear the section ID tracked in the page
-          removeActiveSection(trackingId, scrollInfo.scrollBottom);
-        }
-      }
-
-      preIntersecting.current = curInter;
-    },
-    [isIntersecting, sectionTop, scrollInfo],
+    [trackingId, sectionTop, boundingRect, scrollInfo],
   );
 
   return {

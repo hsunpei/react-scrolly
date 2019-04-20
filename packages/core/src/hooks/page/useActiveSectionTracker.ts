@@ -26,6 +26,9 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
    */
   const visibleSections = useRef({});
 
+  /** keep track of the scrollRatios updated by `updateScrollRatio` */
+  const sectionScrollRatios = useRef({});
+
   /** keep track of the `trackingId` of the section closet to the bottom of the viewport */
   const activeSectionId = useRef<sectionID>(null);
 
@@ -46,6 +49,9 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
           ratio: scrolledRatio,
         });
       }
+
+      // update the scroll ratios of the sections
+      sectionScrollRatios.current[trackingId] = scrolledRatio;
     },
     [],
   );
@@ -64,10 +70,7 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
           const sectionTop = trackedSects[idx];
           const distance = scrollBottom - sectionTop;
 
-          // FIXME: have to make sure that distance > 0 here as a temporary fix
-          // because the initial mounting process
-          // will first add all sections as active sections
-          if (distance > 0 && (!accum || distance < accum.distance)) {
+          if (!accum || distance < accum.distance) {
             return { idx, distance };
           }
           return accum;
@@ -81,8 +84,14 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
 
         // notify all sections subscribing to ActiveSectionInfo
         activeSectionSubjectRef.current.next(null);
-      } else {
+      } else if (activeSectionId.current !== closest.idx) {
         activeSectionId.current = closest.idx;
+
+        // notify there is a new section being added
+        activeSectionSubjectRef.current.next({
+          id: closest.idx,
+          ratio: sectionScrollRatios.current[closest.idx],
+        });
       }
     },
     [],
