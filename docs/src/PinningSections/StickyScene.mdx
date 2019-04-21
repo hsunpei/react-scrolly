@@ -4,33 +4,61 @@ route: /pinning_sections/sticky_scene
 menu: Pinning Sections
 ---
 
+import { Playground } from 'docz'
 import { PageProvider } from '@react-scrolly/core'
-import { StickyScene } from '@react-scrolly/scene'
 
 import { DemoWrapper } from '../components/DemoWrapper'
 import { CenterBox } from '../components/CenterBox';
-import { BorderedStickyScene } from '../components/DemoStickyScene'
+import { DescriptionBox } from '../components/DescriptionBox';
+import { BorderedStickyScene as StickyScene } from '../components/DemoStickyScene'
 import { defaultColors } from '../config/theme';
 
 
 # StickyScene
 
-`<StickyScene>` is a section which sticks to the viewport when its top reaches the top of the viewport,
-and un-sticks to the viewport when its bottom is leaving the bottom of the viewport.
+`<StickyScene>` is another kind of section which sticks its main content on the background when the top of the section reaches the top of the viewport,
+and it lets the supplementary content scroll through its sticky background.
 
 ## Example
-<DemoWrapper>
+<Playground>
   <PageProvider>
-    <BorderedStickyScene color={defaultColors.gray} height="220vh">
+    <StickyScene
+      color={defaultColors.gray}
+      renderOverlay={
+        <>
+          <div style={{ height: '80vh', position: 'relative' }}>
+            <DescriptionBox color={defaultColors.gray}>
+              <h4>Description #1</h4>
+              <p>Supplementary content #1</p>
+            </DescriptionBox>
+          </div>
+          <div style={{ height: '80vh', position: 'relative' }}>
+            <DescriptionBox color={defaultColors.red}>
+              <h4>Description #2</h4>
+              <p>Supplementary content #2</p>
+            </DescriptionBox>
+          </div>
+          <div style={{ height: '80vh', position: 'relative' }}>
+            <DescriptionBox color={defaultColors.blue}>
+              <h4>Description #3</h4>
+              <p>Supplementary content #3</p>
+            </DescriptionBox>
+          </div>
+        </>
+      }
+    >
       {({isIntersecting, scrolledRatio}) => (
         <CenterBox>
           <h4>
-            StickyScene
+            {'<StickyScene> background'}
           </h4>
           <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
           <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
         </CenterBox>
       )}
-    </BorderedStickyScene>
+    </StickyScene>
   </PageProvider>
-</DemoWrapper>
+</Playground>
+
+## Usage
+

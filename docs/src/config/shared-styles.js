@@ -7,7 +7,7 @@ import { defaultColors } from '../config/theme';
 export const borderedStyle = css`
   position: relative;
   margin-top: -3px;
-  height: ${({ height = '100vh' }) => height};
+  ${({ height }) => height ? `height: ${height}` : null};
   border: ${({ color = defaultColors.gray }) => `2.5px solid ${lighten(0.2)(color)}`};
   border-radius: 2px;
 
