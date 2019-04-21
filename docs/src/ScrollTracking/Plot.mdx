@@ -21,13 +21,28 @@ import { defaultColors } from '../config/theme';
 
 
 # Plot
-## Track the section closet to the bottom of the viewport
+## Track scroll progress of the section closest to the bottom of the viewport
 
-Using `<Section>` and `<PageContext>`, you can track the following information of a component (`<Section>`) when it is scrolling with ease:
+`<Plot>` is another kind of section which allows you to track the reading progress of `<Section>` users are currently viewing
+(closest to the bottom of the viewport).
 
-- **Visibility**: Whether the component is intersecting with the viewport.
-- **Scroll progress**: The ratio of component being scrolled.
-- **Position**: The position of the component relative to the viewport.
+This is particularly handy when you want to display some effects based on the section and its progress users are currently reading.
+
+Before you start using `<Plot>`, you have to assign unique `trackingId` to sections you are going to track:
+
+```jsx
+<Section trackingId="GREEN">...</Section>
+```
+
+After that, `<PageProvider>` will keep the scrolling information of all the sections of `trackingId`,
+and `<Plot>` will to be updated with the scrolling information of the section closet to the bottom of the viewport when it is scrolled into the viewport.
+
+
+In other words, `<Plot>` provides:
+
+- All the information provided by `<Section>`
+- The `trackingId` of the `<Section>` currently closet to the bottom of the viewport, and its scroll progress.
+
 
 ## Example
 <DemoWrapper>
@@ -93,5 +108,71 @@ Using `<Section>` and `<PageContext>`, you can track the following information o
 </DemoWrapper>
 
 ## Usage
+
+Import `<Plot>`:
+```jsx
+import { PageProvider } from '@react-scrolly/core';
+import { Plot } from '@react-scrolly/plot'
+```
+
+Use it in your component:
+```jsx
+<PageProvider>
+  ...
+  <Plot>
+    {({ sectionInfo, activeSection }) => (
+      <div>
+        <h2>Scroll info of this Plot</h2>
+        <span>{sectionInfo.isIntersecting}, {sectionInfo.scrolledRatio}</span>
+      </div>
+      <div>
+        <h2>Section closet to the bottom of viewport</h2>
+        <span>`trackingId`:  {activeSection.id}</span>
+        <span>Ratio of the scrolling progress: {activeSection.ratio}</span>
+      </div>
+    )}
+  </Plot>
+  <Section trackingId="SECTION-1">...</Section>
+  <Section trackingId="SECTION-2">...</Section>
+  ...
+</PageProvider>
+```
+
+### `<StickyPlot>`
+
+If you want to stick the `<Plot>` like the demo above,
+you can use [StickyPlot](/pinning_sections/sticky_plot) which provides the same information in the render props that `<Plot>`,
+while sticking the inner component in the center of the viewport when its outer component is visible the viewport.
+
+## Properties
+
+1. `sectionInfo` provides the same information as [Section](/scroll_tracking/section#properties)
+2. `activeSection` provides:
+  - `id`: `trackingId` of the tracked `<Section>` closest to the bottom of
+  - `ratio`: Ratio of the tracked `<Section>` closest to the bottom being read
+
+
+## Advanced usages
+
+### `useActiveSectionInfo` hook
+
+Import the hooks:
+
+```jsx
+import { useIntersectionObservable, useSectionRatio } from '@react-scrolly/core';
+import { useActiveSectionInfo } from '@react-scrolly/plot';
+```
+
+You can get the same information using the hooks:
+
+```jsx
+// assign the ref to the component
+const plotRef = useRef<HTMLDivElement>(null);
+
+const intersectObsr$ = useIntersectionObservable(plotRef, trackingId);
+const sectionInfo = useSectionRatio(plotRef, intersectObsr$, trackingId);
+const activeSection = useActiveSectionInfo(intersectObsr$);
+```
+
 
 <Props of={StickyPlot} />

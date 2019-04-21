@@ -9,7 +9,7 @@ import {
   Section,
 } from '@react-scrolly/core'
 
-import { Playground, Props } from 'docz'
+import { Playground, Link, Props } from 'docz'
 import { DemoWrapper } from '../components/DemoWrapper'
 import { BorderedDemoSection } from '../components/DemoSection'
 import { CenterBox } from '../components/CenterBox';
@@ -123,6 +123,21 @@ return (
     {children(sectionInfo)}
   </div>
 )
+```
+
+### Adding `trackingId` to sections you want to track in `<Plot>`
+Components like [Plot](/scroll_tracking/plot) or [StickyPlot](/pinning_sections/sticky_plot)
+allow you to track the ID and the scroll progress of the `<Section>` closest to the bottom of the viewport.
+
+By adding `trackingId` to sections, `<PageProvider>` select the section closest to the bottom of the viewport while scrolling:
+
+```jsx
+<Section trackingId="TRACKING_ID">...</Section>
+```
+
+or
+```jsx
+const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, 'TRACKING_ID');
 ```
 
 ## Complete Example
