@@ -47,7 +47,7 @@ and it lets the supplementary content scroll through its sticky background.
         </>
       }
     >
-      {({isIntersecting, scrolledRatio}) => (
+      {({ isIntersecting, scrolledRatio }) => (
         <CenterBox>
           <h4>
             {'<StickyScene> background'}
@@ -62,3 +62,19 @@ and it lets the supplementary content scroll through its sticky background.
 
 ## Usage
 
+
+Import `<StickyScene>`:
+```jsx
+import { PageProvider } from '@react-scrolly/core';
+import { StickyScene } from '@react-scrolly/plot'
+```
+
+Use it in your component:
+
+`<StickyScene>` takes two components from the following props to render:
+
+- **children**:
+Background content; normally changes based on the reading progress of the foreground content. It sticks to the viewport while the user is scrolling through the foreground content.
+Since `<StickyScene>` is just a `<Section>` that helps you achieve the sticky scrolling effect with ease, it provides the same information like `scrolledRatio` as [Section](_/scroll_tracking/section#properties_).
+- **renderOverlay**: Foreground content; normally acts as the descriptions for the background content.
+Its rendered content accounts for the real height of `<StickyScene>`, i.e., `scrolledRatio` given in the background is calculated by the reading progress of the foreground content.
