@@ -4,17 +4,12 @@ route: /scroll_tracking/plot
 menu: Scroll Tracking
 ---
 
-import { Props } from 'docz'
-import {
-  PageProvider,
-  Section,
-} from '@react-scrolly/core'
-import {
-  StickyPlot,
-} from '@react-scrolly/plot'
+import { Props } from 'docz';
+import { PageProvider, Section } from '@react-scrolly/core';
+import { StickyPlot } from '@react-scrolly/plot';
 
-import { DemoWrapper } from '../components/DemoWrapper'
-import { BorderedDemoSection } from '../components/DemoSection'
+import { DemoWrapper } from '../components/DemoWrapper';
+import { BorderedDemoSection } from '../components/DemoSection';
 import { CenterBox } from '../components/CenterBox';
 
 import { defaultColors } from '../config/theme';
@@ -112,7 +107,7 @@ In other words, `<Plot>` provides:
 Import `<Plot>`:
 ```jsx
 import { PageProvider } from '@react-scrolly/core';
-import { Plot } from '@react-scrolly/plot'
+import { Plot } from '@react-scrolly/plot';
 ```
 
 Use it in your component:
@@ -132,8 +127,9 @@ Use it in your component:
       </div>
     )}
   </Plot>
-  <Section trackingId="SECTION-1">...</Section>
-  <Section trackingId="SECTION-2">...</Section>
+  <Section trackingId="RED">...</Section>
+  <Section trackingId="ORANGE">...</Section>
+  <Section trackingId="YELLOW">...</Section>
   ...
 </PageProvider>
 ```
@@ -141,8 +137,8 @@ Use it in your component:
 ### `<StickyPlot>`
 
 If you want to stick the `<Plot>` like the demo above,
-you can use [StickyPlot](/pinning_sections/sticky_plot) which provides the same information in the render props that `<Plot>`,
-while sticking the inner component in the center of the viewport when its outer component is visible the viewport.
+you can use [StickyPlot](/pinning_sections/sticky_plot) which provides the same information in the render props as `<Plot>`,
+while sticking the background content in the viewport when its foreground content is visible the viewport.
 
 ## Properties
 

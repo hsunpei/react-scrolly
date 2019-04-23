@@ -16,7 +16,7 @@ import { defaultColors } from '../config/theme';
 
 # StickyScene
 
-`<StickyScene>` is another kind of section which sticks its main content on the background when the top of the section reaches the top of the viewport,
+`<StickyScene>` is another kind of [Section](/scroll_tracking/section) which sticks its main content on the background when the top of the section reaches the top of the viewport,
 and it lets the supplementary content scroll through its sticky background.
 
 ## Example
@@ -75,6 +75,7 @@ Use it in your component:
 
 - **children**:
 Background content; normally changes based on the reading progress of the foreground content. It sticks to the viewport while the user is scrolling through the foreground content.
-Since `<StickyScene>` is just a `<Section>` that helps you achieve the sticky scrolling effect with ease, it provides the same information like `scrolledRatio` as [Section](_/scroll_tracking/section#properties_).
+
+Since `<StickyScene>` is just a `<Section>` that helps you achieve the sticky scrolling effect with ease, it provides the same information like `scrolledRatio` as [Section](/scroll_tracking/section#properties).
 - **renderOverlay**: Foreground content; normally acts as the descriptions for the background content.
 Its rendered content accounts for the real height of `<StickyScene>`, i.e., `scrolledRatio` given in the background is calculated by the reading progress of the foreground content.
