@@ -1,6 +1,6 @@
 {
   "name": "@react-scrolly/core",
-  "version": "0.0.0",
+  "version": "0.0.1-beta.1",
   "description": "> TODO: description",
   "author": "garfieldduck <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
@@ -42,5 +42,6 @@
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
-  }
+  },
+  "gitHead": "69856ca315faf837b34d70030ecfe244125a9568"
 }

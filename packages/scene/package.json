@@ -1,6 +1,6 @@
 {
   "name": "@react-scrolly/scene",
-  "version": "0.0.0",
+  "version": "0.0.1-beta.1",
   "description": "> TODO: description",
   "author": "Mika Wang <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
@@ -37,9 +37,10 @@
     "react-dom": "^16.8.5"
   },
   "dependencies": {
-    "@react-scrolly/core": "^0.0.0"
+    "@react-scrolly/core": "^0.0.1-beta.1"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
-  }
+  },
+  "gitHead": "69856ca315faf837b34d70030ecfe244125a9568"
 }
