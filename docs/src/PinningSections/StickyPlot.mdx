@@ -19,6 +19,9 @@ import { defaultColors } from '../config/theme';
 `<StickyPlot>` is another kind of [Plot](/scroll_tracking/plot) which sticks its main content on the background when the top of the plot reaches the top of the viewport,
 and it lets the supplementary content scroll through its sticky background.
 
+Its usage is close to [StickyScene](/pinning_sections/sticky_scene),
+and it provides additional function by letting you track the scrolling progress of `<Section>` closet to the bottom of the viewport with `trackingId`.
+
 ## Example
 <Playground>
   <PageProvider>
@@ -53,20 +56,16 @@ and it lets the supplementary content scroll through its sticky background.
         </>
       }
     >
-      {({ activeSection, isIntersecting, scrolledRatio }) => {
-        console.log(activeSection)
-        return activeSection && (
-        <CenterBox>
-          <h4>
-            {'<StickyPlot> background'}
-          </h4>
-          <p>Description box you are viewing:</p>
-          <li>You are viewing <b>{activeSection.id}</b> section</li>
-          <li>Reading Ratio: <b>{activeSection.ratio.toFixed(4)}</b></li>
-          <p>Whole Plot:</p>
-          <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
-        </CenterBox>
-      )}}
+      {({ activeSection, isIntersecting, scrolledRatio }) => (
+        activeSection && (
+          <CenterBox>
+            <p>Description box you are viewing:</p>
+            <li>You are viewing <b>{activeSection.id}</b> section</li>
+            <li>Reading Ratio: <b>{activeSection.ratio.toFixed(4)}</b></li>
+            <p>Whole {'<Plot>'}:</p>
+            <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
+          </CenterBox>
+      ))}
     </StickyPlot>
   </PageProvider>
 </Playground>
@@ -85,8 +84,10 @@ Use it in your component:
 `<StickyPlot>` takes two components from the following props to render:
 
 - **children**:
-Background content; normally changes based on the reading progress of the foreground content. It sticks to the viewport while the user is scrolling through the foreground content.
+Background content; it sticks to the viewport while the user is scrolling through the foreground content.
 
-Since `<StickyPlot>` is just a `<Plot>` that helps you achieve the sticky scrolling effect with ease, it provides the same information like `scrolledRatio` as [Section](_/scroll_tracking/section#properties_).
-- **renderOverlay**: Foreground content; normally acts as the descriptions for the background content.
+Since `<StickyPlot>` is just a `<Plot>` that helps you achieve the sticky scrolling effect with ease,
+it provides the same information: `activeSection`, `isIntersecting`, and `scrolledRatio` as [Plot](/scroll_tracking/plot#properties) provides.
+
+- **renderOverlay**: Foreground content; you can put sections with `trackedId` here.
 Its rendered content accounts for the real height of `<StickyPlot>`, i.e., `scrolledRatio` given in the background is calculated by the reading progress of the foreground content.
