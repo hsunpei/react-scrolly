@@ -10,7 +10,11 @@
     "clean": "lerna run --parallel clean",
     "build:doc": "docz build",
     "prepublish": "lerna run prepublish && yarn build:doc",
-    "lint": "lerna run lint --parallel --stream"
+    "lint": "lerna run lint --parallel --stream",
+    "bumpversion": "lerna version --no-push --no-git-tag-version",
+    "release": "lerna publish from-package --yes --no-push --no-git-tag-version",
+    "release:beta": "lerna publish --no-push --no-git-tag-version --preid=beta --npm-tag=prerelease",
+    "release:canary": "lerna publish -c --yes --exact"
   },
   "devDependencies": {
     "@types/node": "^10.12.18",
