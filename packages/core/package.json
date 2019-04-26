@@ -27,7 +27,6 @@
     "build": "run-p \"build:*\"",
     "build:esm": "tsc -p ./src",
     "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
-    "build:dist": "webpack --config=webpack.config.dist.js",
     "clean": "rimraf ./dist ./lib ./es5 ./deploy",
     "lint": "tslint --project ./src"
   },
@@ -43,5 +42,5 @@
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
   },
-  "gitHead": "69856ca315faf837b34d70030ecfe244125a9568"
+  "gitHead": "d0ce82e6ed8464947b03ef82a4651f7dbd5ea9a4"
 }
