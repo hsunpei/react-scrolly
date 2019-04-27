@@ -36,11 +36,11 @@
     "react-dom": "^16.8.5"
   },
   "dependencies": {
-    "intersection-observer": "^0.5.1",
+    "intersection-observer": "^0.6.0",
     "rxjs": "^6.4.0"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
   },
-  "gitHead": "dc8de6fa0a63682e142f83fcbf4a3497362c86f9"
+  "gitHead": "2f3f4f8487e92aef0d19c98c775e8cc78355f3be"
 }
