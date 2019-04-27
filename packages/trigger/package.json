@@ -1,6 +1,6 @@
 {
   "name": "@react-scrolly/trigger",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.0",
   "description": "> TODO: description",
   "author": "Mika Wang <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
@@ -36,10 +36,10 @@
     "react-dom": "^16.8.5"
   },
   "dependencies": {
-    "@react-scrolly/core": "^0.0.1-beta.1"
+    "@react-scrolly/core": "^0.0.0"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
   },
-  "gitHead": "2f3f4f8487e92aef0d19c98c775e8cc78355f3be"
+  "gitHead": "7671b4280d28c8a9fe4da2479497024a68d78c1d"
 }
