@@ -15,7 +15,7 @@
     "bumpversion": "lerna version --no-push --no-git-tag-version",
     "release": "lerna publish from-package --yes --no-push --no-git-tag-version",
     "release:beta": "lerna publish --no-push --no-git-tag-version --preid=beta --npm-tag=prerelease",
-    "release:canary": "lerna publish -c --yes --exact"
+    "release:canary": "lerna publish --canary --yes"
   },
   "devDependencies": {
     "@types/node": "^10.12.18",
