@@ -2,7 +2,6 @@
   "name": "@react-scrolly/plot",
   "version": "0.0.0",
   "description": "> TODO: description",
-  "author": "Mika Wang <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
   "main": "lib/cjs/index.js",
