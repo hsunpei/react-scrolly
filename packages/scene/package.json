@@ -1,7 +1,7 @@
 {
   "name": "@react-scrolly/scene",
   "version": "0.0.0-beta.0",
-  "description": "> TODO: description",
+  "description": "Provides various kinds of sections designed for scrolly-telling.",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
   "main": "lib/cjs/index.js",
