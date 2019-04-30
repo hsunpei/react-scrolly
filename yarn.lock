@@ -1858,14 +1858,6 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/react-native@*":
-  version "0.57.50"
-  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.57.50.tgz#b809960e0ce70190f8082d050bb2aa99b5ee4db2"
-  integrity sha512-mGLmamsi9R2vNtKPBC92BO/RR1UNmCAco7e4ImybnHg6jI7K4y9FZlWMSnjn2Fl0/SAQ0kx2hz/xU5NysVFhLg==
-  dependencies:
-    "@types/prop-types" "*"
-    "@types/react" "*"
-
 "@types/react@*", "@types/react@^16.8.10":
   version "16.8.14"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.14.tgz#b561bfabeb8f60d12e6d4766367e7a9ae927aa18"
@@ -1874,13 +1866,13 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/styled-components@^4.1.12":
-  version "4.1.14"
-  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.14.tgz#fe029b0bfb2d26af7f9bd4dd4811b31961ff6d49"
-  integrity sha512-X5t+uomPU9vxWNnfEpw2W7RtJDpsWCsBizQq95gB2QXrG5qsALV1/H7tfv4xYhTmiG5CGtcbfp4nU4yhhEqTsw==
+"@types/styled-components@4.1.8":
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.8.tgz#15c8a53bb4b9066e528fafb7558963dee5690ae0"
+  integrity sha512-NrG0wmB9Rafy5i00GFxUM/uEge148bX2QPr+Q/MI2fXrew6WOp1hN2A3YEG0AeT45z47CMdJ3BEffPsdQCWayA==
   dependencies:
+    "@types/node" "*"
     "@types/react" "*"
-    "@types/react-native" "*"
     csstype "^2.2.0"
 
 "@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
@@ -4104,7 +4096,7 @@ docz-core@^1.0.4:
     ws "^6.2.1"
     yargs "^13.2.2"
 
-docz-theme-default@^1.0.3:
+docz-theme-default@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/docz-theme-default/-/docz-theme-default-1.0.4.tgz#bc9a113c36e75294b1367144cf30be663443c5d9"
   integrity sha512-CJI8Ng4sniWBhtHtL8rKm3VtluJjGJqIoKdd7g/9mSI7bW+MmvZPdlm1bwYzmQmX5eTwIEThl7Nxm/Q0FXyFFw==
@@ -4158,7 +4150,7 @@ docz-utils@^1.0.4:
     unist-util-is "^2.1.2"
     unist-util-visit "^1.4.0"
 
-docz@^1.0.3, docz@^1.0.4:
+docz@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/docz/-/docz-1.0.4.tgz#bc9b6f741f3650b8e7860d26265ec5f74966fe05"
   integrity sha512-unzY55NP7acS92w9H0G8VGMxdc5ppxkwV7ypi6ieDSJMO5FbEh9iirD8Me1zSKMK+F7BEeV1HzUnBSPhZUnYgQ==
