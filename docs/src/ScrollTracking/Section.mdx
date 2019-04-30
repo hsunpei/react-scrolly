@@ -1,0 +1,158 @@
+---
+name: 1. Section
+route: /scroll_tracking/section
+menu: Scroll Tracking
+---
+
+import {
+  PageProvider,
+  Section,
+} from '@react-scrolly/core'
+
+import { Playground, Link, Props } from 'docz'
+import { DemoWrapper } from '../components/DemoWrapper'
+import { BorderedDemoSection } from '../components/DemoSection'
+import { CenterBox } from '../components/CenterBox';
+import { defaultColors, sectionStyle } from '../config/theme';
+
+# Section
+## Basic scroll tracking of a component
+
+Using `<Section>` and `<PageContext>`, you can track the following information of a component (`<Section>`) when it is scrolling with ease:
+
+- **Visibility**: Whether the component is intersecting with the viewport.
+- **Scroll progress**: The ratio of the component being scrolled.
+- **Position**: The position of the component relative to the viewport.
+
+## Example
+<DemoWrapper>
+  <PageProvider>
+    <BorderedDemoSection color={defaultColors.gray} height="80vh">
+      {({isIntersecting, scrolledRatio}) => (
+        <CenterBox>
+          <h4>
+            Section #1
+          </h4>
+          <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+          <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
+        </CenterBox>
+      )}
+    </BorderedDemoSection>
+    <BorderedDemoSection color={defaultColors.gray} height="100vh">
+      {({isIntersecting, scrolledRatio}) => (
+        <CenterBox>
+          <h4>
+            Section #2
+          </h4>
+          <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+          <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
+        </CenterBox>
+      )}
+    </BorderedDemoSection>
+  </PageProvider>
+</DemoWrapper>
+
+## Usage
+
+### Make sure to wrap `<PageContext>` at the page level
+
+Before we get started, it is important to note that you have to wrap `<PageContext>` at the page level to track window scrolling and resizing.
+
+`<PageContext>` contains observers which are essential to `<Section>`,
+by allowing it to subscribe to the events such as window scrolling and resizing.
+
+### Use `<Section>` to get `sectionInfo`
+
+Import `<Section>`:
+```jsx
+import { PageProvider, Section } from '@react-scrolly/core';
+```
+
+Use it in your component:
+```jsx
+<PageProvider>
+  ...
+  <Section>
+    {(sectionInfo) => (
+      <div>{sectionInfo.isIntersecting}, {sectionInfo.scrolledRatio}</div>
+    )}
+  </Section>
+  <Section>...</Section>
+  ...
+</PageProvider>
+```
+
+
+## Properties
+
+What does `sectionInfo` provides?
+
+* **isIntersecting**: `boolean` - Whether the section is intersecting with the viewport.
+* **scrollInfo**: `object` - With the following properties:
+  * **scrollTop**: `number` - The top of the viewport, i.e., `pageYOffset` of the window.
+  * **scrollBottom**: `number` - The bottom of the viewport, i.e., the `pageYOffset` + height of the window.
+  * **windowHeight**: `number` - The height of the window.
+  * **scrollOffset**: `number` - The difference between the current scrolltop and previous scrolltop. Positive: if the user scroll down the page.
+* **scrolledRatio**: `number` - Ratio of the section being scrolled. It is computed by the ratio of the section surpasses the bottom of the viewport.
+
+
+## Advanced usages
+
+If you don't want to use the render props to get `sectionInfo`, you can also use the hooks to get the same information by yourself:
+
+### `useSectionRatio` hook
+
+Import the hooks:
+```jsx
+import { useIntersectionObservable, useSectionRatio } from '@react-scrolly/core';
+```
+
+Use them in your functional components:
+```jsx
+const sectionRef = useRef(null);
+const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
+const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
+
+return (
+  <div
+    ref={sectionRef}
+    className={className}
+    style={style}
+    {...restProps}
+  >
+    {children(sectionInfo)}
+  </div>
+)
+```
+
+### Adding `trackingId` to sections you want to track in `<Plot>`
+Components like [Plot](/scroll_tracking/plot) or [StickyPlot](/pinning_sections/sticky_plot)
+allow you to track the ID and the scroll progress of the `<Section>` closest to the bottom of the viewport.
+
+By adding `trackingId` to sections, `<PageProvider>` select the section closest to the bottom of the viewport while scrolling:
+
+```jsx
+<Section trackingId="TRACKING_ID">...</Section>
+```
+
+or
+```jsx
+const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, 'TRACKING_ID');
+```
+
+## Complete Example
+
+<Playground>
+  <div style={{ width: '100%' }}>
+    <PageProvider>
+      <Section style={sectionStyle}>
+        {({isIntersecting, scrolledRatio}) => <div>Section # 1: {`${isIntersecting}`}, {scrolledRatio}</div>}
+      </Section>
+      <Section style={sectionStyle}>
+        {({isIntersecting, scrolledRatio}) => <div>Section # 2: {`${isIntersecting}`}, {scrolledRatio}</div>}
+      </Section>
+    </PageProvider>
+  </div>
+</Playground>
+
+<Props of={Section} />

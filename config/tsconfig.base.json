@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "build/dist",
-    "module": "esnext",
+    "baseUrl": "./packages",
+    "outDir": "lib",
+    "module": "es6",
     "target": "es5",
-    "lib": ["es6", "dom"],
+    "lib": ["es2015", "dom"],
     "sourceMap": true,
-    "allowJs": true,
+    "declaration": true,
     "jsx": "react",
     "moduleResolution": "node",
     "rootDir": "",
@@ -16,7 +16,15 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "react",
+      "react-spring",
+      "styled-components",
+      "../types"
+    ]
   },
   "exclude": [
     "node_modules",

@@ -1,7 +1,8 @@
 {
-  "name": "@react-scrolly/core",
+  "name": "@react-scrolly/trigger",
   "version": "0.0.0",
-  "description": "A performant scroll progress tracking of sections designed for scrolly-telling.",
+  "description": "Components provided with the information that whether they are scrolled in/out of the viewport.",
+  "author": "Mika Wang <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
   "main": "lib/cjs/index.js",
@@ -36,8 +37,7 @@
     "react-dom": "^16.8.5"
   },
   "dependencies": {
-    "intersection-observer": "^0.6.0",
-    "rxjs": "^6.4.0"
+    "@react-scrolly/core": "^0.0.0"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"

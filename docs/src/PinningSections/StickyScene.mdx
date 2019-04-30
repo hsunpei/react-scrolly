@@ -1,0 +1,81 @@
+---
+name: 1. StickyScene
+route: /pinning_sections/sticky_scene
+menu: Pinning Sections
+---
+
+import { Playground } from 'docz'
+import { PageProvider } from '@react-scrolly/core'
+
+import { DemoWrapper } from '../components/DemoWrapper'
+import { CenterBox } from '../components/CenterBox';
+import { DescriptionBox } from '../components/DescriptionBox';
+import { BorderedStickyScene as StickyScene } from '../components/DemoStickyScene'
+import { defaultColors } from '../config/theme';
+
+
+# StickyScene
+
+`<StickyScene>` is another kind of [Section](/scroll_tracking/section) which sticks its main content on the background when the top of the section reaches the top of the viewport,
+and it lets the supplementary content scroll through its sticky background.
+
+## Example
+<Playground>
+  <PageProvider>
+    <StickyScene
+      color={defaultColors.gray}
+      renderOverlay={
+        <>
+          <div style={{ height: '80vh', position: 'relative' }}>
+            <DescriptionBox color={defaultColors.gray}>
+              <h4>Description #1</h4>
+              <p>Supplementary content #1</p>
+            </DescriptionBox>
+          </div>
+          <div style={{ height: '80vh', position: 'relative' }}>
+            <DescriptionBox color={defaultColors.red}>
+              <h4>Description #2</h4>
+              <p>Supplementary content #2</p>
+            </DescriptionBox>
+          </div>
+          <div style={{ height: '80vh', position: 'relative' }}>
+            <DescriptionBox color={defaultColors.blue}>
+              <h4>Description #3</h4>
+              <p>Supplementary content #3</p>
+            </DescriptionBox>
+          </div>
+        </>
+      }
+    >
+      {({ isIntersecting, scrolledRatio }) => (
+        <CenterBox>
+          <h4>
+            {'<StickyScene> background'}
+          </h4>
+          <li>isIntersecting: <b>{`${isIntersecting}`}</b></li>
+          <li>scrolledRatio: <b>{scrolledRatio.toFixed(4)}</b></li>
+        </CenterBox>
+      )}
+    </StickyScene>
+  </PageProvider>
+</Playground>
+
+## Usage
+
+
+Import `<StickyScene>`:
+```jsx
+import { PageProvider } from '@react-scrolly/core';
+import { StickyScene } from '@react-scrolly/plot'
+```
+
+Use it in your component:
+
+`<StickyScene>` takes two components from the following props to render:
+
+- **children**:
+Background content; it sticks to the viewport while the user is scrolling through the foreground content.
+
+Since `<StickyScene>` is just a `<Section>` that helps you achieve the sticky scrolling effect with ease, it provides the same information like `scrolledRatio` as [Section](/scroll_tracking/section#properties).
+- **renderOverlay**: Foreground content; normally acts as the descriptions for the background content.
+Its rendered content accounts for the real height of `<StickyScene>`, i.e., `scrolledRatio` given in the background is calculated by the reading progress of the foreground content.

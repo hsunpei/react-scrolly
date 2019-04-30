@@ -2,7 +2,7 @@
 
 > TODO: description
 
-## Usage
+## Scrollytelling made easy with react-scrolly
 
 ```
 const core = require('core');
