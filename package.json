@@ -6,17 +6,18 @@
   ],
   "private": true,
   "scripts": {
-    "start": "yarn run clean && yarn run dev",
+    "start": "npm run clean && npm run dev",
     "dev": "docz dev --port 5000",
     "clean": "lerna run --parallel clean",
     "build:doc": "docz build",
-    "prepublish": "lerna run prepublish && yarn build:doc",
+    "prepublish": "lerna run prepublish && npm run build:doc",
     "lint": "lerna run lint --parallel --stream",
     "bumpversion": "lerna version --no-push --no-git-tag-version",
     "lerna": "lerna",
     "release": "lerna publish from-package --yes --no-push --no-git-tag-version",
     "release:beta": "lerna publish --no-push --no-git-tag-version --preid=beta --npm-tag=prerelease",
-    "release:canary": "lerna publish --canary --yes"
+    "release:canary": "lerna publish --canary --yes",
+    "deploy": "npm run build:doc && gh-pages -d .docz/dist"
   },
   "devDependencies": {
     "@types/node": "^10.12.18",

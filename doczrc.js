@@ -1,4 +1,5 @@
 import * as path from 'path';
+import { css } from 'styled-components';
 import { defaultColors } from './docs/src/config/theme';
 
 const modifyBundlerConfig = config => {
@@ -33,9 +34,7 @@ export default {
   ],
   modifyBundlerConfig,
   themeConfig : {
-    // See:
-    // https://github.com/pedronauck/docz/blob/5fbea6a1469d2e258402621ba81f74f898af90
-    // 6a/packages/docz-theme-default/README.md#default-themeconfig
+    // See: https://github.com/pedronauck/docz/tree/master/core/docz-theme-default
     mode: 'light',
     codemirrorTheme: 'material',
     showPlaygroundEditor: true, // always display the code in <Playground>
@@ -52,9 +51,9 @@ export default {
       theadColor: '#79878e'
     },
     styles: {
-      playground: {
-        background: defaultColors.white
-      }
-    }
+      playground: css`
+        background: #ffffff;
+      `,
+    },
   }
 };
