@@ -1,8 +1,7 @@
 {
   "name": "@react-scrolly/scene",
   "version": "0.0.0",
-  "description": "> TODO: description",
-  "author": "Mika Wang <garfieldduck@gmail.com>",
+  "description": "Provides various kinds of sections designed for scrolly-telling.",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
   "main": "lib/cjs/index.js",
@@ -16,7 +15,8 @@
     "lib"
   ],
   "publishConfig": {
-    "registry": "https://registry.yarnpkg.com"
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,6 @@
     "build": "run-p \"build:*\"",
     "build:esm": "tsc -p ./src",
     "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
-    "build:dist": "webpack --config=webpack.config.dist.js",
     "clean": "rimraf ./dist ./lib ./es5 ./deploy",
     "lint": "tslint --project ./src"
   },
@@ -41,5 +40,6 @@
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
-  }
+  },
+  "gitHead": "7671b4280d28c8a9fe4da2479497024a68d78c1d"
 }
