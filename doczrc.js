@@ -15,6 +15,7 @@ const modifyBundlerConfig = config => {
 export default {
   title : 'React-Scrolly',
   typescript : true,
+  repository: 'https://github.com/garfieldduck/react-scrolly',
   public: 'docs/public',
   // set hashRouter as `true` for Github
   hashRouter: true,
