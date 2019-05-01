@@ -15,7 +15,6 @@ const modifyBundlerConfig = config => {
 export default {
   title : 'React-Scrolly',
   typescript : true,
-  base: '/react-scrolly/',
   public: 'docs/public',
   htmlContext : {
     head: {
@@ -28,7 +27,7 @@ export default {
     }
   },
   htmlContext: {
-    favicon: '/public/favicon.png'
+    favicon: 'public/favicon.png'
   },
   // order of the menu
   menu: [
@@ -56,7 +55,7 @@ export default {
       theadColor: '#79878e'
     },
     logo: {
-      src: '/public/logo-long.png',
+      src: 'public/logo-long.png',
       width: 200,
     },
     styles: {
