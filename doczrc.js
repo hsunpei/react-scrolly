@@ -1,4 +1,5 @@
 import * as path from 'path';
+import { css } from 'styled-components';
 import { defaultColors } from './docs/src/config/theme';
 
 const modifyBundlerConfig = config => {
@@ -14,6 +15,10 @@ const modifyBundlerConfig = config => {
 export default {
   title : 'React-Scrolly',
   typescript : true,
+  repository: 'https://github.com/garfieldduck/react-scrolly',
+  public: 'docs/public',
+  // set hashRouter as `true` for Github
+  hashRouter: true,
   htmlContext : {
     head: {
       links: [
@@ -24,6 +29,9 @@ export default {
       ]
     }
   },
+  htmlContext: {
+    favicon: 'https://user-images.githubusercontent.com/1139698/57021930-34341700-6c60-11e9-876f-62d613f02178.png'
+  },
   // order of the menu
   menu: [
     'Introduction',
@@ -33,9 +41,7 @@ export default {
   ],
   modifyBundlerConfig,
   themeConfig : {
-    // See:
-    // https://github.com/pedronauck/docz/blob/5fbea6a1469d2e258402621ba81f74f898af90
-    // 6a/packages/docz-theme-default/README.md#default-themeconfig
+    // See: https://github.com/pedronauck/docz/tree/master/core/docz-theme-default
     mode: 'light',
     codemirrorTheme: 'material',
     showPlaygroundEditor: true, // always display the code in <Playground>
@@ -51,10 +57,21 @@ export default {
       codeColor: defaultColors.primary,
       theadColor: '#79878e'
     },
+    logo: {
+      src: 'https://user-images.githubusercontent.com/1139698/57021934-37c79e00-6c60-11e9-8451-2b0cf4016492.png',
+      width: 200,
+    },
     styles: {
-      playground: {
-        background: defaultColors.white
-      }
-    }
+      body: css`
+        font-family: 'Source Sans Pro',helvetica,'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif;
+        line-height: 1.6;
+        img {
+          max-width: 100%;
+        }
+      `,
+      playground: css`
+        background: #ffffff;
+      `,
+    },
   }
 };

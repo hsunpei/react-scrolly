@@ -20,9 +20,7 @@
     "removeComments": false,
     "allowSyntheticDefaultImports": true,
     "typeRoots": [
-      "react",
-      "react-spring",
-      "styled-components",
+      "../node_modules/@types",
       "../types"
     ]
   },
