@@ -16,6 +16,8 @@ export default {
   title : 'React-Scrolly',
   typescript : true,
   public: 'docs/public',
+  // set hashRouter as `true` for Github
+  hashRouter: true,
   htmlContext : {
     head: {
       links: [
@@ -27,7 +29,7 @@ export default {
     }
   },
   htmlContext: {
-    favicon: 'public/favicon.png'
+    favicon: '/public/favicon.png'
   },
   // order of the menu
   menu: [
@@ -55,7 +57,7 @@ export default {
       theadColor: '#79878e'
     },
     logo: {
-      src: 'public/logo-long.png',
+      src: '/public/logo-long.png',
       width: 200,
     },
     styles: {
