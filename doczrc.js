@@ -15,6 +15,7 @@ const modifyBundlerConfig = config => {
 export default {
   title : 'React-Scrolly',
   typescript : true,
+  base: '/react-scrolly/',
   htmlContext : {
     head: {
       links: [
