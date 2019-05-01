@@ -16,6 +16,7 @@ export default {
   title : 'React-Scrolly',
   typescript : true,
   base: '/react-scrolly/',
+  public: 'docs/public',
   htmlContext : {
     head: {
       links: [
@@ -25,6 +26,9 @@ export default {
         }
       ]
     }
+  },
+  htmlContext: {
+    favicon: '/public/favicon.png'
   },
   // order of the menu
   menu: [
@@ -51,7 +55,18 @@ export default {
       codeColor: defaultColors.primary,
       theadColor: '#79878e'
     },
+    logo: {
+      src: '/public/logo-long.png',
+      width: 200,
+    },
     styles: {
+      body: css`
+        font-family: 'Source Sans Pro',helvetica,'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif;
+        line-height: 1.6;
+        img {
+          max-width: 100%;
+        }
+      `,
       playground: css`
         background: #ffffff;
       `,
