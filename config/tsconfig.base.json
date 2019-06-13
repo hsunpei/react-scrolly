@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./packages",
+    "incremental": true,
     "outDir": "lib",
     "module": "es6",
     "target": "es5",
