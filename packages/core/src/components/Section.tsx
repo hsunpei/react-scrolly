@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import { useIntersectionObservable } from '../hooks/useIntersectionObservable';
+import { useIntersectionObservable } from '../hooks/common/useIntersectionObservable';
 import { SectionInfo, useSectionRatio } from '../hooks/section/useSectionRatio';
 
 export interface SectionProps {
