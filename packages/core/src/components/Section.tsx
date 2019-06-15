@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 
 import { useIntersectionObservable } from '../hooks/common/useIntersectionObservable';
-import { SectionInfo, useSectionRatio } from '../hooks/section/useSectionRatio';
+import { SectionInfo, useScrolledRatio } from '../hooks/section/useScrolledRatio';
 
 export interface SectionProps {
   /**
@@ -33,7 +33,7 @@ export const Section = ({
 }: SectionProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
-  const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
+  const sectionInfo = useScrolledRatio(sectionRef, intersectObsr$, trackingId);
 
   return (
     <div

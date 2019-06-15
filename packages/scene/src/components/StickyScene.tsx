@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import {
   // hooks
   useIntersectionObservable,
-  useSectionRatio,
+  useScrolledRatio,
   // utils
   getStickyPosition,
   // types
@@ -32,7 +32,7 @@ export const StickyScene = ({
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
-  const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
+  const sectionInfo = useScrolledRatio(sectionRef, intersectObsr$, trackingId);
 
   const stickyStyle: React.CSSProperties = getStickyPosition(sectionInfo);
 

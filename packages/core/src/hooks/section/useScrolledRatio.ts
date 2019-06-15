@@ -23,7 +23,7 @@ export interface SectionInfo extends SectionPosition {
   scrolledRatio: number;
 }
 
-export function useSectionRatio(
+export function useScrolledRatio(
   /** Ref of the section being tracked */
   sectionRef: React.RefObject<HTMLElement>,
 

@@ -7,5 +7,5 @@ export * from './hooks/page/useActiveSectionTracker';
 export * from './hooks/common/useIntersectionObservable';
 export * from './hooks/common/usePageScroll';
 export * from './hooks/common/useSectionPosition';
-export * from './hooks/section/useSectionRatio';
+export * from './hooks/section/useScrolledRatio';
 export * from './hooks/common/useSubscription';
