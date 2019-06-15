@@ -164,7 +164,7 @@ You can get the same information using the hooks:
 
 ```jsx
 // assign the ref to the component
-const plotRef = useRef<HTMLDivElement>(null);
+const plotRef = useRef(null);
 
 const intersectObsr$ = useIntersectionObservable(plotRef, trackingId);
 const sectionInfo = useScrolledRatio(plotRef, intersectObsr$, trackingId);
