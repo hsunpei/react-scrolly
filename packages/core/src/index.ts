@@ -8,4 +8,5 @@ export * from './hooks/common/useIntersectionObservable';
 export * from './hooks/common/usePageScroll';
 export * from './hooks/common/useSectionPosition';
 export * from './hooks/section/useScrolledRatio';
+export * from './hooks/section/useSection';
 export * from './hooks/common/useSubscription';

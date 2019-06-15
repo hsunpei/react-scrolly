@@ -100,18 +100,20 @@ What does `sectionInfo` provides?
 
 If you don't want to use the render props to get `sectionInfo`, you can also use the hooks to get the same information by yourself:
 
-### `useScrolledRatio` hook
+### `useSection` hook
 
-Import the hooks:
+If you prefer using hooks instead of the `<Section>` render props,
+you can use `useSection` hook to obtain the same information:
+
+Import the hook:
 ```jsx
-import { useIntersectionObservable, useScrolledRatio } from '@react-scrolly/core';
+import { useSection } from '@react-scrolly/core';
 ```
 
 Use them in your functional components:
 ```jsx
 const sectionRef = useRef(null);
-const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
-const sectionInfo = useScrolledRatio(sectionRef, intersectObsr$, trackingId);
+const sectionInfo = useSection(sectionRef);
 
 return (
   <div
@@ -137,7 +139,8 @@ By adding `trackingId` to sections, `<PageProvider>` select the section closest 
 
 or
 ```jsx
-const sectionInfo = useScrolledRatio(sectionRef, intersectObsr$, 'TRACKING_ID');
+const sectionRef = useRef(null);
+const sectionInfo = useSection(sectionRef, 'TRACKING_ID');
 ```
 
 ## Complete Example
