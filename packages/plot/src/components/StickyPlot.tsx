@@ -1,15 +1,12 @@
 import React, { useRef } from 'react';
 import {
-  // hooks
-  useIntersectionObservable,
-  useScrolledRatio,
   // utils
   getStickyPosition,
   // types
   SectionProps,
  } from '@react-scrolly/core';
 
-import { useActiveSectionInfo } from '../hooks/useActiveSectionInfo';
+import { usePlot } from '../hooks/usePlot';
 
 export interface StickyPlotProps extends SectionProps {
   /**
@@ -32,16 +29,14 @@ export const StickyPlot = ({
     position: 'relative',
   };
 
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
-  const sectionInfo = useScrolledRatio(sectionRef, intersectObsr$, trackingId);
-  const activeSection = useActiveSectionInfo(intersectObsr$);
+  const plotRef = useRef<HTMLDivElement>(null);
+  const { sectionInfo, activeSection } = usePlot(plotRef, trackingId);
 
   const stickyStyle: React.CSSProperties = getStickyPosition(sectionInfo);
 
   return (
     <div
-      ref={sectionRef}
+      ref={plotRef}
       className={className}
       style={outerStyle}
       {...restProps}
