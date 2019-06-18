@@ -157,7 +157,7 @@ Import the hooks:
 
 ```jsx
 import { useIntersectionObservable, useScrolledRatio } from '@react-scrolly/core';
-import { useActiveSectionInfo } from '@react-scrolly/plot';
+import { usePlot } from '@react-scrolly/plot';
 ```
 
 You can get the same information using the hooks:
@@ -165,10 +165,7 @@ You can get the same information using the hooks:
 ```jsx
 // assign the ref to the component
 const plotRef = useRef(null);
-
-const intersectObsr$ = useIntersectionObservable(plotRef, trackingId);
-const sectionInfo = useScrolledRatio(plotRef, intersectObsr$, trackingId);
-const activeSection = useActiveSectionInfo(intersectObsr$);
+const { sectionInfo, activeSection } = usePlot(plotRef, 'TRACKING_ID');
 ```
 
 
