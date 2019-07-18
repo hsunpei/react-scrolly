@@ -1,6 +1,6 @@
 {
   "name": "@react-scrolly/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A performant scroll progress tracking of sections designed for scrolly-telling.",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
