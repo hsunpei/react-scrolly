@@ -1,4 +1,4 @@
-import { SectionInfo } from '../hooks/section/useSectionRatio';
+import { SectionInfo } from '../hooks/section/useScrolledRatio';
 
 const STICKY_POS: {
   absTop: React.CSSProperties,

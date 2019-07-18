@@ -8,7 +8,7 @@ import { Observable, Subject } from 'rxjs';
 import {
   getIntersectionObserver,
   IntersectionObserverConfig,
-} from '../utils/getIntersectionObserver';
+} from '../../utils/getIntersectionObserver';
 
 export interface IntersectionInfo {
   /** From IntersectionObserver: whether the `<Section>` is intersecting the root */

@@ -8,9 +8,9 @@ import {
 
 import { ScrollPosition } from '../../components/PageProvider';
 import { PageContext, PageContextInterface } from '../../context/PageContext';
-import { useSectionPosition, SectionPosition } from '../useSectionPosition';
-import { usePageScroll } from '../usePageScroll';
-import { IntersectionInfo } from '../useIntersectionObservable';
+import { useSectionPosition, SectionPosition } from '../common/useSectionPosition';
+import { usePageScroll } from '../common/usePageScroll';
+import { IntersectionInfo } from '../common/useIntersectionObservable';
 
 export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */
@@ -23,7 +23,7 @@ export interface SectionInfo extends SectionPosition {
   scrolledRatio: number;
 }
 
-export function useSectionRatio(
+export function useScrolledRatio(
   /** Ref of the section being tracked */
   sectionRef: React.RefObject<HTMLElement>,
 

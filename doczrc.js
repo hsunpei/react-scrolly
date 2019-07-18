@@ -19,18 +19,14 @@ export default {
   public: 'docs/public',
   // set hashRouter as `true` for Github
   hashRouter: true,
-  htmlContext : {
-    head: {
-      links: [
-        {
-          rel: 'stylesheet',
-          href: 'https://codemirror.net/theme/material.css'
-        }
-      ]
-    }
-  },
   htmlContext: {
-    favicon: 'https://user-images.githubusercontent.com/1139698/57021930-34341700-6c60-11e9-876f-62d613f02178.png'
+    favicon: 'https://user-images.githubusercontent.com/1139698/57021930-34341700-6c60-11e9-876f-62d613f02178.png',
+    head: {
+      links: [{
+        rel: 'stylesheet',
+        href: 'https://codemirror.net/theme/oceanic-next.css'
+      }]
+    }
   },
   // order of the menu
   menu: [
@@ -43,7 +39,7 @@ export default {
   themeConfig : {
     // See: https://github.com/pedronauck/docz/tree/master/core/docz-theme-default
     mode: 'light',
-    codemirrorTheme: 'material',
+    codemirrorTheme: 'oceanic-next',
     showPlaygroundEditor: true, // always display the code in <Playground>
     colors: {
       primary: defaultColors.primary,

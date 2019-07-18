@@ -1,13 +1,10 @@
 import React, { useRef } from 'react';
 import {
-  // hooks
-  useIntersectionObservable,
-  useSectionRatio,
   // types
   SectionProps,
  } from '@react-scrolly/core';
 
-import { useActiveSectionInfo } from '../hooks/useActiveSectionInfo';
+import { usePlot } from '../hooks/usePlot';
 
 export const Plot = ({
   className,
@@ -16,14 +13,12 @@ export const Plot = ({
   trackingId,
   ...restProps
 }: SectionProps) => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
-  const sectionInfo = useSectionRatio(sectionRef, intersectObsr$, trackingId);
-  const activeSection = useActiveSectionInfo(intersectObsr$);
+  const plotRef = useRef<HTMLDivElement>(null);
+  const { sectionInfo, activeSection } = usePlot(plotRef, trackingId);
 
   return (
     <div
-      ref={sectionRef}
+      ref={plotRef}
       className={className}
       style={style}
       {...restProps}

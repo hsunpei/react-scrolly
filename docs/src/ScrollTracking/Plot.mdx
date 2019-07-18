@@ -156,19 +156,16 @@ while sticking the background content in the viewport when its foreground conten
 Import the hooks:
 
 ```jsx
-import { useIntersectionObservable, useSectionRatio } from '@react-scrolly/core';
-import { useActiveSectionInfo } from '@react-scrolly/plot';
+import { useIntersectionObservable, useScrolledRatio } from '@react-scrolly/core';
+import { usePlot } from '@react-scrolly/plot';
 ```
 
 You can get the same information using the hooks:
 
 ```jsx
 // assign the ref to the component
-const plotRef = useRef<HTMLDivElement>(null);
-
-const intersectObsr$ = useIntersectionObservable(plotRef, trackingId);
-const sectionInfo = useSectionRatio(plotRef, intersectObsr$, trackingId);
-const activeSection = useActiveSectionInfo(intersectObsr$);
+const plotRef = useRef(null);
+const { sectionInfo, activeSection } = usePlot(plotRef, 'TRACKING_ID');
 ```
 
 

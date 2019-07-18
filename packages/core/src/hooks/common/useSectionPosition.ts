@@ -13,7 +13,7 @@ import React, {
   useCallback,
 } from 'react';
 
-import { PageContext, PageContextInterface } from '../context/PageContext';
+import { PageContext, PageContextInterface } from '../../context/PageContext';
 
 import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
