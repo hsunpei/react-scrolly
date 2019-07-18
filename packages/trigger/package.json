@@ -1,6 +1,6 @@
 {
   "name": "@react-scrolly/trigger",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Components provided with the information that whether they are scrolled in/out of the viewport.",
   "author": "Mika Wang <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
@@ -37,7 +37,7 @@
     "react-dom": "^16.8.5"
   },
   "dependencies": {
-    "@react-scrolly/core": "^0.0.0"
+    "@react-scrolly/core": "^0.1.0"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
