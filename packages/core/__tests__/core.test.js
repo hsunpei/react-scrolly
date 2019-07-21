@@ -1,7 +1,7 @@
-'use strict';
-
 const core = require('..');
 
 describe('core', () => {
-    it('needs tests');
+    it('dummy test', () => {
+      expect(1 + 2).toBe(3);
+    })
 });
