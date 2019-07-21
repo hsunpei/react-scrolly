@@ -6,4 +6,7 @@ module.exports = {
       tsConfig: '<rootDir>/config/tsconfig.base.json',
     },
   },
+  setupFilesAfterEnv: [
+    '@testing-library/react/cleanup-after-each',
+  ],
 };

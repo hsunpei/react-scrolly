@@ -22,6 +22,7 @@
     "test:watch": "jest ./packages --watch --config=config/jest.config.js"
   },
   "devDependencies": {
+    "@testing-library/react": "^8.0.5",
     "@types/jest": "^24.0.15",
     "@types/node": "^10.12.18",
     "@types/react": "^16.8.10",
