@@ -25,7 +25,7 @@ and it lets the supplementary content scroll through its sticky background.
     <StickyScene
       color={defaultColors.gray}
       renderOverlay={
-        <>
+        <React.Fragment>
           <div style={{ height: '80vh', position: 'relative' }}>
             <DescriptionBox color={defaultColors.gray}>
               <h4>Description #1</h4>
@@ -44,7 +44,7 @@ and it lets the supplementary content scroll through its sticky background.
               <p>Supplementary content #3</p>
             </DescriptionBox>
           </div>
-        </>
+        </React.Fragment>
       }
     >
       {({ isIntersecting, scrolledRatio }) => (

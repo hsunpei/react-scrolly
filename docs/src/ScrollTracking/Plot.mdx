@@ -44,7 +44,7 @@ In other words, `<Plot>` provides:
   <PageProvider>
     <StickyPlot
         renderOverlay={
-          <>
+          <React.Fragment>
             <BorderedDemoSection trackingId="RED" color={defaultColors.red} height="100vh">
               {() => (
                 <h5>
@@ -87,7 +87,7 @@ In other words, `<Plot>` provides:
                 </h5>
               )}
             </BorderedDemoSection>
-          </>
+          </React.Fragment>
         }
       >
         {({activeSection}) => (

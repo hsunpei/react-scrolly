@@ -28,7 +28,7 @@ and it provides additional function by letting you track the scrolling progress 
     <StickyPlot
       color={defaultColors.gray}
       renderOverlay={
-        <>
+        <React.Fragment>
           <Section trackingId="DESC-1" style={{ height: '80vh', position: 'relative' }}>
             {() => (
               <DescriptionBox color={defaultColors.gray}>
@@ -53,7 +53,7 @@ and it provides additional function by letting you track the scrolling progress 
               </DescriptionBox>
             )}
           </Section>
-        </>
+        </React.Fragment>
       }
     >
       {({ activeSection, isIntersecting, scrolledRatio }) => (

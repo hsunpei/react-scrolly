@@ -20,6 +20,7 @@
     "noUnusedLocals": true,
     "removeComments": false,
     "allowSyntheticDefaultImports": true,
+    "types": ["react"],
     "typeRoots": [
       "../node_modules/@types",
       "../types"
