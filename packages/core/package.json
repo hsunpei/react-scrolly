@@ -36,7 +36,6 @@
     "react-dom": "^16.13.1"
   },
   "dependencies": {
-    "intersection-observer": "^0.6.0",
     "rxjs": "^6.4.0"
   },
   "bugs": {

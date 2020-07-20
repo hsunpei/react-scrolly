@@ -1,5 +1,3 @@
-import 'intersection-observer';
-
 export interface Margin {
   top: number;
   right: number;
