@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { css } from 'styled-components';
-import { defaultColors } from './docs/src/config/theme';
+import { defaultColors } from './_docs/src/config/theme';
 
 const modifyBundlerConfig = config => {
   config.resolve.alias = Object.assign({}, config.resolve.alias, {
@@ -16,7 +16,7 @@ export default {
   title : 'React-Scrolly',
   typescript : true,
   repository: 'https://github.com/garfieldduck/react-scrolly',
-  public: 'docs/public',
+  public: '_docs/public',
   // set hashRouter as `true` for Github
   hashRouter: true,
   htmlContext: {
