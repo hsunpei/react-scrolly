@@ -2,12 +2,17 @@
   "name": "react-scrolly",
   "version": "0.1.0",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "docs"
   ],
   "private": true,
   "scripts": {
-    "start": "npm run clean && npm run dev",
-    "dev": "docz dev --port 5000",
+    "start": "yarn dev",
+    "dev": "run-p dev:packages dev:docs",
+    "dev:packages": "lerna run dev --parallel --stream",
+    "dev:docs": "yarn workspace docs dev",
+    "_start": "npm run clean && npm run _dev",
+    "_dev": "docz dev --port 5000",
     "clean": "lerna run --parallel clean",
     "build:doc": "docz build",
     "prepublish": "lerna run prepublish && npm run build:doc",

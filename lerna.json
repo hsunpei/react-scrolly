@@ -6,7 +6,8 @@
   "npmClient": "yarn",
   "command": {
     "publish": {
-      "registry": "https://registry.npmjs.org"
+      "registry": "https://registry.npmjs.org",
+      "ignoreChanges": ["docs"]
     }
   },
   "useWorkspaces": true
