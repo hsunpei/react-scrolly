@@ -1,21 +1,25 @@
 {
   "name": "react-scrolly",
   "version": "0.1.0",
-  "workspaces": [
-    "packages/*",
-    "docs"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "docs"
+    ]
+  },
   "private": true,
   "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "postinstall": "npm run bootstrap",
+    "clean": "lerna run clean",
     "start": "yarn dev",
     "dev": "run-p dev:packages dev:docs",
     "dev:packages": "lerna run dev --parallel --stream",
     "dev:docs": "yarn workspace docs dev",
+    "build": "lerna run build --stream",
     "_start": "npm run clean && npm run _dev",
     "_dev": "docz dev --port 5000",
-    "clean": "lerna run --parallel clean",
-    "build:doc": "docz build",
-    "prepublish": "lerna run prepublish && npm run build:doc",
+    "_build:doc": "docz build",
     "lint": "lerna run lint --parallel --stream",
     "bumpversion": "lerna version --no-push --no-git-tag-version",
     "lerna": "lerna",
@@ -25,6 +29,7 @@
     "deploy": "DOCZ_BASE=/react-scrolly/ npm run build:doc && gh-pages -d .docz/dist"
   },
   "devDependencies": {
+    "@garfieldduck/typescript-config": "^1.0.3",
     "@types/node": "^14.0.23",
     "@types/react": "^16.9.43",
     "@types/styled-components": "5.1.1",

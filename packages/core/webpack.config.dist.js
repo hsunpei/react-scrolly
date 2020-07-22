@@ -1,3 +1,3 @@
-const baseConfig = require('../../config/webpack.config.base.js');
+const baseConfig = require('../../configs/webpack.config.base.js');
 
 module.exports = baseConfig;

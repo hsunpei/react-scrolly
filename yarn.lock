@@ -1402,6 +1402,11 @@
     reflect-metadata "^0.1.12"
     tslib "^1.8.1"
 
+"@garfieldduck/typescript-config@^1.0.3":
+  version "1.0.3"
+  resolved "https://npm.pkg.github.com/download/@garfieldduck/typescript-config/1.0.3/2bb3ccff189b4bdccb078cf63bbb28ddf39c48cbab5b1bdc96ba9de38ad31378#fe108410d9aebfdab71cb4ff17f179addeca3f11"
+  integrity sha512-iCRRNaeQoZ7OX1ToEs8QQD0ZlOtV53JCA/QUQ5TN4U9cIKTyTO+OLQ/VQBYQAkclm7VjLWxr3KzBktyA8DLbFg==
+
 "@graphql-tools/schema@^6.0.11":
   version "6.0.14"
   resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-6.0.14.tgz#f095e2c90f66d21a248b60c4bd32cb367d6722cc"

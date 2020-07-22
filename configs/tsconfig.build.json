@@ -10,7 +10,6 @@
     "declaration": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "rootDir": "",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -20,19 +19,10 @@
     "noUnusedLocals": true,
     "removeComments": false,
     "allowSyntheticDefaultImports": true,
-    "types": ["react"],
     "typeRoots": [
       "../node_modules/@types",
       "../types"
-    ]
-  },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts"
-  ]
+    ],
+    "types": ["react"]
+  }
 }
