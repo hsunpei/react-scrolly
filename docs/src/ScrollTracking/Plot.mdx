@@ -1,0 +1,172 @@
+---
+name: 2. Plot
+route: /scroll_tracking/plot
+menu: Scroll Tracking
+---
+
+import { Props } from 'docz';
+import { PageProvider, Section } from '@react-scrolly/core';
+import { StickyPlot } from '@react-scrolly/plot';
+
+import { DemoWrapper } from '../components/DemoWrapper';
+import { BorderedDemoSection } from '../components/DemoSection';
+import { CenterBox } from '../components/CenterBox';
+
+import { defaultColors } from '../config/theme';
+
+
+# Plot
+## Track scroll progress of the section closest to the bottom of the viewport
+
+`<Plot>` is another kind of section which allows you to track the reading progress of `<Section>` users are currently viewing
+(closest to the bottom of the viewport).
+
+This is particularly handy when you want to display some effects based on the section and its progress users are currently reading.
+
+Before you start using `<Plot>`, you have to assign unique `trackingId` to sections you are going to track:
+
+```jsx
+<Section trackingId="GREEN">...</Section>
+```
+
+After that, `<PageProvider>` will keep the scrolling information of all the sections of `trackingId`,
+and `<Plot>` will to be updated with the scrolling information of the section closet to the bottom of the viewport when it is scrolled into the viewport.
+
+
+In other words, `<Plot>` provides:
+
+- All the information provided by `<Section>`
+- The `trackingId` of the `<Section>` currently closet to the bottom of the viewport, and its scroll progress.
+
+
+## Example
+<DemoWrapper>
+  <PageProvider>
+    <StickyPlot
+        renderOverlay={
+          <React.Fragment>
+            <BorderedDemoSection trackingId="RED" color={defaultColors.red} height="100vh">
+              {() => (
+                <h5>
+                  RED
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="ORANGE" color={defaultColors.orange} height="50vh">
+              {() => (
+                <h5>
+                  ORANGE
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="YELLOW" color={defaultColors.yellow} height="50vh">
+              {() => (
+                <h5>
+                  YELLOW
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="GREEN" color={defaultColors.green} height="50vh">
+              {() => (
+                <h5>
+                  GREEN
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="BLUE" color={defaultColors.blue} height="50vh">
+              {() => (
+                <h5>
+                  BLUE
+                </h5>
+              )}
+            </BorderedDemoSection>
+            <BorderedDemoSection trackingId="PURPLE" color={defaultColors.purple} height="60vh">
+              {() => (
+                <h5>
+                  PURPLE
+                </h5>
+              )}
+            </BorderedDemoSection>
+          </React.Fragment>
+        }
+      >
+        {({activeSection}) => (
+          activeSection && (
+            <CenterBox boldColor={defaultColors[activeSection.id.toLowerCase()]}>
+              <li>You are viewing <b>{activeSection.id}</b> section</li>
+              <li>Reading Ratio: {activeSection.ratio.toFixed(4)}</li>
+            </CenterBox>
+          )
+        )}
+      </StickyPlot>
+  </PageProvider>
+</DemoWrapper>
+
+## Usage
+
+Import `<Plot>`:
+```jsx
+import { PageProvider } from '@react-scrolly/core';
+import { Plot } from '@react-scrolly/plot';
+```
+
+Use it in your component:
+```jsx
+<PageProvider>
+  ...
+  <Plot>
+    {({ sectionInfo, activeSection }) => (
+      <div>
+        <h2>Scroll info of this Plot</h2>
+        <span>{sectionInfo.isIntersecting}, {sectionInfo.scrolledRatio}</span>
+      </div>
+      <div>
+        <h2>Section closet to the bottom of viewport</h2>
+        <span>`trackingId`:  {activeSection.id}</span>
+        <span>Ratio of the scrolling progress: {activeSection.ratio}</span>
+      </div>
+    )}
+  </Plot>
+  <Section trackingId="RED">...</Section>
+  <Section trackingId="ORANGE">...</Section>
+  <Section trackingId="YELLOW">...</Section>
+  ...
+</PageProvider>
+```
+
+### `<StickyPlot>`
+
+If you want to stick the `<Plot>` like the demo above,
+you can use [StickyPlot](/pinning_sections/sticky_plot) which provides the same information in the render props as `<Plot>`,
+while sticking the background content in the viewport when its foreground content is visible the viewport.
+
+## Properties
+
+1. `isIntersecting`: same as the `isIntersecting` of `sectionInfo` in [Section](/scroll_tracking/section#properties)
+2. `scrolledRatio`: same as the `isIntersecting` of `sectionInfo` in [Section](/scroll_tracking/section#properties)
+2. `activeSection` provides:
+  - `id`: `trackingId` of the tracked `<Section>` closest to the bottom of
+  - `ratio`: Ratio of the tracked `<Section>` closest to the bottom being read
+
+
+## Advanced usages
+
+### `useActiveSectionInfo` hook
+
+Import the hooks:
+
+```jsx
+import { useIntersectionObservable, useScrolledRatio } from '@react-scrolly/core';
+import { usePlot } from '@react-scrolly/plot';
+```
+
+You can get the same information using the hooks:
+
+```jsx
+// assign the ref to the component
+const plotRef = useRef(null);
+const { sectionInfo, activeSection } = usePlot(plotRef, 'TRACKING_ID');
+```
+
+
+<Props of={StickyPlot} />
