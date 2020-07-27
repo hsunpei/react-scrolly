@@ -1,10 +1,12 @@
 export default {
-  title : 'React-Scrolly',
+  title: 'React-Scrolly',
   repository: 'https://github.com/garfieldduck/react-scrolly',
 
   docgenConfig: {
     searchPath: '../packages',
   },
+
+  themesDir: 'theme',
 
   port: 5000,
 
@@ -16,6 +18,6 @@ export default {
     'Introduction',
     'Scroll Tracking',
     'Pinning Sections',
-    'Revealing Animations'
+    'Revealing Animations',
   ],
 };
