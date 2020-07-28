@@ -20,7 +20,8 @@
     "_start": "npm run clean && npm run _dev",
     "_dev": "docz dev --port 5000",
     "_build:doc": "docz build",
-    "lint": "lerna run lint --parallel --stream",
+    "lint": "eslint --ignore-path .gitignore \"./**/*.{ts,tsx}\"",
+    "lint:fix": "yarn lint --fix",
     "bumpversion": "lerna version --no-push --no-git-tag-version",
     "lerna": "lerna",
     "release": "lerna publish from-package --yes --no-push --no-git-tag-version",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@garfieldduck/typescript-config": "^1.0.3",
+    "@garfieldduck/eslint-config": "^0.0.3",
     "@types/node": "^14.0.23",
     "@types/react": "^16.9.43",
     "@types/styled-components": "5.1.1",
@@ -47,13 +49,10 @@
     "styled-components": "^5.1.1",
     "styled-media-query": "^2.1.2",
     "ts-loader": "^5.3.3",
-    "tslint": "^5.12.1",
-    "tslint-config-airbnb": "^5.11.1",
-    "tslint-react": "^3.6.0",
-    "tslint-react-hooks": "^1.1.0",
     "typescript": "^3.9.7",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "webpack-cli": "^3.3.0",
+    "eslint": "^6.7.2"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"

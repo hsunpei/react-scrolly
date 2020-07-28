@@ -20,4 +20,12 @@ export default {
     'Pinning Sections',
     'Revealing Animations',
   ],
+
+  themeConfig: {
+    colors: {
+      props: {
+        highlight: '#ef3e36'
+      },
+    },
+  },
 };
