@@ -1397,6 +1397,11 @@
     eslint-plugin-react "^7.17.0"
     eslint-plugin-react-hooks "^3.0.0"
 
+"@garfieldduck/prettier-config@^1.0.2":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@garfieldduck/prettier-config/1.0.2/548ae7f41c84fa4b87c6da1bb9c3597781833313e7ffd80faf4b90f58fdaaa71#8071d9335bc954ada59835a7f0528a895a2d5c5c"
+  integrity sha512-ONrTKir17gteZIlrGzBILCGosJc6r23Q8YHnuVbrWdOQDyTHgcduqyBDujTPBdej00lreJHsEmn0RIUN/RydaA==
+
 "@garfieldduck/typescript-config@^1.0.3":
   version "1.0.3"
   resolved "https://npm.pkg.github.com/download/@garfieldduck/typescript-config/1.0.3/2bb3ccff189b4bdccb078cf63bbb28ddf39c48cbab5b1bdc96ba9de38ad31378#fe108410d9aebfdab71cb4ff17f179addeca3f11"
