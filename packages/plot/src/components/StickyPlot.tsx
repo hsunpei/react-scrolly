@@ -4,7 +4,7 @@ import {
   getStickyPosition,
   // types
   SectionProps,
- } from '@react-scrolly/core';
+} from '@react-scrolly/core';
 
 import { usePlot } from '../hooks/usePlot';
 
@@ -35,21 +35,14 @@ export const StickyPlot = ({
   const stickyStyle: React.CSSProperties = getStickyPosition(sectionInfo);
 
   return (
-    <div
-      ref={plotRef}
-      className={className}
-      style={outerStyle}
-      {...restProps}
-    >
+    <div ref={plotRef} className={className} style={outerStyle} {...restProps}>
       <div style={stickyStyle}>
         {children({
           ...sectionInfo,
           ...activeSection,
         })}
       </div>
-      <div style={{ position: 'relative' }}>
-        {renderOverlay}
-      </div>
+      <div style={{ position: 'relative' }}>{renderOverlay}</div>
     </div>
   );
 };

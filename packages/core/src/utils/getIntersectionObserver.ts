@@ -29,10 +29,7 @@ const DEFAULT_MARGIN = {
 
 export function getIntersectionObserver(
   callback: (entries: IntersectionObserverEntry[]) => void,
-  {
-    threshold = DEFAULT_THRESHOLD,
-    rootMargin = DEFAULT_MARGIN,
-  }: IntersectionObserverConfig = {
+  { threshold = DEFAULT_THRESHOLD, rootMargin = DEFAULT_MARGIN }: IntersectionObserverConfig = {
     threshold: DEFAULT_THRESHOLD,
     rootMargin: DEFAULT_MARGIN,
   }

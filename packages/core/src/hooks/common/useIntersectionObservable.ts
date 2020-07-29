@@ -1,8 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Observable, Subject } from 'rxjs';
 
 import {
@@ -29,7 +25,7 @@ export function useIntersectionObservable(
   trackingId: IntersectionInfo['trackingId'],
 
   /** Margin and threshold configurations for IntersectionObserver */
-  intersectionConfig?: IntersectionObserverConfig,
+  intersectionConfig?: IntersectionObserverConfig
 ): Observable<IntersectionInfo> {
   /**
    * Stores references to the observer listening to section intersection with the viewport
@@ -53,29 +49,26 @@ export function useIntersectionObservable(
 
       intersectSubjectRef.current.next(intersecting);
     },
-    []
+    [trackingId]
   );
 
-  useEffect(
-    () => {
-      // start observing whether the section is scrolled into the viewport
-      intersectionObserverRef.current = getIntersectionObserver(
-        recordIntersection,
-        intersectionConfig
-      );
+  useEffect(() => {
+    // start observing whether the section is scrolled into the viewport
+    intersectionObserverRef.current = getIntersectionObserver(
+      recordIntersection,
+      intersectionConfig
+    );
 
-      intersectionObserverRef.current.observe(sectionRef.current!);
+    intersectionObserverRef.current.observe(sectionRef.current!);
 
-      // unsubscribe to the intersection observer on unmounting
-      return () => {
-        if (intersectionObserverRef.current) {
-          intersectionObserverRef.current.disconnect();
-          intersectSubjectRef.current.complete();
-        }
-      };
-    },
-    []
-  );
+    // unsubscribe to the intersection observer on unmounting
+    return () => {
+      if (intersectionObserverRef.current) {
+        intersectionObserverRef.current.disconnect();
+        intersectSubjectRef.current.complete();
+      }
+    };
+  }, [intersectionConfig, recordIntersection, sectionRef]);
 
   return intersectObservableRef.current;
 }

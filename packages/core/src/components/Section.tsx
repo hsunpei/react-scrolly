@@ -24,23 +24,12 @@ export interface SectionProps {
   children: (section: SectionInfo) => React.ReactNode;
 }
 
-export const Section = ({
-  className,
-  style,
-  children,
-  trackingId,
-  ...restProps
-}: SectionProps) => {
+export const Section = ({ className, style, children, trackingId, ...restProps }: SectionProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const sectionInfo = useSection(sectionRef, trackingId);
 
   return (
-    <div
-      ref={sectionRef}
-      className={className}
-      style={style}
-      {...restProps}
-    >
+    <div ref={sectionRef} className={className} style={style} {...restProps}>
       {children(sectionInfo)}
     </div>
   );

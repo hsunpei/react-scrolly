@@ -1,10 +1,5 @@
 import { Observable } from 'rxjs';
-import {
-  useRef,
-  useMemo,
-  useEffect,
-  useContext,
-} from 'react';
+import { useRef, useMemo, useEffect, useContext } from 'react';
 
 import { ScrollPosition } from '../../components/PageProvider';
 import { PageContext, PageContextInterface } from '../../context/PageContext';
@@ -36,7 +31,7 @@ export function useScrolledRatio(
    * Please make sure that on the same `scrollTop`,
    * there is **NO** more than one tracked section (section with `trackingId`).
    */
-  trackingId?: string,
+  trackingId?: string
 ): SectionInfo {
   const context = useContext<PageContextInterface | null>(PageContext);
   const { addActiveSection, removeActiveSection, updateScrollRatio } = context!;
@@ -48,51 +43,45 @@ export function useScrolledRatio(
   const preIntersecting = useRef(false);
 
   // update the active section info if `isIntersecting` changes
-  useEffect(
-    () => {
-      const curInter = isIntersecting;
-      const preInter = preIntersecting.current;
+  useEffect(() => {
+    const curInter = isIntersecting;
+    const preInter = preIntersecting.current;
 
-      if (trackingId) {
-        if (!preInter && curInter) {
-          // update the section currently being scrolled
-          addActiveSection(trackingId, sectionTop, scrollInfo.scrollBottom);
-        } else if (preInter && !curInter) {
-          // clear the section ID tracked in the page
-          removeActiveSection(trackingId, scrollInfo.scrollBottom);
-        }
+    if (trackingId) {
+      if (!preInter && curInter) {
+        // update the section currently being scrolled
+        addActiveSection(trackingId, sectionTop, scrollInfo.scrollBottom);
+      } else if (preInter && !curInter) {
+        // clear the section ID tracked in the page
+        removeActiveSection(trackingId, scrollInfo.scrollBottom);
       }
+    }
 
-      preIntersecting.current = curInter;
-    },
-    [trackingId, isIntersecting, sectionTop, scrollInfo],
-  );
+    preIntersecting.current = curInter;
+  }, [trackingId, isIntersecting, sectionTop, scrollInfo, addActiveSection, removeActiveSection]);
 
-  const scrolledRatio = useMemo(
-    () => {
-      const { scrollBottom } = scrollInfo;
-      const { height } = boundingRect;
+  const scrolledRatio = useMemo(() => {
+    const { scrollBottom } = scrollInfo;
+    const { height } = boundingRect;
 
-      const distance = scrollBottom - sectionTop;
-      let ratio = distance / height;
+    const distance = scrollBottom - sectionTop;
+    let ratio = distance / height;
 
-      if (ratio >= 1) {
-        ratio = 1;
-      } else if (ratio <= 0) {
-        ratio = 0;
-      }
+    if (ratio >= 1) {
+      ratio = 1;
+    } else if (ratio <= 0) {
+      ratio = 0;
+    }
 
-      // if the section is tracked,
-      // let `useActiveSectionTracker()`to determine whether it is active,
-      // and if it is active, the scrolled ratio which it keeps track of will be updated
-      if (trackingId) {
-        updateScrollRatio(trackingId, ratio);
-      }
+    // if the section is tracked,
+    // let `useActiveSectionTracker()`to determine whether it is active,
+    // and if it is active, the scrolled ratio which it keeps track of will be updated
+    if (trackingId) {
+      updateScrollRatio(trackingId, ratio);
+    }
 
-      return ratio;
-    },
-    [trackingId, sectionTop, boundingRect, scrollInfo],
-  );
+    return ratio;
+  }, [scrollInfo, boundingRect, sectionTop, trackingId, updateScrollRatio]);
 
   return {
     isIntersecting,

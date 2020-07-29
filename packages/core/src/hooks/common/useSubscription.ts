@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useCallback,
-} from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { Subscription } from 'rxjs';
 
 export interface SubscriptionControl {
@@ -16,20 +12,15 @@ export interface SubscriptionControl {
   setSubscription: (sub: Subscription) => void;
 }
 
-export function useSubscription(
-  subscription: SubscriptionControl['subscription'],
-) {
+export function useSubscription(subscription: SubscriptionControl['subscription']) {
   const subscriptionRef = useRef<SubscriptionControl['subscription']>(subscription);
 
   /** Function to unscribe the current subscription */
-  const unSubscribe = useCallback(
-    () => {
-      if (subscriptionRef.current) {
-        subscriptionRef.current.unsubscribe();
-      }
-    },
-    [],
-  );
+  const unSubscribe = useCallback(() => {
+    if (subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe();
+    }
+  }, []);
 
   /** Function to set the latest subscription */
   const setSubscription = useCallback(
@@ -37,18 +28,15 @@ export function useSubscription(
       unSubscribe();
       subscriptionRef.current = subs;
     },
-    [],
+    [unSubscribe]
   );
 
-  useEffect(
-    () => {
-      // unsubscribe the subscription on unmounting
-      return () => {
-        unSubscribe();
-      };
-    },
-    [],
-  );
+  useEffect(() => {
+    // unsubscribe the subscription on unmounting
+    return () => {
+      unSubscribe();
+    };
+  }, [unSubscribe]);
 
   return {
     setSubscription,

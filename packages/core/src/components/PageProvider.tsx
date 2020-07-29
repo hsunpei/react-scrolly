@@ -1,10 +1,5 @@
 import React, { FunctionComponent, useRef, useEffect } from 'react';
-import {
-  Observable,
-  Subject,
-  fromEvent,
-  animationFrameScheduler,
-} from 'rxjs';
+import { Observable, Subject, fromEvent, animationFrameScheduler } from 'rxjs';
 import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
@@ -59,15 +54,15 @@ export const PageProvider: FunctionComponent<PageProps> = ({
   const scrollObserverRef = useRef<Observable<ScrollPosition>>(
     scrollSubjectRef.current.asObservable().pipe(
       merge(
-        fromEvent(window, 'scroll')
-          .pipe(
-            // throttled by the animation frame
-            debounceTime(0, animationFrameScheduler),
-            map(() => getScrollPosition()),
-            // use pairwise to group pairs of consecutive emissions
-            // so that we can calculate `scrollOffset`
-            pairwise(),
-            map(([previousScroll, currentScroll]): ScrollPosition => {
+        fromEvent(window, 'scroll').pipe(
+          // throttled by the animation frame
+          debounceTime(0, animationFrameScheduler),
+          map(() => getScrollPosition()),
+          // use pairwise to group pairs of consecutive emissions
+          // so that we can calculate `scrollOffset`
+          pairwise(),
+          map(
+            ([previousScroll, currentScroll]): ScrollPosition => {
               // amount of pixels scrolled by
               // - postive: scroll down
               // - negative: scroll up
@@ -77,8 +72,9 @@ export const PageProvider: FunctionComponent<PageProps> = ({
                 ...currentScroll,
                 scrollOffset,
               };
-            }),
-        ),
+            }
+          )
+        )
       )
     )
   );
@@ -87,10 +83,7 @@ export const PageProvider: FunctionComponent<PageProps> = ({
    * Observer to listen to window resize
    */
   const resizeObserverRef = useRef(
-    fromEvent(window, 'resize')
-    .pipe(
-      debounceTime(resizeThrottleTime),
-    ),
+    fromEvent(window, 'resize').pipe(debounceTime(resizeThrottleTime))
   );
 
   const { Provider } = PageContext;
@@ -103,29 +96,20 @@ export const PageProvider: FunctionComponent<PageProps> = ({
     resizeObs$: resizeObserverRef.current,
   };
 
-  useEffect(
-    () => {
-      const initialScroll = {
-        ...getScrollPosition(),
-        scrollOffset: 0,
-      };
+  useEffect(() => {
+    const initialScroll = {
+      ...getScrollPosition(),
+      scrollOffset: 0,
+    };
 
-      // send the initial window scrolling position on mounted
-      scrollSubjectRef.current.next(initialScroll);
+    // send the initial window scrolling position on mounted
+    scrollSubjectRef.current.next(initialScroll);
 
-      return () => {
-        // complete the scrolling subject
-        scrollSubjectRef.current.complete();
-      };
-    },
-    [],
-  );
+    return () => {
+      // complete the scrolling subject
+      scrollSubjectRef.current.complete();
+    };
+  }, []);
 
-  return (
-    <Provider
-      value={context}
-    >
-      {children}
-    </Provider>
-  );
+  return <Provider value={context}>{children}</Provider>;
 };
