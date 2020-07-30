@@ -26,7 +26,7 @@ export interface ActiveSectionTracker {
 
 export interface PageContextInterface extends ActiveSectionTracker {
   scrollObs$: Observable<ScrollPosition>;
-  resizeObs$: Observable<Event>;
+  resizeObs$?: Observable<Event>;
 }
 
 export const PageContext = createContext<PageContextInterface | null>(null);

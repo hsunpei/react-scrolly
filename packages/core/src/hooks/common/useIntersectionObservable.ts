@@ -53,13 +53,16 @@ export function useIntersectionObservable(
   );
 
   useEffect(() => {
-    // start observing whether the section is scrolled into the viewport
-    intersectionObserverRef.current = getIntersectionObserver(
-      recordIntersection,
-      intersectionConfig
-    );
+    // check if it's not on SSR
+    if (window && IntersectionObserver) {
+      // start observing whether the section is scrolled into the viewport
+      intersectionObserverRef.current = getIntersectionObserver(
+        recordIntersection,
+        intersectionConfig
+      );
 
-    intersectionObserverRef.current.observe(sectionRef.current!);
+      intersectionObserverRef.current.observe(sectionRef.current!);
+    }
 
     // unsubscribe to the intersection observer on unmounting
     return () => {

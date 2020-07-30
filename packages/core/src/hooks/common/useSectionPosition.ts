@@ -40,45 +40,49 @@ export function useSectionPosition(
 
   /** Observer to the window resizing events */
   const combinedResizeObsRef = useRef(
-    intersectObsr$.pipe(
-      switchMap((intersectInfo) => {
-        const { isIntersecting, sectionBoundingRect } = intersectInfo;
-        return isIntersecting
-          ? // return the bounding rect from `intersectObsr$` when it appears in the viewport
-            of(sectionBoundingRect)
-              // merge it with the intersection observer
-              .pipe(
-                merge(
-                  resizeObs$.pipe(
-                    map(() => {
-                      const currentSect = sectionRef.current;
-                      if (currentSect) {
-                        const rect = currentSect.getBoundingClientRect();
-                        return rect;
-                      }
-                      return undefined;
-                    })
+    resizeObs$
+      ? intersectObsr$.pipe(
+          switchMap((intersectInfo) => {
+            const { isIntersecting, sectionBoundingRect } = intersectInfo;
+            return isIntersecting
+              ? // return the bounding rect from `intersectObsr$` when it appears in the viewport
+                of(sectionBoundingRect)
+                  // merge it with the intersection observer
+                  .pipe(
+                    merge(
+                      resizeObs$.pipe(
+                        map(() => {
+                          const currentSect = sectionRef.current;
+                          if (currentSect) {
+                            const rect = currentSect.getBoundingClientRect();
+                            return rect;
+                          }
+                          return undefined;
+                        })
+                      )
+                    )
                   )
-                )
-              )
-          : // when the section is scrolled out of the viewport
-            of(undefined);
-      }),
-      filter((rect) => typeof rect !== 'undefined')
-    )
+              : // when the section is scrolled out of the viewport
+                of(undefined);
+          }),
+          filter((rect) => typeof rect !== 'undefined')
+        )
+      : undefined
   );
 
   /**
    * Update the absolute position of the section
    */
   const updateSectionPosition = useCallback((boundingClientRect) => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const { top } = boundingClientRect;
+    if (typeof window !== 'undefined') {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const { top } = boundingClientRect;
 
-    setSectionPosition({
-      sectionTop: top + scrollTop,
-      boundingRect: boundingClientRect,
-    });
+      setSectionPosition({
+        sectionTop: top + scrollTop,
+        boundingRect: boundingClientRect,
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -88,13 +92,16 @@ export function useSectionPosition(
     }
 
     // set the subscription to the page resizing events and intersection events
-    setSubscription(
-      combinedResizeObsRef.current.subscribe({
-        next: (sectionBoundingRect) => {
-          updateSectionPosition(sectionBoundingRect!);
-        },
-      })
-    );
+    // combinedResizeObsRef.current does not exist on SSR
+    if (combinedResizeObsRef.current) {
+      setSubscription(
+        combinedResizeObsRef.current.subscribe({
+          next: (sectionBoundingRect) => {
+            updateSectionPosition(sectionBoundingRect!);
+          },
+        })
+      );
+    }
   }, [sectionRef, setSubscription, updateSectionPosition]);
 
   return sectionPosition;
