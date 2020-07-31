@@ -113,12 +113,13 @@ export const PageProvider: FunctionComponent<PageProps> = ({
       scrollOffset: 0,
     };
 
+    const scrollSubject = scrollSubjectRef.current;
     // send the initial window scrolling position on mounted
-    scrollSubjectRef.current.next(initialScroll);
+    scrollSubject.next(initialScroll);
 
     return () => {
       // complete the scrolling subject
-      scrollSubjectRef.current.complete();
+      scrollSubject.complete();
     };
   }, []);
 

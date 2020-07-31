@@ -64,11 +64,13 @@ export function useIntersectionObservable(
       intersectionObserverRef.current.observe(sectionRef.current!);
     }
 
+    const intersectSubject = intersectSubjectRef.current;
+
     // unsubscribe to the intersection observer on unmounting
     return () => {
       if (intersectionObserverRef.current) {
         intersectionObserverRef.current.disconnect();
-        intersectSubjectRef.current.complete();
+        intersectSubject.complete();
       }
     };
   }, [intersectionConfig, recordIntersection, sectionRef]);
