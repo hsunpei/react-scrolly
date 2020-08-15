@@ -18,7 +18,7 @@ export interface ActiveSectionInfo {
 }
 
 export interface ActiveSectionTracker {
-  addActiveSection: (trackingId: string,  sectionTop: number, scrollBottom: number) => void;
+  addActiveSection: (trackingId: string, sectionTop: number, scrollBottom: number) => void;
   removeActiveSection: (trackingId: string, scrollBottom: number) => void;
   updateScrollRatio: (trackingId: string, scrolledRatio: number) => void;
   activeSectionObs$: Observable<ActiveSectionInfo | null>;
@@ -26,7 +26,7 @@ export interface ActiveSectionTracker {
 
 export interface PageContextInterface extends ActiveSectionTracker {
   scrollObs$: Observable<ScrollPosition>;
-  resizeObs$: Observable<Event>;
+  resizeObs$?: Observable<Event>;
 }
 
 export const PageContext = createContext<PageContextInterface | null>(null);

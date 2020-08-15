@@ -6,7 +6,7 @@ import {
   getStickyPosition,
   // types
   SectionProps,
- } from '@react-scrolly/core';
+} from '@react-scrolly/core';
 
 export interface StickySceneProps extends SectionProps {
   /**
@@ -35,18 +35,9 @@ export const StickyScene = ({
   const stickyStyle: React.CSSProperties = getStickyPosition(sectionInfo);
 
   return (
-    <div
-      ref={sectionRef}
-      className={className}
-      style={outerStyle}
-      {...restProps}
-    >
-      <div style={stickyStyle}>
-        {children(sectionInfo)}
-      </div>
-      <div style={{ position: 'relative' }}>
-        {renderOverlay}
-      </div>
+    <div ref={sectionRef} className={className} style={outerStyle} {...restProps}>
+      <div style={stickyStyle}>{children(sectionInfo)}</div>
+      <div style={{ position: 'relative' }}>{renderOverlay}</div>
     </div>
   );
 };

@@ -1,23 +1,15 @@
-import React, {
-  useEffect,
-  useRef,
-  useCallback,
-  useState,
-} from 'react';
-import {
-  getIntersectionObserver,
-  IntersectionObserverConfig,
-} from '@react-scrolly/core';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
+import { getIntersectionObserver, IntersectionObserverConfig } from '@react-scrolly/core';
 
 export function useIntersectingTrigger(
   /** Ref which is binded to the container */
   containerRef: React.RefObject<HTMLElement>,
 
   /** If true, the container will not be tracked again once it is visible in the viewport */
-  trackOnce: boolean = false,
+  trackOnce = false,
 
   /** Margin and threshold configurations for IntersectionObserver */
-  intersectionConfig?: IntersectionObserverConfig,
+  intersectionConfig?: IntersectionObserverConfig
 ) {
   const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
   const preIntersecting = useRef(false);
@@ -27,14 +19,11 @@ export function useIntersectingTrigger(
    */
   const intersectionObserverRef = useRef<IntersectionObserver | null>(null);
 
-  const disconnectIntersection = useCallback(
-    () => {
-      if (intersectionObserverRef.current) {
-        intersectionObserverRef.current.disconnect();
-      }
-    },
-    []
-  );
+  const disconnectIntersection = useCallback(() => {
+    if (intersectionObserverRef.current) {
+      intersectionObserverRef.current.disconnect();
+    }
+  }, []);
 
   /** Use browser's IntersectionObserver to record whether the container is inside the viewport */
   const recordIntersection = useCallback(
@@ -43,34 +32,29 @@ export function useIntersectingTrigger(
       const { isIntersecting: curIntersecting } = entry;
       setIsIntersecting(curIntersecting);
 
-      if (trackOnce &&
-        (!preIntersecting.current && curIntersecting)
-      ) {
+      if (trackOnce && !preIntersecting.current && curIntersecting) {
         disconnectIntersection();
       }
 
       preIntersecting.current = curIntersecting;
     },
-    []
+    [disconnectIntersection, trackOnce]
   );
 
-  useEffect(
-    () => {
-      // start observing whether the container is scrolled into the viewport
-      intersectionObserverRef.current = getIntersectionObserver(
-        recordIntersection,
-        intersectionConfig
-      );
+  useEffect(() => {
+    // start observing whether the container is scrolled into the viewport
+    intersectionObserverRef.current = getIntersectionObserver(
+      recordIntersection,
+      intersectionConfig
+    );
 
-      intersectionObserverRef.current!.observe(containerRef.current!);
+    intersectionObserverRef.current!.observe(containerRef.current!);
 
-      // unsubscribe to the intersection observer on unmounting
-      return () => {
-        disconnectIntersection();
-      };
-    },
-    []
-  );
+    // unsubscribe to the intersection observer on unmounting
+    return () => {
+      disconnectIntersection();
+    };
+  }, [containerRef, disconnectIntersection, intersectionConfig, recordIntersection]);
 
   return isIntersecting;
 }

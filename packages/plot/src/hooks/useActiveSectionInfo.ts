@@ -1,11 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { map, switchMap, merge, filter } from 'rxjs/operators';
-import {
-  useState,
-  useEffect,
-  useRef,
-  useContext,
-} from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import {
   // hooks
   useSubscription,
@@ -15,11 +10,9 @@ import {
   IntersectionInfo,
   ActiveSectionInfo,
   PageContextInterface,
- } from '@react-scrolly/core';
+} from '@react-scrolly/core';
 
-export function useActiveSectionInfo(
-  intersectObsr$: Observable<IntersectionInfo>,
-) {
+export function useActiveSectionInfo(intersectObsr$: Observable<IntersectionInfo>) {
   const context = useContext<PageContextInterface | null>(PageContext);
   const { activeSectionObs$ } = context!;
 
@@ -28,9 +21,9 @@ export function useActiveSectionInfo(
 
   const [activeSection, setActiveSection] = useState<ActiveSectionInfo | null>(null);
 
-  const isIntersectingObs = useRef(intersectObsr$.pipe(
-    map(({ isIntersecting }) => isIntersecting)
-  ));
+  const isIntersectingObs = useRef(
+    intersectObsr$.pipe(map(({ isIntersecting }) => isIntersecting))
+  );
 
   /**
    * Observer to the changes in the scrolledRatio of the active section
@@ -39,36 +32,33 @@ export function useActiveSectionInfo(
   const activeSectionObsrRef = useRef(
     // first emit true in order to take the active section info when Page is mounted
     of(true)
-    // merge it with the intersection observer
-    .pipe(
-      merge(isIntersectingObs.current)
-    )
-    // use `isIntersecting` to determine whether to take the active section info
-    .pipe(
-      switchMap((isIntersecting: boolean) => {
-        return isIntersecting
-          ? activeSectionObs$.pipe(
-            map((activeSectionInfo) => {
-              return activeSectionInfo;
-            })
-          )
-          : of(undefined);
-      }),
-      filter(info => typeof info !== 'undefined'),
-    )
+      // merge it with the intersection observer
+      .pipe(merge(isIntersectingObs.current))
+      // use `isIntersecting` to determine whether to take the active section info
+      .pipe(
+        switchMap((isIntersecting: boolean) => {
+          return isIntersecting
+            ? activeSectionObs$.pipe(
+                map((activeSectionInfo) => {
+                  return activeSectionInfo;
+                })
+              )
+            : of(undefined);
+        }),
+        filter((info) => typeof info !== 'undefined')
+      )
   );
 
-  useEffect(
-    () => {
-      // set the subscription to the info of the active section
-      setSubscription(activeSectionObsrRef.current.subscribe({
+  useEffect(() => {
+    // set the subscription to the info of the active section
+    setSubscription(
+      activeSectionObsrRef.current.subscribe({
         next: (activeSectionInfo) => {
           setActiveSection(activeSectionInfo!);
         },
-      }));
-    },
-    [],
-  );
+      })
+    );
+  }, [setSubscription]);
 
   return {
     activeSection,

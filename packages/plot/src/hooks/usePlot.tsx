@@ -13,7 +13,7 @@ export function usePlot(
    * Please make sure that on the same `scrollTop`,
    * there is **NO** more than one tracked section (section with `trackingId`).
    */
-  trackingId?: string,
+  trackingId?: string
 ) {
   const intersectObsr$ = useIntersectionObservable(plotRef, trackingId);
   const sectionInfo = useScrolledRatio(plotRef, intersectObsr$, trackingId);

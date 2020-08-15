@@ -5,15 +5,16 @@
   "author": "Mika Wang <garfieldduck@gmail.com>",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
-  "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
-  "typings": "lib/esm/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "sideEffects": false,
   "directories": {
     "lib": "lib",
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
@@ -24,17 +25,16 @@
     "url": "git+https://github.com/garfieldduck/intrasections.git"
   },
   "scripts": {
-    "prepublish": "yarn run clean && yarn run build",
-    "build": "run-p \"build:*\"",
-    "build:esm": "tsc -p ./src",
-    "build:cjs": "tsc -p ./src/tsconfig.cjs.json",
-    "clean": "rimraf ./dist ./lib ./es5 ./deploy",
-    "lint": "tslint --project ./src"
+    "dev": "yarn compile:esm --watch",
+    "build": "run-p compile:esm compile:cjs",
+    "clean": "rimraf -rf ./dist",
+    "compile:esm": "tsc -p tsconfig.build.json",
+    "compile:cjs": "tsc -p . -m commonjs --outDir dist/cjs"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",
-    "react": "^16.8.5",
-    "react-dom": "^16.8.5"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
   },
   "dependencies": {
     "@react-scrolly/core": "^0.1.1"

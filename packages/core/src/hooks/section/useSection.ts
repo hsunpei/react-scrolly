@@ -16,7 +16,7 @@ export function useSection(
    * Please make sure that on the same `scrollTop`,
    * there is **NO** more than one tracked section (section with `trackingId`).
    */
-  trackingId?: string,
+  trackingId?: string
 ) {
   const intersectObsr$ = useIntersectionObservable(sectionRef, trackingId);
   return useScrolledRatio(sectionRef, intersectObsr$, trackingId);

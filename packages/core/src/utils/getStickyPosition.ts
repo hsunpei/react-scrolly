@@ -1,9 +1,9 @@
 import { SectionInfo } from '../hooks/section/useScrolledRatio';
 
 const STICKY_POS: {
-  absTop: React.CSSProperties,
-  fixed: React.CSSProperties,
-  absBottom: React.CSSProperties,
+  absTop: React.CSSProperties;
+  fixed: React.CSSProperties;
+  absBottom: React.CSSProperties;
 } = {
   absTop: {
     position: 'absolute',
@@ -24,14 +24,8 @@ const STICKY_POS: {
 /**
  * Returns the position of the inner div of the StickySection
  */
-export function getStickyPosition(
-  section: SectionInfo,
-): React.CSSProperties {
-  const {
-    scrollInfo,
-    sectionTop,
-    boundingRect,
-  } = section;
+export function getStickyPosition(section: SectionInfo): React.CSSProperties {
+  const { scrollInfo, sectionTop, boundingRect } = section;
   const { scrollTop, scrollBottom } = scrollInfo;
   const sectionBottom = sectionTop + boundingRect.height;
   const stickyHeight = {
@@ -43,7 +37,7 @@ export function getStickyPosition(
     return { ...stickyHeight, ...STICKY_POS.absTop };
   }
 
-  if ((scrollTop >= sectionTop) && (sectionBottom > scrollBottom)) {
+  if (scrollTop >= sectionTop && sectionBottom > scrollBottom) {
     // sticks to the viewport
     return {
       ...stickyHeight,

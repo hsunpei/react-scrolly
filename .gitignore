@@ -6,5 +6,6 @@ out/
 lib/
 dist/
 .docz/
+coverage/
 *-debug.log
 *-error.log

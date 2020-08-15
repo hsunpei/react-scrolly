@@ -1,10 +1,5 @@
 import React, { FunctionComponent, useRef, useEffect } from 'react';
-import {
-  Observable,
-  Subject,
-  fromEvent,
-  animationFrameScheduler,
-} from 'rxjs';
+import { Subject, fromEvent, animationFrameScheduler, of } from 'rxjs';
 import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
 import { PageContext, PageContextInterface } from '../context/PageContext';
@@ -41,6 +36,8 @@ export const PageProvider: FunctionComponent<PageProps> = ({
   children,
   resizeThrottleTime = 300,
 }) => {
+  const { Provider } = PageContext;
+
   const {
     updateScrollRatio,
     addActiveSection,
@@ -56,44 +53,51 @@ export const PageProvider: FunctionComponent<PageProps> = ({
   /**
    * Observer to listen to page scroll
    */
-  const scrollObserverRef = useRef<Observable<ScrollPosition>>(
-    scrollSubjectRef.current.asObservable().pipe(
-      merge(
-        fromEvent(window, 'scroll')
-          .pipe(
-            // throttled by the animation frame
-            debounceTime(0, animationFrameScheduler),
-            map(() => getScrollPosition()),
-            // use pairwise to group pairs of consecutive emissions
-            // so that we can calculate `scrollOffset`
-            pairwise(),
-            map(([previousScroll, currentScroll]): ScrollPosition => {
-              // amount of pixels scrolled by
-              // - postive: scroll down
-              // - negative: scroll up
-              const scrollOffset = currentScroll.scrollTop - previousScroll.scrollTop;
+  const scrollObserverRef = useRef(
+    // detect window object to prevent issues on SSR
+    typeof window !== 'undefined'
+      ? scrollSubjectRef.current.asObservable().pipe(
+          merge(
+            fromEvent(window, 'scroll').pipe(
+              // throttled by the animation frame
+              debounceTime(0, animationFrameScheduler),
+              map(() => getScrollPosition()),
+              // use pairwise to group pairs of consecutive emissions
+              // so that we can calculate `scrollOffset`
+              pairwise(),
+              map(
+                ([previousScroll, currentScroll]): ScrollPosition => {
+                  // amount of pixels scrolled by
+                  // - postive: scroll down
+                  // - negative: scroll up
+                  const scrollOffset = currentScroll.scrollTop - previousScroll.scrollTop;
 
-              return {
-                ...currentScroll,
-                scrollOffset,
-              };
-            }),
-        ),
-      )
-    )
+                  return {
+                    ...currentScroll,
+                    scrollOffset,
+                  };
+                }
+              )
+            )
+          )
+        )
+      : of({
+          scrollTop: 0,
+          scrollBottom: 0,
+          windowHeight: 10,
+        })
   );
 
   /**
    * Observer to listen to window resize
    */
   const resizeObserverRef = useRef(
-    fromEvent(window, 'resize')
-    .pipe(
-      debounceTime(resizeThrottleTime),
-    ),
+    // detect window object to prevent issues on SSR
+    typeof window !== 'undefined'
+      ? fromEvent(window, 'resize').pipe(debounceTime(resizeThrottleTime))
+      : undefined
   );
 
-  const { Provider } = PageContext;
   const context: PageContextInterface = {
     addActiveSection,
     removeActiveSection,
@@ -103,29 +107,21 @@ export const PageProvider: FunctionComponent<PageProps> = ({
     resizeObs$: resizeObserverRef.current,
   };
 
-  useEffect(
-    () => {
-      const initialScroll = {
-        ...getScrollPosition(),
-        scrollOffset: 0,
-      };
+  useEffect(() => {
+    const initialScroll = {
+      ...getScrollPosition(),
+      scrollOffset: 0,
+    };
 
-      // send the initial window scrolling position on mounted
-      scrollSubjectRef.current.next(initialScroll);
+    const scrollSubject = scrollSubjectRef.current;
+    // send the initial window scrolling position on mounted
+    scrollSubject.next(initialScroll);
 
-      return () => {
-        // complete the scrolling subject
-        scrollSubjectRef.current.complete();
-      };
-    },
-    [],
-  );
+    return () => {
+      // complete the scrolling subject
+      scrollSubject.complete();
+    };
+  }, []);
 
-  return (
-    <Provider
-      value={context}
-    >
-      {children}
-    </Provider>
-  );
+  return <Provider value={context}>{children}</Provider>;
 };
