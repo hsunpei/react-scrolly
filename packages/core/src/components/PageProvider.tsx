@@ -29,7 +29,7 @@ export interface PageProps {
   /**
    * Allows the window resizing event to go through again after the `resizeThrottleTime`
    */
-  resizeThrottleTime: number;
+  resizeThrottleTime?: number;
 }
 
 export const PageProvider: FunctionComponent<PageProps> = ({
