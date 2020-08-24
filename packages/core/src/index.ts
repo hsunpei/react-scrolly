@@ -1,3 +1,4 @@
+export * from './components/DummyComp';
 export * from './components/PageProvider';
 export * from './components/Section';
 export * from './context/PageContext';
