@@ -5,23 +5,7 @@ import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 import { PageContext, PageContextInterface } from '../context/PageContext';
 import { getScrollPosition } from '../utils/getScrollPosition';
 import { useActiveSectionTracker } from '../hooks/page/useActiveSectionTracker';
-
-export interface ScrollPosition {
-  /** The pageYOffset of the window obtained in <PageProvider>  */
-  scrollTop: number;
-
-  /** The pageYOffset + height of the window obtained in <PageProvider> */
-  scrollBottom: number;
-
-  /** The height of the window obtained in <PageProvider> */
-  windowHeight: number;
-
-  /**
-   * The difference between the current scrolltop and previous scrolltop obtained in <PageProvider>.
-   * Positive: if the user scroll down the page.
-   */
-  scrollOffset: number;
-}
+import { ScrollPosition } from '../types/ScrollPosition';
 
 export interface PageProps {
   children: React.ReactNode;
@@ -85,6 +69,7 @@ export const PageProvider: FunctionComponent<PageProps> = ({
           scrollTop: 0,
           scrollBottom: 0,
           windowHeight: 10,
+          scrollOffset: 0,
         })
   );
 

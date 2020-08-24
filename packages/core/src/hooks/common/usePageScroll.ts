@@ -3,10 +3,10 @@ import { map, switchMap, merge, take } from 'rxjs/operators';
 import { useState, useEffect, useRef, useContext } from 'react';
 
 import { PageContext, PageContextInterface } from '../../context/PageContext';
-import { ScrollPosition } from '../../components/PageProvider';
 
 import { IntersectionInfo } from './useIntersectionObservable';
 import { useSubscription } from './useSubscription';
+import { ScrollPosition } from '../../types/ScrollPosition';
 
 export function usePageScroll(intersectObsr$: Observable<IntersectionInfo>) {
   const context = useContext<PageContextInterface | null>(PageContext);

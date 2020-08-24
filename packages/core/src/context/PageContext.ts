@@ -1,13 +1,9 @@
 import { createContext } from 'react';
 import { Observable } from 'rxjs';
 
-export type sectionID = string | null;
+import { ScrollPosition } from '../types/ScrollPosition';
 
-interface ScrollPosition {
-  scrollTop: number;
-  scrollBottom: number;
-  windowHeight: number;
-}
+export type sectionID = string | null;
 
 export interface ActiveSectionInfo {
   /** `trackingId` of the active section (section closest to the bottom of the viewport) */

@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs';
 import { useRef, useMemo, useEffect, useContext } from 'react';
 
-import { ScrollPosition } from '../../components/PageProvider';
 import { PageContext, PageContextInterface } from '../../context/PageContext';
 import { useSectionPosition, SectionPosition } from '../common/useSectionPosition';
 import { usePageScroll } from '../common/usePageScroll';
 import { IntersectionInfo } from '../common/useIntersectionObservable';
+import { ScrollPosition } from '../../types/ScrollPosition';
 
 export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */
