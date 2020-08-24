@@ -21,10 +21,10 @@ export function useActiveSectionTracker(): ActiveSectionTracker {
    *  'section-2': 1000,
    * }
    */
-  const visibleSections = useRef({});
+  const visibleSections = useRef<{ [key: string]: number }>({});
 
   /** keep track of the scrollRatios updated by `updateScrollRatio` */
-  const sectionScrollRatios = useRef({});
+  const sectionScrollRatios = useRef<{ [key: string]: number }>({});
 
   /** keep track of the `trackingId` of the section closet to the bottom of the viewport */
   const activeSectionId = useRef<sectionID>(null);
