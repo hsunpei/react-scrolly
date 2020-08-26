@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 
 import { SectionInfo } from '../hooks/section/useScrolledRatio';
 import { useSection } from '../hooks/section/useSection';
+import { IntersectionObserverConfig } from '..';
 
 export interface SectionProps {
   /**
@@ -18,15 +19,22 @@ export interface SectionProps {
    * The array of intersectionRatio thresholds which is used in the options of IntersectionObserver
    * @example [0, 0.25, 0.5, 0.75, 1]
    */
-  threshold: number[] | 1;
+  threshold?: IntersectionObserverConfig['threshold'];
   className?: string;
   style?: React.CSSProperties;
   children: (section: SectionInfo) => React.ReactNode;
 }
 
-export const Section = ({ className, style, children, trackingId, ...restProps }: SectionProps) => {
+export const Section = ({
+  className,
+  style,
+  children,
+  trackingId,
+  threshold,
+  ...restProps
+}: SectionProps) => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const sectionInfo = useSection(sectionRef, trackingId);
+  const sectionInfo = useSection(sectionRef, trackingId, threshold);
 
   return (
     <div ref={sectionRef} className={className} style={style} {...restProps}>
