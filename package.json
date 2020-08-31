@@ -54,7 +54,8 @@
     "ts-loader": "^5.3.3",
     "typescript": "^3.9.7",
     "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0"
+    "webpack-cli": "^3.3.0",
+    "observable-hooks": "^3.1.2"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
