@@ -73,15 +73,17 @@ export function useScrolledRatio(
       ratio = 0;
     }
 
+    return ratio;
+  }, [scrollInfo, boundingRect, sectionTop]);
+
+  useEffect(() => {
     // if the section is tracked,
     // let `useActiveSectionTracker()`to determine whether it is active,
     // and if it is active, the scrolled ratio which it keeps track of will be updated
     if (trackingId) {
-      updateScrollRatio(trackingId, ratio);
+      updateScrollRatio(trackingId, scrolledRatio);
     }
-
-    return ratio;
-  }, [scrollInfo, boundingRect, sectionTop, trackingId, updateScrollRatio]);
+  }, [scrolledRatio, trackingId, updateScrollRatio]);
 
   return {
     isIntersecting,
