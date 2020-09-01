@@ -44,13 +44,14 @@ export function useActiveSectionInfo(intersectObsr$: Observable<IntersectionInfo
   const context = useContext<PageContextInterface | null>(PageContext);
   const { activeSectionObs$ } = context!;
 
-  const isIntersectingObs = useRef(
-    intersectObsr$.pipe(map(({ isIntersecting }) => isIntersecting))
+  const isIntersectingObs = useMemo(
+    () => intersectObsr$.pipe(map(({ isIntersecting }) => isIntersecting)),
+    [intersectObsr$]
   );
 
   const activeSectionFunc = useMemo(() => {
-    return getActiveSectionObsrFunc(isIntersectingObs.current, activeSectionObs$);
-  }, [activeSectionObs$]);
+    return getActiveSectionObsrFunc(isIntersectingObs, activeSectionObs$);
+  }, [activeSectionObs$, isIntersectingObs]);
 
   const [activeSection] = useObservableState(activeSectionFunc, null);
 
