@@ -38,6 +38,10 @@ export const StickyBackground = React.memo(
   }
 );
 
+export const Overlay = React.memo(({ children }) => {
+  return <div style={{ position: 'relative' }}>{children}</div>;
+});
+
 export const StickyPlot = ({
   className,
   style,
@@ -52,16 +56,13 @@ export const StickyPlot = ({
   };
 
   const plotRef = useRef<HTMLDivElement>(null);
-  const overlay = useMemo(() => {
-    return <div style={{ position: 'relative' }}>{renderOverlay}</div>;
-  }, [renderOverlay]);
 
   return (
     <div ref={plotRef} className={className} style={outerStyle} {...restProps}>
       <StickyBackground plotRef={plotRef} trackingId={trackingId}>
         {children}
       </StickyBackground>
-      {overlay}
+      <Overlay>{renderOverlay}</Overlay>
     </div>
   );
 };
