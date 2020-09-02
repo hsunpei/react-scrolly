@@ -1,3 +1,7 @@
+/**
+ * DEPRECATED: use observable-hooks as its syntax is much cleaner when managing the states
+ * Ref: https://github.com/crimx/observable-hooks
+ */
 import { useEffect, useRef, useCallback } from 'react';
 import { Subscription } from 'rxjs';
 

@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { map, switchMap, merge, filter } from 'rxjs/operators';
-import { useRef, useContext, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useObservableState } from 'observable-hooks';
 import {
   // context
