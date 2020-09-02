@@ -1,12 +1,5 @@
 import { IntersectionObserverConfig } from '../types/IntersectionObserverConfig';
 
-export interface Margin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
 const DEFAULT_THRESHOLD = 0;
 const DEFAULT_MARGIN = {
   top: 0,

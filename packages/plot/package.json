@@ -34,14 +34,12 @@
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "rxjs": "^6.6.0",
+    "rxjs": "^6.6.2",
     "observable-hooks": "^3.1.2",
     "@react-scrolly/core": "^0.2.1-alpha.4"
   },
   "devDependencies": {
-    "prop-types": "^15.7.2",
-    "react": "^16.13.1",
-    "rxjs": "^6.6.0"
+    "@react-scrolly/core": "^0.2.1-alpha.4"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
