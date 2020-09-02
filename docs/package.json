@@ -1,7 +1,7 @@
 {
   "name": "docs",
   "private": true,
-  "version": "0.2.1-alpha.4",
+  "version": "0.2.1-alpha.5",
   "license": "MIT",
   "files": [
     "src/",
@@ -15,10 +15,10 @@
     "serve": "docz serve"
   },
   "dependencies": {
-    "@react-scrolly/core": "^0.2.1-alpha.4",
-    "@react-scrolly/plot": "^0.2.1-alpha.4",
-    "@react-scrolly/scene": "^0.2.1-alpha.4",
-    "@react-scrolly/trigger": "^0.2.1-alpha.4",
+    "@react-scrolly/core": "^0.2.1-alpha.5",
+    "@react-scrolly/plot": "^0.2.1-alpha.5",
+    "@react-scrolly/scene": "^0.2.1-alpha.5",
+    "@react-scrolly/trigger": "^0.2.1-alpha.5",
     "docz": "^2.3.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",

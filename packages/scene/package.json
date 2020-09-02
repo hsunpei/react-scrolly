@@ -1,6 +1,6 @@
 {
   "name": "@react-scrolly/scene",
-  "version": "0.2.1-alpha.4",
+  "version": "0.2.1-alpha.5",
   "description": "Provides various kinds of sections designed for scrolly-telling.",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
@@ -31,13 +31,13 @@
     "compile:cjs": "tsc -p . -m commonjs --outDir dist/cjs"
   },
   "peerDependencies": {
+    "@react-scrolly/core": "^0.2.1-alpha.4",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "@react-scrolly/core": "^0.2.1-alpha.4"
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
-    "@react-scrolly/core": "^0.2.1-alpha.4"
+    "@react-scrolly/core": "^0.2.1-alpha.5"
   },
   "bugs": {
     "url": "https://github.com/garfieldduck/intrasections/issues"
