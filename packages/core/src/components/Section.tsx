@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import { SectionInfo } from '../hooks/section/useScrolledRatio';
 import { useSection } from '../hooks/section/useSection';
-import { IntersectionObserverConfig } from '..';
+import { IntersectionObserverConfig } from '../types/IntersectionObserverConfig';
 
 export interface SectionProps {
   /**

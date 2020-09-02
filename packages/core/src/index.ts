@@ -1,4 +1,3 @@
-export * from './components/DummyComp';
 export * from './components/PageProvider';
 export * from './components/Section';
 export * from './context/PageContext';
@@ -11,3 +10,4 @@ export * from './hooks/common/useSectionPosition';
 export * from './hooks/section/useScrolledRatio';
 export * from './hooks/section/useSection';
 export * from './hooks/common/useSubscription';
+export * from './types';

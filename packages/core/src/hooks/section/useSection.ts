@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useIntersectionObservable } from '../common/useIntersectionObservable';
 
 import { useScrolledRatio } from './useScrolledRatio';
-import { IntersectionObserverConfig } from '../../utils/getIntersectionObserver';
+import { IntersectionObserverConfig } from '../../types/IntersectionObserverConfig';
 
 /**
  * Return the `sectionInfo` of obtained from `useScrolledRatio()`
