@@ -1,6 +1,6 @@
 {
   "name": "@react-scrolly/plot",
-  "version": "0.2.1-alpha.5",
+  "version": "0.2.1-alpha.6",
   "description": "Components which are able to track the scrolling progress of the section closest to the bottom of the viewport.",
   "homepage": "https://github.com/garfieldduck/intrasections#readme",
   "license": "MIT",
