@@ -7,9 +7,9 @@ import {
 } from '@react-scrolly/core';
 
 import { usePlot } from '../hooks/usePlot';
-import { PlotRenderProps } from './Plot';
+import { PlotProps } from './Plot';
 
-export interface StickyPlotProps extends SectionProps {
+export interface StickyPlotProps extends PlotProps {
   /**
    * Render the non-sticky part of the section,
    * which is placed on top of the children
@@ -20,7 +20,7 @@ export interface StickyPlotProps extends SectionProps {
 interface StickyBackgroundProps {
   plotRef: React.RefObject<HTMLDivElement>;
   trackingId?: SectionProps['trackingId'];
-  children: PlotRenderProps;
+  children: PlotProps['children'];
 }
 
 export const StickyBackground = React.memo(

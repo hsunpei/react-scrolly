@@ -9,7 +9,9 @@ import {
 import { usePlot } from '../hooks/usePlot';
 
 export type PlotRenderProps = (
-  section: SectionInfo & { activeSection: ActiveSectionInfo | null | undefined }
+  plotInfo: SectionInfo & {
+    activeSection: ActiveSectionInfo | null | undefined;
+  }
 ) => React.ReactNode;
 export interface PlotProps extends Omit<SectionProps, 'children'> {
   children: PlotRenderProps;
