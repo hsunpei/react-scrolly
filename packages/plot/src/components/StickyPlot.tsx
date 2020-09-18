@@ -7,6 +7,7 @@ import {
 } from '@react-scrolly/core';
 
 import { usePlot } from '../hooks/usePlot';
+import { PlotRenderProps } from './Plot';
 
 export interface StickyPlotProps extends SectionProps {
   /**
@@ -19,7 +20,7 @@ export interface StickyPlotProps extends SectionProps {
 interface StickyBackgroundProps {
   plotRef: React.RefObject<HTMLDivElement>;
   trackingId?: SectionProps['trackingId'];
-  children: SectionProps['children'];
+  children: PlotRenderProps;
 }
 
 export const StickyBackground = React.memo(

@@ -53,7 +53,10 @@ export function useActiveSectionInfo(intersectObsr$: Observable<IntersectionInfo
     return getActiveSectionObsrFunc(isIntersectingObs, activeSectionObs$);
   }, [activeSectionObs$, isIntersectingObs]);
 
-  const [activeSection] = useObservableState(activeSectionFunc, null);
+  const [activeSection] = useObservableState<ActiveSectionInfo | null | undefined>(
+    activeSectionFunc,
+    null
+  );
 
   return {
     activeSection,
