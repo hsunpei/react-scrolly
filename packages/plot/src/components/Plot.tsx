@@ -9,7 +9,7 @@ import {
 import { usePlot } from '../hooks/usePlot';
 
 export interface PlotInfo extends SectionInfo {
-  activeSection: ActiveSectionInfo | null;
+  activeSection?: ActiveSectionInfo | null;
 }
 
 export type PlotRenderProps = (plotInfo: PlotInfo) => React.ReactNode;
