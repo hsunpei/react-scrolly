@@ -21,6 +21,6 @@ export function usePlot(
 
   return {
     sectionInfo,
-    activeSection,
+    ...activeSection,
   };
 }

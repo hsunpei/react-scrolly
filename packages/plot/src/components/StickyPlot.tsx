@@ -32,7 +32,7 @@ export const StickyBackground = React.memo(
       <div style={stickyStyle}>
         {children({
           ...sectionInfo,
-          ...activeSection,
+          activeSection,
         })}
       </div>
     );
