@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs';
 import { useRef, useMemo, useEffect, useContext } from 'react';
 
-import { ScrollPosition } from '../../components/PageProvider';
 import { PageContext, PageContextInterface } from '../../context/PageContext';
 import { useSectionPosition, SectionPosition } from '../common/useSectionPosition';
 import { usePageScroll } from '../common/usePageScroll';
 import { IntersectionInfo } from '../common/useIntersectionObservable';
+import { ScrollPosition } from '../../types/ScrollPosition';
 
 export interface SectionInfo extends SectionPosition {
   /** Whether the section is intersecting with the viewport */
@@ -73,15 +73,17 @@ export function useScrolledRatio(
       ratio = 0;
     }
 
+    return ratio;
+  }, [scrollInfo, boundingRect, sectionTop]);
+
+  useEffect(() => {
     // if the section is tracked,
     // let `useActiveSectionTracker()`to determine whether it is active,
     // and if it is active, the scrolled ratio which it keeps track of will be updated
     if (trackingId) {
-      updateScrollRatio(trackingId, ratio);
+      updateScrollRatio(trackingId, scrolledRatio);
     }
-
-    return ratio;
-  }, [scrollInfo, boundingRect, sectionTop, trackingId, updateScrollRatio]);
+  }, [scrolledRatio, trackingId, updateScrollRatio]);
 
   return {
     isIntersecting,

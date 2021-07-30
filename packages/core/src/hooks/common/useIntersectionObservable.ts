@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { Observable, Subject } from 'rxjs';
 
-import {
-  getIntersectionObserver,
-  IntersectionObserverConfig,
-} from '../../utils/getIntersectionObserver';
+import { getIntersectionObserver } from '../../utils/getIntersectionObserver';
+import { IntersectionObserverConfig } from '../../types/IntersectionObserverConfig';
 
 export interface IntersectionInfo {
   /** From IntersectionObserver: whether the `<Section>` is intersecting the root */

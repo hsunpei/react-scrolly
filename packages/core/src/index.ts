@@ -10,3 +10,4 @@ export * from './hooks/common/useSectionPosition';
 export * from './hooks/section/useScrolledRatio';
 export * from './hooks/section/useSection';
 export * from './hooks/common/useSubscription';
+export * from './types';
