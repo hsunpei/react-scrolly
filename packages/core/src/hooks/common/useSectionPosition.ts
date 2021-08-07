@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { map, filter, switchMap, merge } from 'rxjs/operators';
-import React, { useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo, useCallback, useLayoutEffect } from 'react';
 import { useObservableState } from 'observable-hooks';
 
 import { PageContext, PageContextInterface } from '../../context/PageContext';
@@ -91,7 +91,7 @@ export function useSectionPosition(
     }
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // update the dimension of the section when it's mounted
     if (sectionRef.current) {
       updateSectionPosition({
