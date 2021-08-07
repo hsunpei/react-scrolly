@@ -2,8 +2,6 @@ import React, { useRef } from 'react';
 import {
   // utils
   getStickyPosition,
-  // types
-  SectionProps,
 } from '@react-scrolly/core';
 
 import { usePlot } from '../hooks/usePlot';
@@ -16,28 +14,6 @@ export interface StickyPlotProps extends PlotProps {
    */
   renderOverlay: React.ReactNode;
 }
-
-interface StickyBackgroundProps {
-  plotRef: React.RefObject<HTMLDivElement>;
-  trackingId?: SectionProps['trackingId'];
-  children: PlotProps['children'];
-}
-
-export const StickyBackground = React.memo(
-  ({ plotRef, trackingId, children }: StickyBackgroundProps) => {
-    const { sectionInfo, activeSection } = usePlot(plotRef, trackingId);
-    const stickyStyle: React.CSSProperties = getStickyPosition(sectionInfo);
-
-    return (
-      <div style={stickyStyle}>
-        {children({
-          ...sectionInfo,
-          activeSection,
-        })}
-      </div>
-    );
-  }
-);
 
 export const Overlay = React.memo(({ children }) => {
   return <div style={{ position: 'relative' }}>{children}</div>;
@@ -58,11 +34,19 @@ export const StickyPlot = ({
 
   const plotRef = useRef<HTMLDivElement>(null);
 
+  const { sectionInfo, activeSection } = usePlot(plotRef, trackingId);
+  const stickyStyle: React.CSSProperties = getStickyPosition(sectionInfo);
+
   return (
     <div ref={plotRef} className={className} style={outerStyle} {...restProps}>
-      <StickyBackground plotRef={plotRef} trackingId={trackingId}>
-        {children}
-      </StickyBackground>
+      {/* Sticky background */}
+      <div style={stickyStyle}>
+        {children({
+          ...sectionInfo,
+          activeSection,
+        })}
+      </div>
+      {/* Overlay on top of the background */}
       <Overlay>{renderOverlay}</Overlay>
     </div>
   );
