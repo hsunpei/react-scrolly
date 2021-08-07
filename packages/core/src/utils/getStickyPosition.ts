@@ -26,6 +26,12 @@ const STICKY_POS: {
  */
 export function getStickyPosition(section: SectionInfo): React.CSSProperties {
   const { scrollInfo, sectionTop, boundingRect } = section;
+
+  // TODO: think of a way to handle the case when sectionPosition cannot be successfully obtained when mounted
+  if (boundingRect.width < 0) {
+    return { position: 'relative' };
+  }
+
   const { scrollTop, scrollBottom } = scrollInfo;
   const sectionBottom = sectionTop + boundingRect.height;
   const stickyHeight = {

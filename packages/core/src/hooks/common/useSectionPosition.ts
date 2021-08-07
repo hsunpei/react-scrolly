@@ -85,8 +85,11 @@ export function useSectionPosition(
         right: 0,
         left: 0,
         bottom: 0,
-        height: 1,
-        width: 1,
+        // TODO: think of a way to deal with the case that sectionPosition
+        // cannot be correctly updated occasionally in <StickyScene>
+        // see also `getStickyPosition()`: width < 0
+        height: -1,
+        width: -1,
       },
     }
   );
