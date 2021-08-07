@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { map, filter, switchMap, merge } from 'rxjs/operators';
-import React, { useContext, useMemo, useCallback, useEffect } from 'react';
+import React, { useContext, useMemo, useCallback, useLayoutEffect } from 'react';
 import { useObservableState } from 'observable-hooks';
 
 import { PageContext, PageContextInterface } from '../../context/PageContext';
@@ -91,12 +91,14 @@ export function useSectionPosition(
     }
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // update the dimension of the section when it's mounted
     // TODO: remove this
     if (!sectionRef.current) {
       console.log('-> react-scrolly cannot get sectionRef:', sectionRef);
     }
+
+    console.log('getBoundingClientRect', sectionRef.current!.getBoundingClientRect());
 
     if (sectionRef.current) {
       updateSectionPosition({
