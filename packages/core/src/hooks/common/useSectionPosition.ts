@@ -96,12 +96,6 @@ export function useSectionPosition(
 
   useLayoutEffect(() => {
     // update the dimension of the section when it's mounted
-    // TODO: remove this
-    if (!sectionRef.current) {
-      console.log('-> react-scrolly cannot get sectionRef:', sectionRef);
-    }
-
-    console.log('getBoundingClientRect', sectionRef.current!.getBoundingClientRect());
 
     if (sectionRef.current) {
       updateSectionPosition({
