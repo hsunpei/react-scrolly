@@ -8,11 +8,11 @@ import {
 
 import { usePlot } from '../hooks/usePlot';
 
-export type PlotRenderProps = (
-  plotInfo: SectionInfo & {
-    activeSection: ActiveSectionInfo | null | undefined;
-  }
-) => React.ReactNode;
+export interface PlotInfo extends SectionInfo {
+  activeSection?: ActiveSectionInfo | null;
+}
+
+export type PlotRenderProps = (plotInfo: PlotInfo) => React.ReactNode;
 export interface PlotProps extends Omit<SectionProps, 'children'> {
   children: PlotRenderProps;
 }
@@ -25,7 +25,7 @@ export const Plot = ({ className, style, children, trackingId, ...restProps }: P
     <div ref={plotRef} className={className} style={style} {...restProps}>
       {children({
         ...sectionInfo,
-        ...activeSection,
+        activeSection,
       })}
     </div>
   );

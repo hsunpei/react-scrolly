@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { map, filter, switchMap, merge } from 'rxjs/operators';
-import React, { useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { useContext, useMemo, useCallback, useLayoutEffect } from 'react';
 import { useObservableState } from 'observable-hooks';
 
 import { PageContext, PageContextInterface } from '../../context/PageContext';
@@ -85,14 +85,18 @@ export function useSectionPosition(
         right: 0,
         left: 0,
         bottom: 0,
-        height: 1,
-        width: 1,
+        // TODO: think of a way to deal with the case that sectionPosition
+        // cannot be correctly updated occasionally in <StickyScene>
+        // see also `getStickyPosition()`: width < 0
+        height: -1,
+        width: -1,
       },
     }
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // update the dimension of the section when it's mounted
+
     if (sectionRef.current) {
       updateSectionPosition({
         ...sectionPosition,
