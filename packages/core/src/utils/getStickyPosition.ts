@@ -35,7 +35,7 @@ export function getStickyPosition(section: SectionInfo): React.CSSProperties {
   const { scrollTop, scrollBottom } = scrollInfo;
   const sectionBottom = sectionTop + boundingRect.height;
   const stickyHeight = {
-    height: `${section.scrollInfo.windowHeight}px`,
+    height: `${section.scrollInfo.windowHeight || window.innerHeight}px`,
   };
 
   if (scrollTop < sectionTop) {
