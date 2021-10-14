@@ -38,6 +38,8 @@ export function getStickyPosition(section: SectionInfo): React.CSSProperties {
     height: `${section.scrollInfo.windowHeight || window.innerHeight}px`,
   };
 
+  console.log('scrollTop', scrollTop, 'sectionTop', sectionTop, 'sectionBottom', sectionBottom);
+
   if (scrollTop < sectionTop) {
     // appears on the top of the page
     return { ...stickyHeight, ...STICKY_POS.absTop };

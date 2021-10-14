@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef, useEffect } from 'react';
+import React, { FunctionComponent, useRef, useLayoutEffect } from 'react';
 import { Subject, fromEvent, animationFrameScheduler, of } from 'rxjs';
 import { debounceTime, map, pairwise, merge } from 'rxjs/operators';
 
@@ -92,7 +92,7 @@ export const PageProvider: FunctionComponent<PageProps> = ({
     resizeObs$: resizeObserverRef.current,
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const initialScroll = {
       ...getScrollPosition(),
       scrollOffset: 0,
