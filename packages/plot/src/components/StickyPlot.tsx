@@ -13,6 +13,9 @@ export interface StickyPlotProps extends PlotProps {
    * which is placed on top of the children
    */
   renderOverlay: React.ReactNode;
+
+  /** Customized overlay wrapper */
+  overlay?: React.FC;
 }
 
 export const Overlay = React.memo(({ children }) => {
@@ -25,6 +28,7 @@ export const StickyPlot = ({
   children,
   trackingId,
   renderOverlay,
+  overlay: OverlayComp = Overlay,
   ...restProps
 }: StickyPlotProps) => {
   const outerStyle: React.CSSProperties = {
@@ -47,7 +51,7 @@ export const StickyPlot = ({
         })}
       </div>
       {/* Overlay on top of the background */}
-      <Overlay>{renderOverlay}</Overlay>
+      <OverlayComp>{renderOverlay}</OverlayComp>
     </div>
   );
 };
