@@ -1,6 +1,14 @@
+> [!CAUTION]
+> ## This project is deprecated
+>
+> `react-scrolly` is no longer maintained and will not receive updates or fixes.
+>
+> A new, more lightweight version is being developed at
+> **[react-scrollytelling](https://github.com/hsunpei/react-scrollytelling)** — please use it instead.
+
 ![react-scrolly](https://user-images.githubusercontent.com/1139698/56862995-5cfba880-69e3-11e9-85ec-3a051659a324.jpg)
 
-# Scrolly-telling made easy
+# [DEPRECATED] Scrolly-telling made easy
 
 Magical scroll-based interactions made easy with `react-scrolly`.
 
